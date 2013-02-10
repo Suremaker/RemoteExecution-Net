@@ -1,0 +1,7 @@
+Remote Execution project changelog
+---------------------------------------------------
+
+Version 1.0.0:
+----------------
++ project setup
++ extracted remote execution code from http://sourceforge.net/projects/distantcolony/
