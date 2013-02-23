@@ -37,6 +37,7 @@
     <Reference Include="Rhino.Mocks">
       <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\Calculator.cs" />
@@ -44,6 +45,7 @@
     <Compile Include="Helpers\ICalculator.cs" />
     <Compile Include="Helpers\IGreeter.cs" />
     <Compile Include="Helpers\MockWriteEndpoint.cs" />
+    <Compile Include="MessageSerializerTests.cs" />
     <Compile Include="OperationDispatcherOperationHandlingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemotingClientConcurrentTests.cs" />

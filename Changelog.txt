@@ -1,6 +1,11 @@
 Remote Execution project changelog
 ---------------------------------------------------
 
+Version 1.0.1:
+----------------
++ updated version of ObjectSerialization package
++ extended MessageSerializer with RegsterSerializableFrom() that allows to register types with [Serializable] attribute in order to decrease their serialized length
+
 Version 1.0.0:
 ----------------
 + project setup

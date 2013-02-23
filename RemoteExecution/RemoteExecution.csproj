@@ -37,8 +37,9 @@
     <Reference Include="Lidgren.Network">
       <HintPath>..\3rdparty\Lidgren.Network.dll</HintPath>
     </Reference>
-    <Reference Include="ObjectSerialization">
-      <HintPath>..\packages\ObjectSerialization-Net.1.0.24\lib\net40\ObjectSerialization.dll</HintPath>
+    <Reference Include="ObjectSerialization, Version=1.0.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ObjectSerialization-Net.1.0.26\lib\net40\ObjectSerialization.dll</HintPath>
     </Reference>
     <Reference Include="Spring.Aop">
       <HintPath>..\packages\Spring.Aop.1.3.2\lib\net40\Spring.Aop.dll</HintPath>

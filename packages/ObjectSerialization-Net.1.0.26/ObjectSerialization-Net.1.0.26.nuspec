@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>ObjectSerialization-Net</id>
-    <version>1.0.24</version>
+    <version>1.0.26</version>
     <title>Object Serialization Net</title>
     <authors>Wojciech Kotlarski</authors>
     <owners>Wojciech Kotlarski</owners>
@@ -17,7 +17,7 @@
 * serialization of classes without parameter-less constructor;
 * serialization of arrays and collections implementing ICollection&lt;T&gt;;</description>
     <summary>A fast object graph binary serialization for .NET</summary>
-    <releaseNotes />
+    <releaseNotes>+ ensured proper and constant order of registered types with TypeInfoRepository.RegisterPredefinedUsingSerializableFrom</releaseNotes>
     <copyright>Copyright (c) 2013, Wojciech Kotlarski</copyright>
     <language>en-US</language>
     <tags>binary serialization</tags>
