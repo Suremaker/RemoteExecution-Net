@@ -1,6 +1,10 @@
 Remote Execution project changelog
 ---------------------------------------------------
 
+Version 1.0.2:
+----------------
++ modified RemoteExecutor class to be a non-static class and extracted IRemoteExecutor interface
+
 Version 1.0.1:
 ----------------
 + updated version of ObjectSerialization package

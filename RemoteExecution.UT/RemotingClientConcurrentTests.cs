@@ -8,54 +8,56 @@ using RemoteExecution.UT.Helpers;
 
 namespace RemoteExecution.UT
 {
-    [TestFixture]
-    public class RemotingClientConcurrentTests
-    {
-        #region Setup/Teardown
+	[TestFixture]
+	public class RemotingClientConcurrentTests
+	{
+		#region Setup/Teardown
 
-        [SetUp]
-        public void SetUp()
-        {
-            _operationDispatcher = new OperationDispatcher();
-            _endpoint = new MockWriteEndpoint();
-            _subject = RemoteExecutor.Create<ICalculator>(_operationDispatcher, _endpoint);
-        }
+		[SetUp]
+		public void SetUp()
+		{
+			_operationDispatcher = new OperationDispatcher();
+			_endpoint = new MockWriteEndpoint();
+			_remoteExecutor = new RemoteExecutor(_operationDispatcher, _endpoint);
+			_subject = _remoteExecutor.Create<ICalculator>();
+		}
 
-        #endregion
+		#endregion
 
-        private OperationDispatcher _operationDispatcher;
-        private MockWriteEndpoint _endpoint;
-        private ICalculator _subject;
+		private OperationDispatcher _operationDispatcher;
+		private MockWriteEndpoint _endpoint;
+		private ICalculator _subject;
+		private RemoteExecutor _remoteExecutor;
 
-        [Test]
-        public void ShouldSupportConcurrentOperations()
-        {
-            var requests = new ConcurrentStack<Request>();
-            _endpoint.OnMessageSend = r => requests.Push((Request)r);
+		[Test]
+		public void ShouldSupportConcurrentOperations()
+		{
+			var requests = new ConcurrentStack<Request>();
+			_endpoint.OnMessageSend = r => requests.Push((Request)r);
 
-            int validResults = 0;
+			int validResults = 0;
 
-            var tasks = new List<Thread>();
-            for (int i = 0; i < 10; ++i)
-            {
-                var thread = new Thread(o =>
-                    {
-                        string add = _subject.Add((int)o, 0);
-                        if (Equals(add, o))
-                            Interlocked.Increment(ref validResults);
-                    });
-                tasks.Add(thread);
-                thread.Start(i);
-            }
+			var tasks = new List<Thread>();
+			for (int i = 0; i < 10; ++i)
+			{
+				var thread = new Thread(o =>
+					{
+						string add = _subject.Add((int)o, 0);
+						if (Equals(add, o))
+							Interlocked.Increment(ref validResults);
+					});
+				tasks.Add(thread);
+				thread.Start(i);
+			}
 
-            Thread.Sleep(500);
-            foreach (Request request in requests)
-                _operationDispatcher.Dispatch(new Response(request.CorrelationId, request.Args[0]), null);
+			Thread.Sleep(500);
+			foreach (Request request in requests)
+				_operationDispatcher.Dispatch(new Response(request.CorrelationId, request.Args[0]), null);
 
-            foreach (Thread thread in tasks)
-                thread.Join();
+			foreach (Thread thread in tasks)
+				thread.Join();
 
-            Assert.That(validResults, Is.EqualTo(tasks.Count));
-        }
-    }
+			Assert.That(validResults, Is.EqualTo(tasks.Count));
+		}
+	}
 }

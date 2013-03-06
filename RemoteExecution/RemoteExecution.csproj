@@ -58,6 +58,7 @@
     <Compile Include="Handling\IHandler.cs" />
     <Compile Include="Handling\RequestHandler.cs" />
     <Compile Include="Handling\ResponseHandler.cs" />
+    <Compile Include="IRemoteExecutor.cs" />
     <Compile Include="Messages\Request.cs" />
     <Compile Include="Messages\Response.cs" />
     <Compile Include="Networking\Client.cs" />
