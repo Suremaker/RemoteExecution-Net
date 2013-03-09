@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.Dispatching;
-using RemoteExecution.Messages;
+using RemoteExecution.Messaging;
 using RemoteExecution.UT.Helpers;
 
 namespace RemoteExecution.UT
@@ -17,15 +17,15 @@ namespace RemoteExecution.UT
 		public void SetUp()
 		{
 			_operationDispatcher = new OperationDispatcher();
-			_endpoint = new MockWriteEndpoint();
-			_remoteExecutor = new RemoteExecutor(_operationDispatcher, _endpoint);
+			_connection = new MockNetworkConnection(_operationDispatcher);
+			_remoteExecutor = new RemoteExecutor(_connection);
 			_subject = _remoteExecutor.Create<ICalculator>();
 		}
 
 		#endregion
 
 		private OperationDispatcher _operationDispatcher;
-		private MockWriteEndpoint _endpoint;
+		private MockNetworkConnection _connection;
 		private ICalculator _subject;
 		private RemoteExecutor _remoteExecutor;
 
@@ -33,7 +33,7 @@ namespace RemoteExecution.UT
 		public void ShouldSupportConcurrentOperations()
 		{
 			var requests = new ConcurrentStack<Request>();
-			_endpoint.OnMessageSend = r => requests.Push((Request)r);
+			_connection.OnMessageSend = r => requests.Push((Request)r);
 
 			int validResults = 0;
 

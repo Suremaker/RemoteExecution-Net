@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Concurrent;
-using RemoteExecution.Endpoints;
 using RemoteExecution.Handling;
-using RemoteExecution.Messages;
+using RemoteExecution.Messaging;
 
 namespace RemoteExecution.Dispatching
 {
@@ -33,13 +32,13 @@ namespace RemoteExecution.Dispatching
             _handlers.TryRemove(typeof(TInterface).Name, out handler);
         }
 
-        public void Dispatch(IMessage msg, IWriteEndpoint writeEndpoint)
+        public void Dispatch(IMessage msg, IMessageSender messageSender)
         {
             IHandler handler;
             if (_handlers.TryGetValue(msg.GroupId, out handler))
-                handler.Handle(msg, writeEndpoint);
+                handler.Handle(msg, messageSender);
             else
-                HandleUndefinedType(msg, writeEndpoint);
+                HandleUndefinedType(msg, messageSender);
         }
 
         #endregion
@@ -56,12 +55,12 @@ namespace RemoteExecution.Dispatching
             AddHandler(new RequestHandler(interfaceType.Name, handler));
         }
 
-        private void HandleUndefinedType(IMessage msg, IWriteEndpoint writeEndpoint)
+        private void HandleUndefinedType(IMessage msg, IMessageSender messageSender)
         {
             if (!(msg is Request))
                 return;
             string message = string.Format("No handler is defined for {0} type.", msg.GroupId);
-            writeEndpoint.Send(new Response(msg.CorrelationId, new InvalidOperationException(message)));
+            messageSender.Send(new Response(msg.CorrelationId, new InvalidOperationException(message)));
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
-using RemoteExecution.Endpoints;
 
-namespace RemoteExecution.Messages
+namespace RemoteExecution.Messaging
 {
 	[Serializable]
 	public class Request : IMessage

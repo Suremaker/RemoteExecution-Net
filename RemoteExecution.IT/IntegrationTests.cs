@@ -1,63 +1,93 @@
+﻿using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.Dispatching;
-using RemoteExecution.Networking;
+using RemoteExecution.Endpoints;
+using RemoteExecution.Endpoints.Processing;
+using RemoteExecution.IT.Services;
 
 namespace RemoteExecution.IT
 {
 	[TestFixture]
 	public class IntegrationTests
 	{
-		#region Setup/Teardown
+		private TestableServerEndpoint _serverEndpoint;
 
-		[SetUp]
-		public void FixtureSetUp()
+		private IMessageLoop _serverLoop;
+		private const int _maxConnections = 2;
+		private const ushort _port = 3232;
+		private const string _appId = "testAppId";
+		private const string _localhost = "localhost";
+
+		[TestFixtureSetUp]
+		public void SetUp()
 		{
-			const string appId = "test_app";
-			_serverDispatcher = new OperationDispatcher();
-			_server = new Server(appId, _serverDispatcher, 5, 3232);
-			_server.Start();
-
-			_clientDispatcher = new OperationDispatcher();
-			_clientDispatcher.RegisterFor<IVersionProvider>(new VersionProvider());
-			_client = new Client(appId, _clientDispatcher);
-			_server.OnNewConnection = endpoint => { _remoteExecutor = new RemoteExecutor(_serverDispatcher, endpoint); };
-			_client.Start();
+			_serverEndpoint = new TestableServerEndpoint(_appId, _maxConnections, _port);
+			_serverEndpoint.StartListening();
+			_serverLoop = new MessageLoop(_serverEndpoint);
 		}
 
-		[TearDown]
-		public void FixtureTearDown()
+		[TestFixtureTearDown]
+		public void TearDown()
 		{
-			_client.Stop();
-			_server.Stop();
-		}
-
-		#endregion
-
-		private Server _server;
-		private IOperationDispatcher _serverDispatcher;
-		private IOperationDispatcher _clientDispatcher;
-		private Client _client;
-		private RemoteExecutor _remoteExecutor;
-
-		private void ConnectClient()
-		{
-			_client.Connect("localhost", 3232);
+			_serverLoop.Dispose();
+			_serverEndpoint.Dispose();
 		}
 
 		[Test]
-		public void ShouldGameServerCheckClientVersion()
+		public void ShouldProperlyConnectAndDisconnectClient()
 		{
-			ConnectClient();
-
-			var versionProvider = _remoteExecutor.Create<IVersionProvider>();
-			Assert.That(versionProvider.GetVersion(), Is.EqualTo(5));
+			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
+			using (new MessageLoop(client))
+			using (var clientConnection = client.ConnectTo(_localhost, _port))
+			{
+				Assert.That(clientConnection.IsOpen, Is.True);
+				Assert.That(_serverEndpoint.ActiveConnections.Count, Is.EqualTo(1));
+			}
+			Thread.Sleep(250);
+			Assert.That(_serverEndpoint.ActiveConnections.Count, Is.EqualTo(0));
 		}
 
 		[Test]
-		public void ShouldGameServerReceiveNewConnection()
+		public void ShouldCallRemoteOperation()
 		{
-			ConnectClient();
-			Assert.That(_remoteExecutor, Is.Not.Null);
+			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
+			using (new MessageLoop(client))
+			using (var clientConnection = client.ConnectTo(_localhost, _port))
+			{
+				var remoteExecutor = new RemoteExecutor(clientConnection);
+				Assert.That(remoteExecutor.Create<IRemoteService>().Hello(), Is.EqualTo("world"));
+			}
+		}
+
+		[Test]
+		public void ShouldRetrieveProperConnectionId()
+		{
+			using (var client1 = new ClientEndpoint(_appId, new OperationDispatcher()))
+			using (var client2 = new ClientEndpoint(_appId, new OperationDispatcher()))
+			using (new MessageLoop(client1))
+			using (new MessageLoop(client2))
+			using (var clientConnection1 = client1.ConnectTo(_localhost, _port))
+			using (var clientConnection2 = client2.ConnectTo(_localhost, _port))
+			{
+				Assert.That(new RemoteExecutor(clientConnection1).Create<IRemoteService>().GetConnectionId(), Is.EqualTo(1));
+				Assert.That(new RemoteExecutor(clientConnection2).Create<IRemoteService>().GetConnectionId(), Is.EqualTo(2));
+			}
+		}
+
+		[Test]
+		public void ShouldServerReturnValueRetrievedFromClient()
+		{
+			const int baseValue = 32;
+			var operationDispatcher = new OperationDispatcher();
+			operationDispatcher.RegisterFor(LoggingProxy.For<IClientService>(new ClientService(baseValue)));
+
+			using (var client = (IClientEndpoint)new ClientEndpoint(_appId, operationDispatcher))
+			using (new MessageLoop(client))
+			using (var clientConnection = client.ConnectTo(_localhost, _port))
+			{
+				var remoteExecutor = new RemoteExecutor(clientConnection);
+				Assert.That(remoteExecutor.Create<IRemoteService>().ExecuteChainedMethod(), Is.EqualTo(baseValue * 2));
+			}
 		}
 	}
 }

@@ -1,8 +1,7 @@
 using System.Reflection;
 using ObjectSerialization;
 using ObjectSerialization.Types;
-using RemoteExecution.Endpoints;
-using RemoteExecution.Messages;
+using RemoteExecution.Messaging;
 
 namespace RemoteExecution.Serialization
 {

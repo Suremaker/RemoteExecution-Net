@@ -4,7 +4,7 @@ using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.Dispatching;
 using RemoteExecution.Handling;
-using RemoteExecution.Messages;
+using RemoteExecution.Messaging;
 using RemoteExecution.UT.Helpers;
 using Rhino.Mocks;
 
@@ -19,8 +19,8 @@ namespace RemoteExecution.UT
 		public void SetUp()
 		{
 			_operationDispatcher = MockRepository.GenerateMock<IOperationDispatcher>();
-			_endpoint = new MockWriteEndpoint();
-			_remoteExecutor = new RemoteExecutor(_operationDispatcher, _endpoint);
+			_connection = new MockNetworkConnection(_operationDispatcher);
+			_remoteExecutor = new RemoteExecutor(_connection);
 			_subject = _remoteExecutor.Create<ICalculator>();
 			_currentHandler = null;
 		}
@@ -29,7 +29,7 @@ namespace RemoteExecution.UT
 
 		private ICalculator _subject;
 		private IOperationDispatcher _operationDispatcher;
-		private MockWriteEndpoint _endpoint;
+		private MockNetworkConnection _connection;
 		private IHandler _currentHandler;
 		private RemoteExecutor _remoteExecutor;
 
@@ -56,8 +56,8 @@ namespace RemoteExecution.UT
 
 		private Request EnsureRequest()
 		{
-			Assert.That(_endpoint.SentMessages.Count, Is.EqualTo(1));
-			var request = (Request)_endpoint.SentMessages.Single();
+			Assert.That(_connection.SentMessages.Count, Is.EqualTo(1));
+			var request = (Request)_connection.SentMessages.Single();
 			return request;
 		}
 
@@ -65,7 +65,7 @@ namespace RemoteExecution.UT
 		{
 			_operationDispatcher.Stub(d => d.AddHandler(null)).IgnoreArguments().WhenCalled(UpdateCurrentHandler);
 
-			_endpoint.OnMessageSend = m => _currentHandler.Handle(new Response(m.CorrelationId, value), _endpoint);
+			_connection.OnMessageSend = m => _currentHandler.Handle(new Response(m.CorrelationId, value), _connection);
 		}
 
 		private void UpdateCurrentHandler(MethodInvocation a)

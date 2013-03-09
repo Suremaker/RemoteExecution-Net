@@ -1,8 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using RemoteExecution.Endpoints;
-using RemoteExecution.Messages;
+using RemoteExecution.Messaging;
 
 namespace RemoteExecution.Handling
 {
@@ -22,9 +21,9 @@ namespace RemoteExecution.Handling
 
         public string Id { get; private set; }
 
-        public void Handle(IMessage msg, IWriteEndpoint writeEndpoint)
+        public void Handle(IMessage msg, IMessageSender messageSender)
         {
-            writeEndpoint.Send(new Response(msg.CorrelationId, Execute((Request)msg)));
+            messageSender.Send(new Response(msg.CorrelationId, Execute((Request)msg)));
         }
 
         #endregion

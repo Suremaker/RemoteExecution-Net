@@ -1,4 +1,3 @@
-using RemoteExecution.Dispatching;
 using RemoteExecution.Endpoints;
 using RemoteExecution.Remoting;
 using Spring.Aop.Framework;
@@ -7,18 +6,16 @@ namespace RemoteExecution
 {
 	public class RemoteExecutor : IRemoteExecutor
 	{
-		private readonly IOperationDispatcher _operationDispatcher;
-		private readonly IWriteEndpoint _writeEndpoint;
+		private readonly INetworkConnection _networkConnection;
 
-		public RemoteExecutor(IOperationDispatcher operationDispatcher, IWriteEndpoint writeEndpoint)
+		public RemoteExecutor(INetworkConnection networkConnection)
 		{
-			_operationDispatcher = operationDispatcher;
-			_writeEndpoint = writeEndpoint;
+			_networkConnection = networkConnection;
 		}
 
 		public T Create<T>()
 		{
-			var factory = new ProxyFactory(typeof(T), new RemoteCallInterceptor(_operationDispatcher, _writeEndpoint, typeof(T).Name));
+			var factory = new ProxyFactory(typeof(T), new RemoteCallInterceptor(_networkConnection.OperationDispatcher, _networkConnection, typeof(T).Name));
 			return (T)factory.GetProxy();
 		}
 	}

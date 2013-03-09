@@ -44,7 +44,7 @@
     <Compile Include="Helpers\Greeter.cs" />
     <Compile Include="Helpers\ICalculator.cs" />
     <Compile Include="Helpers\IGreeter.cs" />
-    <Compile Include="Helpers\MockWriteEndpoint.cs" />
+    <Compile Include="Helpers\MockNetworkConnection.cs" />
     <Compile Include="MessageSerializerTests.cs" />
     <Compile Include="OperationDispatcherOperationHandlingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

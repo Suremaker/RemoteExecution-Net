@@ -1,18 +1,17 @@
 using AopAlliance.Intercept;
 using RemoteExecution.Dispatching;
-using RemoteExecution.Endpoints;
 using RemoteExecution.Handling;
-using RemoteExecution.Messages;
+using RemoteExecution.Messaging;
 
 namespace RemoteExecution.Remoting
 {
     internal class RemoteCallInterceptor : IMethodInterceptor
     {
-        private readonly IWriteEndpoint _endpoint;
+        private readonly IMessageSender _endpoint;
         private readonly string _interfaceName;
         private readonly IOperationDispatcher _operationDispatcher;
 
-        public RemoteCallInterceptor(IOperationDispatcher operationDispatcher, IWriteEndpoint endpoint, string interfaceName)
+        public RemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageSender endpoint, string interfaceName)
         {
             _operationDispatcher = operationDispatcher;
             _endpoint = endpoint;
