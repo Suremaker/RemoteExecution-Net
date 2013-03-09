@@ -26,7 +26,7 @@ namespace RemoteExecution.UT
 
 		private T GetResult<T>(string id)
 		{
-			return _networkConnection.SentMessages.OfType<Response>().Where(r => r.CorrelationId == id).Select(r => r.Value).OfType<T>().SingleOrDefault();
+			return _networkConnection.SentMessages.OfType<IResponse>().Where(r => r.CorrelationId == id).Select(r => r.Value).OfType<T>().SingleOrDefault();
 		}
 
 		[Test]
@@ -54,8 +54,7 @@ namespace RemoteExecution.UT
 			_subject.RegisterFor(typeof(ICalculator), new Calculator());
 
 			_subject.Dispatch(new Request("1", "ICalculator", "Subtract", new object[] { 3, 2 }), _networkConnection);
-			var ex = GetResult<Exception>("1");
-			Assert.That(ex, Is.InstanceOf<ArgumentException>());
+			var ex = Assert.Throws<ArgumentException>(() => GetResult<Exception>("1"));
 			Assert.That(ex.Message, Is.EqualTo("test"));
 		}
 
@@ -63,8 +62,7 @@ namespace RemoteExecution.UT
 		public void ShouldPassInvalidOperationExceptionIfNoHandlerIsRegistered()
 		{
 			_subject.Dispatch(new Request("1", "ICalculator", "Add", new object[] { 0, 1 }), _networkConnection);
-			var ex = GetResult<Exception>("1");
-			Assert.That(ex, Is.InstanceOf<InvalidOperationException>());
+			var ex = Assert.Throws<InvalidOperationException>(() => GetResult<Exception>("1"));
 			Assert.That(ex.Message, Is.EqualTo("No handler is defined for ICalculator type."));
 		}
 
@@ -74,8 +72,7 @@ namespace RemoteExecution.UT
 			_subject.RegisterFor(typeof(ICalculator), new Calculator());
 			_subject.Dispatch(new Request("1", "ICalculator", "Add", new object[] { null, 3.14, "test" }), _networkConnection);
 
-			var ex = GetResult<Exception>("1");
-			Assert.That(ex, Is.InstanceOf<InvalidOperationException>());
+			var ex = Assert.Throws<InvalidOperationException>(() => GetResult<Exception>("1"));
 			Assert.That(ex.Message, Is.EqualTo("Unable to call Add(null,Double,String) method on ICalculator handler: no matching method was found."));
 		}
 	}

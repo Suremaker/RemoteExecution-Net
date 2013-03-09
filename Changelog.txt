@@ -1,6 +1,12 @@
 Remote Execution project changelog
 ---------------------------------------------------
 
+Version 1.0.3:
+----------------
++ used MessageLoop internally in LindgrenEndpoint (so it is not needed to use it directly in code)
++ fixed issue with serialization problem of thrown exceptions (Now, only the exception type and message is preserved - call stack is not).
+
+
 Version 1.0.2:
 ----------------
 + modified RemoteExecutor class to be a non-static class and extracted IRemoteExecutor interface

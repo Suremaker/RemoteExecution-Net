@@ -68,6 +68,13 @@ namespace RemoteExecution.UT
 			_connection.OnMessageSend = m => _currentHandler.Handle(new Response(m.CorrelationId, value), _connection);
 		}
 
+		private void BindThrowMessageLoopback(Exception value)
+		{
+			_operationDispatcher.Stub(d => d.AddHandler(null)).IgnoreArguments().WhenCalled(UpdateCurrentHandler);
+
+			_connection.OnMessageSend = m => _currentHandler.Handle(new ExceptionResponse(m.CorrelationId, value.GetType(), value.Message), _connection);
+		}
+
 		private void UpdateCurrentHandler(MethodInvocation a)
 		{
 			_currentHandler = (IHandler)a.Arguments[0];
@@ -122,7 +129,7 @@ namespace RemoteExecution.UT
 		[Test]
 		public void ShouldThrowIfResponseIsException()
 		{
-			BindMessageLoopback(new Exception("test"));
+			BindThrowMessageLoopback(new Exception("test"));
 			AsyncTest(() =>
 				{
 					var ex = Assert.Throws<Exception>(() => _subject.Add(2, 3));

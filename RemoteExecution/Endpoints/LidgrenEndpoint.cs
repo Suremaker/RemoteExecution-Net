@@ -1,24 +1,31 @@
 ﻿using System.Threading.Tasks;
 using Lidgren.Network;
+using RemoteExecution.Endpoints.Processing;
 
 namespace RemoteExecution.Endpoints
 {
 	public abstract class LidgrenEndpoint : INetworkEndpoint
 	{
 		protected readonly NetPeer Peer;
+		private MessageLoop _messageLoop;
 
 		protected void Start()
 		{
+			_messageLoop = new MessageLoop(this);
 			Peer.Start();
 		}
 
 		protected LidgrenEndpoint(NetPeer peer)
 		{
 			Peer = peer;
+			_messageLoop = new MessageLoop(this);
 		}
 
 		public void Dispose()
 		{
+			if (_messageLoop != null)
+				_messageLoop.Dispose();
+			_messageLoop = null;
 			Peer.Shutdown("Endpoint disposed");
 		}
 

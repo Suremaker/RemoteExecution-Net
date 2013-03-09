@@ -52,12 +52,14 @@
   <ItemGroup>
     <Compile Include="Dispatching\IOperationDispatcher.cs" />
     <Compile Include="Dispatching\OperationDispatcher.cs" />
+    <Compile Include="Messaging\ExceptionResponse.cs" />
     <Compile Include="Messaging\IMessage.cs" />
     <Compile Include="Messaging\IMessageSender.cs" />
     <Compile Include="Handling\IHandler.cs" />
     <Compile Include="Handling\RequestHandler.cs" />
     <Compile Include="Handling\ResponseHandler.cs" />
     <Compile Include="IRemoteExecutor.cs" />
+    <Compile Include="Messaging\IResponse.cs" />
     <Compile Include="Messaging\Request.cs" />
     <Compile Include="Messaging\Response.cs" />
     <Compile Include="Endpoints\ClientEndpoint.cs" />

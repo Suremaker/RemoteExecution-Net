@@ -5,53 +5,54 @@ using RemoteExecution.Messaging;
 
 namespace RemoteExecution.Handling
 {
-    internal class RequestHandler : IHandler
-    {
-        private readonly object _handler;
-        private readonly Type _type;
+	internal class RequestHandler : IHandler
+	{
+		private readonly object _handler;
+		private readonly Type _type;
 
-        public RequestHandler(string id, object handler)
-        {
-            Id = id;
-            _handler = handler;
-            _type = handler.GetType();
-        }
+		public RequestHandler(string id, object handler)
+		{
+			Id = id;
+			_handler = handler;
+			_type = handler.GetType();
+		}
 
-        #region IHandler Members
+		#region IHandler Members
 
-        public string Id { get; private set; }
+		public string Id { get; private set; }
 
-        public void Handle(IMessage msg, IMessageSender messageSender)
-        {
-            messageSender.Send(new Response(msg.CorrelationId, Execute((Request)msg)));
-        }
+		public void Handle(IMessage msg, IMessageSender messageSender)
+		{
+			try
+			{
+				messageSender.Send(new Response(msg.CorrelationId, Execute((Request)msg)));
+			}
+			catch (Exception e)
+			{
+				messageSender.Send(new ExceptionResponse(msg.CorrelationId, e.GetType(), e.Message));
+			}
+		}
 
-        #endregion
+		#endregion
 
-        private object Execute(Request request)
-        {
-            try
-            {
-                return _type.InvokeMember(request.OperationName,
-                                          BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.Public, null,
-                                          _handler, request.Args);
-            }
-            catch (MissingMemberException)
-            {
-                return new InvalidOperationException(string.Format(
-                    "Unable to call {0}({1}) method on {2} handler: no matching method was found.",
-                    request.OperationName,
-                    string.Join(",", request.Args.Select(a => a == null ? "null" : a.GetType().Name)),
-                    Id));
-            }
-            catch (TargetInvocationException e)
-            {
-                return e.InnerException;
-            }
-            catch (Exception e)
-            {
-                return e;
-            }
-        }
-    }
+		private object Execute(Request request)
+		{
+			try
+			{
+				return _type.InvokeMember(request.OperationName, BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.Public, null, _handler, request.Args);
+			}
+			catch (MissingMemberException)
+			{
+				throw new InvalidOperationException(string.Format(
+					"Unable to call {0}({1}) method on {2} handler: no matching method was found.",
+					request.OperationName,
+					string.Join(",", request.Args.Select(a => a == null ? "null" : a.GetType().Name)),
+					Id));
+			}
+			catch (TargetInvocationException e)
+			{
+				throw e.InnerException;
+			}
+		}
+	}
 }

@@ -37,7 +37,6 @@ namespace RemoteExecution.IT
 		public void ShouldProperlyConnectAndDisconnectClient()
 		{
 			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
-			using (new MessageLoop(client))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
 				Assert.That(clientConnection.IsOpen, Is.True);
@@ -51,7 +50,6 @@ namespace RemoteExecution.IT
 		public void ShouldCallRemoteOperation()
 		{
 			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
-			using (new MessageLoop(client))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
 				var remoteExecutor = new RemoteExecutor(clientConnection);
@@ -64,8 +62,6 @@ namespace RemoteExecution.IT
 		{
 			using (var client1 = new ClientEndpoint(_appId, new OperationDispatcher()))
 			using (var client2 = new ClientEndpoint(_appId, new OperationDispatcher()))
-			using (new MessageLoop(client1))
-			using (new MessageLoop(client2))
 			using (var clientConnection1 = client1.ConnectTo(_localhost, _port))
 			using (var clientConnection2 = client2.ConnectTo(_localhost, _port))
 			{
@@ -82,11 +78,23 @@ namespace RemoteExecution.IT
 			operationDispatcher.RegisterFor(LoggingProxy.For<IClientService>(new ClientService(baseValue)));
 
 			using (var client = (IClientEndpoint)new ClientEndpoint(_appId, operationDispatcher))
-			using (new MessageLoop(client))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
 				var remoteExecutor = new RemoteExecutor(clientConnection);
 				Assert.That(remoteExecutor.Create<IRemoteService>().ExecuteChainedMethod(), Is.EqualTo(baseValue * 2));
+			}
+		}
+
+		[Test]
+		public void ShouldThrowExceptionFromRemoteOperation()
+		{
+			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
+			using (var clientConnection = client.ConnectTo(_localhost, _port))
+			{
+				var remoteService = new RemoteExecutor(clientConnection).Create<IRemoteService>();
+
+				var ex = Assert.Throws<MyException>(remoteService.ThrowException);
+				Assert.That(ex.Message,Is.EqualTo("test"));
 			}
 		}
 	}

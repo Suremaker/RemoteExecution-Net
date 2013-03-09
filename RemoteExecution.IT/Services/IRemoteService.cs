@@ -5,5 +5,6 @@
 		int GetConnectionId();
 		int ExecuteChainedMethod();
 		string Hello();
+		void ThrowException();
 	}
 }

@@ -3,7 +3,7 @@ using System;
 namespace RemoteExecution.Messaging
 {
 	[Serializable]
-	public class Response : IMessage
+	public class Response : IResponse
 	{
 		public object Value { get; set; }
 

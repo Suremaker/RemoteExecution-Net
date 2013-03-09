@@ -27,5 +27,18 @@ namespace RemoteExecution.IT.Services
 		{
 			return "world";
 		}
+
+		public void ThrowException()
+		{
+			throw new MyException("test");
+		}
+	}
+
+	public class MyException : Exception
+	{
+		public MyException(string message)
+			: base(message)
+		{
+		}
 	}
 }
