@@ -4,6 +4,10 @@ Remote Execution project changelog
 Version 1.0.2:
 ----------------
 + modified RemoteExecutor class to be a non-static class and extracted IRemoteExecutor interface
++ changed Networking.Client to Endpoints.ClientEndpoint
++ changed Networking.Server to Endpoints.ServerEndpoint
++ introduced Endpoints.Processing.MessageLoop
++ moved OperationDispatcher from ServerEndpoint to each INetworkConnection, so each connection can have own set of operations
 
 Version 1.0.1:
 ----------------
