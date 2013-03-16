@@ -7,14 +7,14 @@ namespace RemoteExecution.Remoting
 {
     internal class RemoteCallInterceptor : IMethodInterceptor
     {
-        private readonly IMessageSender _endpoint;
+        private readonly IMessageChannel _channel;
         private readonly string _interfaceName;
         private readonly IOperationDispatcher _operationDispatcher;
 
-        public RemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageSender endpoint, string interfaceName)
+        public RemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageChannel channel, string interfaceName)
         {
             _operationDispatcher = operationDispatcher;
-            _endpoint = endpoint;
+            _channel = channel;
             _interfaceName = interfaceName;
         }
 
@@ -22,17 +22,17 @@ namespace RemoteExecution.Remoting
 
         public object Invoke(IMethodInvocation invocation)
         {
-            var handler = new ResponseHandler();
+            var handler = new ResponseHandler(_channel);
 
-            _operationDispatcher.AddHandler(handler);
+            _operationDispatcher.RegisterResponseHandler(handler);
             try
             {
-                _endpoint.Send(new Request(handler.Id, _interfaceName, invocation.Method.Name, invocation.Arguments));
+                _channel.Send(new Request(handler.Id, _interfaceName, invocation.Method.Name, invocation.Arguments));
                 handler.Wait();
             }
             finally
             {
-                _operationDispatcher.RemoveHandler(handler);
+                _operationDispatcher.UnregisterResponseHandler(handler);
             }
             return handler.GetValue();
         }

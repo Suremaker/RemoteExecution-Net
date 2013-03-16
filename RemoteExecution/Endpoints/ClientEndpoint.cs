@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Threading;
 using Lidgren.Network;
 using RemoteExecution.Dispatching;
@@ -8,7 +9,6 @@ namespace RemoteExecution.Endpoints
 	public class ClientEndpoint : LidgrenEndpoint, IClientEndpoint
 	{
 		private readonly IOperationDispatcher _operationDispatcher;
-		private LidgrenNetworkConnection _connection;
 
 		public ClientEndpoint(string applicationId, IOperationDispatcher operationDispatcher)
 			: base(new NetClient(new NetPeerConfiguration(applicationId)))
@@ -19,23 +19,23 @@ namespace RemoteExecution.Endpoints
 		public INetworkConnection ConnectTo(string host, ushort port)
 		{
 			Start();
-			return _connection = OpenConnection(host, port);
+			OpenConnection(host, port);
+			return Connections.Single();
 		}
 
-		private LidgrenNetworkConnection OpenConnection(string host, ushort port)
+		private void OpenConnection(string host, ushort port)
 		{
 			NetConnection conn = Peer.Connect(host, port);
 			while (conn.Status != NetConnectionStatus.Connected && conn.Status != NetConnectionStatus.Disconnected)
 				Thread.Sleep(150);
 			if (conn.Status == NetConnectionStatus.Disconnected)
 				throw new IOException("Connection closed.");
-			return new LidgrenNetworkConnection(conn,_operationDispatcher);
 		}
 
-
-		protected override void HandleData(NetIncomingMessage message)
+		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
 		{
-			_connection.HandleIncomingMessage(message);
+			connection.OperationDispatcher = _operationDispatcher;
+			return true;
 		}
 	}
 }

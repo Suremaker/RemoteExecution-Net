@@ -1,11 +1,19 @@
 Remote Execution project changelog
 ---------------------------------------------------
 
+Version 1.0.4:
+----------------
++ NotConnectedException is now thrown if message is sent using closed connection.
++ OperationAbortedException is now thrown if connection has been closed before response is received.
++ IOperationDispatcher method names have been changed to distinguish handlers for requests and responses
++ DispatchAbortResponses method has been added to IOperationDispatcher, allowing to abort all pending operations for given channel
++ added IConfigurableNetworkConnection with settable OperationDispatcher
++ renamed IMessageSender to IMessageChannel
+
 Version 1.0.3:
 ----------------
 + used MessageLoop internally in LindgrenEndpoint (so it is not needed to use it directly in code)
 + fixed issue with serialization problem of thrown exceptions (Now, only the exception type and message is preserved - call stack is not).
-
 
 Version 1.0.2:
 ----------------

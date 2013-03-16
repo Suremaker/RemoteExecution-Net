@@ -1,4 +1,5 @@
 ﻿using System;
+using RemoteExecution.Endpoints;
 
 namespace RemoteExecution.IT.Services
 {
@@ -6,11 +7,13 @@ namespace RemoteExecution.IT.Services
 	{
 		private readonly int _connectionId;
 		private readonly IClientService _clientService;
+		private readonly INetworkConnection _clientConnection;
 
-		public RemoteService(int connectionId, IClientService clientService)
+		public RemoteService(int connectionId, IClientService clientService, INetworkConnection clientConnection)
 		{
 			_connectionId = connectionId;
 			_clientService = clientService;
+			_clientConnection = clientConnection;
 		}
 
 		public int GetConnectionId()
@@ -31,6 +34,11 @@ namespace RemoteExecution.IT.Services
 		public void ThrowException()
 		{
 			throw new MyException("test");
+		}
+
+		public void CloseConnectionOnServerSide()
+		{
+			_clientConnection.Dispose();
 		}
 	}
 

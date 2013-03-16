@@ -6,5 +6,6 @@
 		int ExecuteChainedMethod();
 		string Hello();
 		void ThrowException();
+		void CloseConnectionOnServerSide();
 	}
 }

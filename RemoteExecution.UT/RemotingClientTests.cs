@@ -30,7 +30,7 @@ namespace RemoteExecution.UT
 		private ICalculator _subject;
 		private IOperationDispatcher _operationDispatcher;
 		private MockNetworkConnection _connection;
-		private IHandler _currentHandler;
+		private IResponseHandler _currentHandler;
 		private RemoteExecutor _remoteExecutor;
 
 		private void AsyncTest(Action action)
@@ -63,21 +63,21 @@ namespace RemoteExecution.UT
 
 		private void BindMessageLoopback(object value)
 		{
-			_operationDispatcher.Stub(d => d.AddHandler(null)).IgnoreArguments().WhenCalled(UpdateCurrentHandler);
+			_operationDispatcher.Stub(d => d.RegisterResponseHandler(null)).IgnoreArguments().WhenCalled(UpdateCurrentHandler);
 
 			_connection.OnMessageSend = m => _currentHandler.Handle(new Response(m.CorrelationId, value), _connection);
 		}
 
 		private void BindThrowMessageLoopback(Exception value)
 		{
-			_operationDispatcher.Stub(d => d.AddHandler(null)).IgnoreArguments().WhenCalled(UpdateCurrentHandler);
+			_operationDispatcher.Stub(d => d.RegisterResponseHandler(null)).IgnoreArguments().WhenCalled(UpdateCurrentHandler);
 
 			_connection.OnMessageSend = m => _currentHandler.Handle(new ExceptionResponse(m.CorrelationId, value.GetType(), value.Message), _connection);
 		}
 
 		private void UpdateCurrentHandler(MethodInvocation a)
 		{
-			_currentHandler = (IHandler)a.Arguments[0];
+			_currentHandler = (IResponseHandler)a.Arguments[0];
 		}
 
 		[Test]
@@ -91,15 +91,15 @@ namespace RemoteExecution.UT
 		{
 			BindMessageLoopback("8");
 			AsyncTest(() =>
-				{
-					_subject.Add(3, 5);
+			{
+				_subject.Add(3, 5);
 
-					Assert.That(_currentHandler, Is.Not.Null);
-					Request request = EnsureRequest();
-					Assert.That(_currentHandler.Id, Is.EqualTo(request.CorrelationId));
+				Assert.That(_currentHandler, Is.Not.Null);
+				Request request = EnsureRequest();
+				Assert.That(_currentHandler.Id, Is.EqualTo(request.CorrelationId));
 
-					_operationDispatcher.AssertWasCalled(d => d.RemoveHandler(_currentHandler));
-				});
+				_operationDispatcher.AssertWasCalled(d => d.UnregisterResponseHandler(_currentHandler));
+			});
 		}
 
 		[Test]

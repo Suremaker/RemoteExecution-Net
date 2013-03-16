@@ -4,7 +4,7 @@ using RemoteExecution.Messaging;
 
 namespace RemoteExecution.Endpoints
 {
-	public interface INetworkConnection:IMessageSender,IDisposable
+	public interface INetworkConnection : IMessageChannel, IDisposable
 	{
 		bool IsOpen { get; }
 		IOperationDispatcher OperationDispatcher { get; }

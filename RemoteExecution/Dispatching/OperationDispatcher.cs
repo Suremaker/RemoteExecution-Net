@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using RemoteExecution.Handling;
 using RemoteExecution.Messaging;
 
@@ -11,39 +12,52 @@ namespace RemoteExecution.Dispatching
 
 		#region IOperationDispatcher Members
 
-		public void RegisterFor<TInterface>(TInterface handler)
+		public void RegisterRequestHandler<TInterface>(TInterface handler)
 		{
-			RegisterFor(typeof(TInterface), handler);
+			RegisterRequestHandler(typeof(TInterface), handler);
 		}
 
-		public void AddHandler(IHandler handler)
+		public void RegisterResponseHandler(IResponseHandler handler)
+		{
+			RegisterHandler(handler);
+		}
+
+		private void RegisterHandler(IHandler handler)
 		{
 			_handlers.AddOrUpdate(handler.Id, k => handler, (k, v) => handler);
 		}
 
-		public void RemoveHandler(IHandler handler)
+		public void UnregisterResponseHandler(IResponseHandler handler)
 		{
-			_handlers.TryRemove(handler.Id, out handler);
+			IHandler hnd;
+			_handlers.TryRemove(handler.Id, out hnd);
 		}
 
-		public void Unregister<TInterface>()
+		public void DispatchAbortResponses(IMessageChannel originChannel, string message)
+		{
+			var handlers = _handlers.Values.OfType<IResponseHandler>().Where(h => h.TargetChannel == originChannel).ToArray();
+			foreach (var responseHandler in handlers)
+				responseHandler.Handle(new ExceptionResponse(responseHandler.Id, typeof(OperationAbortedException), message), originChannel);
+		}
+
+		public void UnregisterRequestHandler<TInterface>()
 		{
 			IHandler handler;
 			_handlers.TryRemove(typeof(TInterface).Name, out handler);
 		}
 
-		public void Dispatch(IMessage msg, IMessageSender messageSender)
+		public void Dispatch(IMessage msg, IMessageChannel originChannel)
 		{
 			IHandler handler;
 			if (_handlers.TryGetValue(msg.GroupId, out handler))
-				handler.Handle(msg, messageSender);
+				handler.Handle(msg, originChannel);
 			else
-				HandleUndefinedType(msg, messageSender);
+				HandleUndefinedType(msg, originChannel);
 		}
 
 		#endregion
 
-		public void RegisterFor(Type interfaceType, object handler)
+		public void RegisterRequestHandler(Type interfaceType, object handler)
 		{
 			if (!interfaceType.IsInstanceOfType(handler))
 				throw new ArgumentException(
@@ -52,15 +66,15 @@ namespace RemoteExecution.Dispatching
 						handler.GetType().Name,
 						interfaceType.Name));
 
-			AddHandler(new RequestHandler(interfaceType.Name, handler));
+			RegisterHandler(new RequestHandler(interfaceType.Name, handler));
 		}
 
-		private void HandleUndefinedType(IMessage msg, IMessageSender messageSender)
+		private void HandleUndefinedType(IMessage msg, IMessageChannel messageChannel)
 		{
 			if (!(msg is Request))
 				return;
 			string message = string.Format("No handler is defined for {0} type.", msg.GroupId);
-			messageSender.Send(new ExceptionResponse(msg.CorrelationId, typeof(InvalidOperationException), message));
+			messageChannel.Send(new ExceptionResponse(msg.CorrelationId, typeof(InvalidOperationException), message));
 		}
 	}
 }

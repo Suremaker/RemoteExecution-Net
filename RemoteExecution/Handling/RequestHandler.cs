@@ -21,15 +21,15 @@ namespace RemoteExecution.Handling
 
 		public string Id { get; private set; }
 
-		public void Handle(IMessage msg, IMessageSender messageSender)
+		public void Handle(IMessage msg, IMessageChannel messageChannel)
 		{
 			try
 			{
-				messageSender.Send(new Response(msg.CorrelationId, Execute((Request)msg)));
+				messageChannel.Send(new Response(msg.CorrelationId, Execute((Request)msg)));
 			}
 			catch (Exception e)
 			{
-				messageSender.Send(new ExceptionResponse(msg.CorrelationId, e.GetType(), e.Message));
+				messageChannel.Send(new ExceptionResponse(msg.CorrelationId, e.GetType(), e.Message));
 			}
 		}
 

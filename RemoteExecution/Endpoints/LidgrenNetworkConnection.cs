@@ -5,7 +5,7 @@ using RemoteExecution.Serialization;
 
 namespace RemoteExecution.Endpoints
 {
-	internal class LidgrenNetworkConnection : INetworkConnection
+	internal class LidgrenNetworkConnection : IConfigurableNetworkConnection
 	{
 		private static readonly MessageSerializer _serializer = new MessageSerializer();
 		private readonly NetConnection _connection;
@@ -22,7 +22,7 @@ namespace RemoteExecution.Endpoints
 		}
 
 		public bool IsOpen { get { return _connection.Status == NetConnectionStatus.Connected; } }
-		public IOperationDispatcher OperationDispatcher { get; private set; }
+		public IOperationDispatcher OperationDispatcher { get; set; }
 
 		public void HandleIncomingMessage(NetIncomingMessage message)
 		{
@@ -31,6 +31,8 @@ namespace RemoteExecution.Endpoints
 
 		public void Send(IMessage message)
 		{
+			if (!IsOpen)
+				throw new NotConnectedException("Network connection is not opened.");
 			_connection.Peer.SendMessage(CreateOutgoingMessage(message), _connection, NetDeliveryMethod.ReliableUnordered, 0);
 		}
 

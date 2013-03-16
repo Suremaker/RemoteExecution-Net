@@ -51,10 +51,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dispatching\IOperationDispatcher.cs" />
+    <Compile Include="Dispatching\OperationAbortedException.cs" />
     <Compile Include="Dispatching\OperationDispatcher.cs" />
+    <Compile Include="Endpoints\IConfigurableNetworkConnection.cs" />
+    <Compile Include="Endpoints\NotConnectedException.cs" />
+    <Compile Include="Handling\IResponseHandler.cs" />
     <Compile Include="Messaging\ExceptionResponse.cs" />
     <Compile Include="Messaging\IMessage.cs" />
-    <Compile Include="Messaging\IMessageSender.cs" />
+    <Compile Include="Messaging\IMessageChannel.cs" />
     <Compile Include="Handling\IHandler.cs" />
     <Compile Include="Handling\RequestHandler.cs" />
     <Compile Include="Handling\ResponseHandler.cs" />

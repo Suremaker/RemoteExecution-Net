@@ -12,12 +12,12 @@ namespace RemoteExecution.IT
 			ActiveConnections=new List<INetworkConnection>();
 		}
 
-		protected override bool HandleNewConnection(INetworkConnection connection)
+		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
 		{
 			ActiveConnections.Add(connection);
 			
-			var remoteService = new RemoteService(ActiveConnections.Count,new RemoteExecutor(connection).Create<IClientService>());
-			connection.OperationDispatcher.RegisterFor(LoggingProxy.For<IRemoteService>(remoteService));
+			var remoteService = new RemoteService(ActiveConnections.Count,new RemoteExecutor(connection).Create<IClientService>(),connection);
+			connection.OperationDispatcher.RegisterRequestHandler(LoggingProxy.For<IRemoteService>(remoteService));
 			
 			return true;
 		}

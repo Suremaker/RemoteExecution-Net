@@ -4,13 +4,14 @@ using RemoteExecution.Messaging;
 
 namespace RemoteExecution.Handling
 {
-	internal class ResponseHandler : IHandler
+	internal class ResponseHandler : IResponseHandler
 	{
 		private readonly ManualResetEventSlim _resetEvent = new ManualResetEventSlim(false);
 		private IResponse _response;
 
-		public ResponseHandler()
+		public ResponseHandler(IMessageChannel targetChannel)
 		{
+			TargetChannel = targetChannel;
 			Id = Guid.NewGuid().ToString();
 		}
 
@@ -18,7 +19,7 @@ namespace RemoteExecution.Handling
 
 		public string Id { get; private set; }
 
-		public void Handle(IMessage msg, IMessageSender messageSender)
+		public void Handle(IMessage msg, IMessageChannel messageChannel)
 		{
 			_response = ((IResponse)msg);
 			_resetEvent.Set();
@@ -35,5 +36,7 @@ namespace RemoteExecution.Handling
 		{
 			_resetEvent.Wait();
 		}
+
+		public IMessageChannel TargetChannel { get; private set; }
 	}
 }

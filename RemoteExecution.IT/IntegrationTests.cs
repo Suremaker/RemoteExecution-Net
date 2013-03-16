@@ -75,7 +75,7 @@ namespace RemoteExecution.IT
 		{
 			const int baseValue = 32;
 			var operationDispatcher = new OperationDispatcher();
-			operationDispatcher.RegisterFor(LoggingProxy.For<IClientService>(new ClientService(baseValue)));
+			operationDispatcher.RegisterRequestHandler(LoggingProxy.For<IClientService>(new ClientService(baseValue)));
 
 			using (var client = (IClientEndpoint)new ClientEndpoint(_appId, operationDispatcher))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
@@ -94,7 +94,34 @@ namespace RemoteExecution.IT
 				var remoteService = new RemoteExecutor(clientConnection).Create<IRemoteService>();
 
 				var ex = Assert.Throws<MyException>(remoteService.ThrowException);
-				Assert.That(ex.Message,Is.EqualTo("test"));
+				Assert.That(ex.Message, Is.EqualTo("test"));
+			}
+		}
+
+		[Test]
+		public void ShouldThrowExceptionIfRemoteOperationIsCalledOnClosedConnection()
+		{
+			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
+			using (var clientConnection = client.ConnectTo(_localhost, _port))
+			{
+				var remoteService = new RemoteExecutor(clientConnection).Create<IRemoteService>();
+				_serverEndpoint.Dispose();
+				Thread.Sleep(100);
+				var ex = Assert.Throws<NotConnectedException>(() => remoteService.Hello());
+				Assert.That(ex.Message, Is.EqualTo("Network connection is not opened."));
+			}
+		}
+
+		[Test]
+		public void ShouldThrowExceptionIfConnectionIsClosedDuringRemoteOperationCall()
+		{
+			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
+			using (var clientConnection = client.ConnectTo(_localhost, _port))
+			{
+				var remoteService = new RemoteExecutor(clientConnection).Create<IRemoteService>();
+
+				var ex = Assert.Throws<OperationAbortedException>(remoteService.CloseConnectionOnServerSide);
+				Assert.That(ex.Message, Is.EqualTo("Network connection has been closed."));
 			}
 		}
 	}

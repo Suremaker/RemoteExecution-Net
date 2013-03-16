@@ -32,8 +32,8 @@ namespace RemoteExecution.UT
 		[Test]
 		public void ShouldDispatchOperations()
 		{
-			_subject.RegisterFor(typeof(IGreeter), new Greeter());
-			_subject.RegisterFor(typeof(ICalculator), new Calculator());
+			_subject.RegisterRequestHandler(typeof(IGreeter), new Greeter());
+			_subject.RegisterRequestHandler(typeof(ICalculator), new Calculator());
 
 			_subject.Dispatch(new Request("1", "ICalculator", "Add", new object[] { 2, 3 }), _networkConnection);
 			_subject.Dispatch(new Request("2", "IGreeter", "Hello", new object[] { "Jack" }), _networkConnection);
@@ -44,14 +44,14 @@ namespace RemoteExecution.UT
 		[Test]
 		public void ShouldNotAllowToRegisterHandlerIfItDoesNotImplementSpecifiedInterface()
 		{
-			var ex = Assert.Throws<ArgumentException>(() => _subject.RegisterFor(typeof(ICalculator), new Greeter()));
+			var ex = Assert.Throws<ArgumentException>(() => _subject.RegisterRequestHandler(typeof(ICalculator), new Greeter()));
 			Assert.That(ex.Message, Is.StringStarting("Unable to register Greeter handler: it does not implement ICalculator interface."));
 		}
 
 		[Test]
 		public void ShouldPassHandlerExceptions()
 		{
-			_subject.RegisterFor(typeof(ICalculator), new Calculator());
+			_subject.RegisterRequestHandler(typeof(ICalculator), new Calculator());
 
 			_subject.Dispatch(new Request("1", "ICalculator", "Subtract", new object[] { 3, 2 }), _networkConnection);
 			var ex = Assert.Throws<ArgumentException>(() => GetResult<Exception>("1"));
@@ -69,7 +69,7 @@ namespace RemoteExecution.UT
 		[Test]
 		public void ShouldPassInvalidOperationExceptionIfNoOperationIsDefinedInHandler()
 		{
-			_subject.RegisterFor(typeof(ICalculator), new Calculator());
+			_subject.RegisterRequestHandler(typeof(ICalculator), new Calculator());
 			_subject.Dispatch(new Request("1", "ICalculator", "Add", new object[] { null, 3.14, "test" }), _networkConnection);
 
 			var ex = Assert.Throws<InvalidOperationException>(() => GetResult<Exception>("1"));
