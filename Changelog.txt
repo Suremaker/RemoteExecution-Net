@@ -7,6 +7,7 @@ Version 1.0.5:
 + exposed ClientEndpoint Connection property
 + added ctor with default OperationDispatcher to ClientEndpoint
 + removed INetworkEndpoint and hidden MessageLoop class
++ increased MessageLoop performance
 
 Version 1.0.4:
 ----------------

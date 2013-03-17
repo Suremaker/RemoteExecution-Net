@@ -11,7 +11,7 @@ namespace RemoteExecution.Endpoints.Processing
 		private readonly NetPeer _peer;
 		private readonly Action<NetIncomingMessage> _handleMessage;
 		private readonly Thread _thread;
-		private bool _shouldStop;
+		private readonly SemaphoreSlim _semaphore;
 
 		public MessageLoop(NetPeer peer, Action<NetIncomingMessage> handleMessage)
 		{
@@ -19,7 +19,7 @@ namespace RemoteExecution.Endpoints.Processing
 			_handleMessage = handleMessage;
 			_thread = new Thread(Run) { Name = "Message loop", IsBackground = true };
 
-			_shouldStop = false;
+			_semaphore = new SemaphoreSlim(0);
 			_thread.Start();
 		}
 
@@ -27,8 +27,7 @@ namespace RemoteExecution.Endpoints.Processing
 		{
 			SetSynchronizationContext();
 			_peer.RegisterReceivedCallback(MessageReady);
-			while (!_shouldStop)
-				Thread.Sleep(500);
+			_semaphore.Wait();
 			_peer.UnregisterReceivedCallback(MessageReady);
 		}
 
@@ -43,14 +42,15 @@ namespace RemoteExecution.Endpoints.Processing
 		private void MessageReady(object obj)
 		{
 			var msg = _peer.ReadMessage();
-			if(msg!=null)
+			if (msg != null)
 				Task.Factory.StartNew(() => _handleMessage(msg));
 		}
 
 		public void Dispose()
 		{
-			_shouldStop = true;
+			_semaphore.Release();
 			_thread.Join();
+			_semaphore.Dispose();
 		}
 	}
 }
