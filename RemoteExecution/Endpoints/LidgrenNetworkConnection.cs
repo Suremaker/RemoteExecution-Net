@@ -1,4 +1,6 @@
-﻿using Lidgren.Network;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Lidgren.Network;
 using RemoteExecution.Dispatching;
 using RemoteExecution.Messaging;
 using RemoteExecution.Serialization;
@@ -7,6 +9,7 @@ namespace RemoteExecution.Endpoints
 {
 	internal class LidgrenNetworkConnection : IConfigurableNetworkConnection
 	{
+		private static readonly IEnumerable<NetConnectionStatus> _validConnectionStatus = new[] { NetConnectionStatus.Connected, NetConnectionStatus.RespondedConnect };
 		private static readonly MessageSerializer _serializer = new MessageSerializer();
 		private readonly NetConnection _connection;
 
@@ -21,7 +24,7 @@ namespace RemoteExecution.Endpoints
 			_connection.Disconnect("Connection disposed");
 		}
 
-		public bool IsOpen { get { return _connection.Status == NetConnectionStatus.Connected; } }
+		public bool IsOpen { get { return _validConnectionStatus.Contains(_connection.Status); } }
 		public IOperationDispatcher OperationDispatcher { get; set; }
 
 		public void HandleIncomingMessage(NetIncomingMessage message)

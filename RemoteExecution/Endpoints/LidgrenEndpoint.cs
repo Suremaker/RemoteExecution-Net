@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lidgren.Network;
 using RemoteExecution.Dispatching;
@@ -8,7 +9,7 @@ namespace RemoteExecution.Endpoints
 {
 	public abstract class LidgrenEndpoint : INetworkEndpoint
 	{
-		private readonly IDictionary<NetConnection, LidgrenNetworkConnection> _connections = new Dictionary<NetConnection, LidgrenNetworkConnection>();
+		private readonly IDictionary<NetConnection, LidgrenNetworkConnection> _connections = new ConcurrentDictionary<NetConnection, LidgrenNetworkConnection>();
 		protected readonly NetPeer Peer;
 		private MessageLoop _messageLoop;
 

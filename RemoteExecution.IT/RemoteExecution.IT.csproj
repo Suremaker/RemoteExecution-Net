@@ -46,10 +46,13 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoadTests.cs" />
     <Compile Include="LoggingProxy.cs" />
     <Compile Include="IntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CalculatorService.cs" />
     <Compile Include="Services\ClientService.cs" />
+    <Compile Include="Services\ICalculatorService.cs" />
     <Compile Include="Services\IClientService.cs" />
     <Compile Include="Services\IRemoteService.cs" />
     <Compile Include="Services\RemoteService.cs" />

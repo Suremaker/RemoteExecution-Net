@@ -1,6 +1,12 @@
 Remote Execution project changelog
 ---------------------------------------------------
 
+Version 1.0.5:
+----------------
++ added load tests and stabilized framework
++ exposed ClientEndpoint Connection property
++ added ctor with default OperationDispatcher to ClientEndpoint
+
 Version 1.0.4:
 ----------------
 + NotConnectedException is now thrown if message is sent using closed connection.
