@@ -1,6 +1,8 @@
-﻿namespace RemoteExecution.Endpoints
+﻿using System;
+
+namespace RemoteExecution.Endpoints
 {
-	public interface IServerEndpoint : INetworkEndpoint
+	public interface IServerEndpoint : IDisposable
 	{
 		void StartListening();
 	}

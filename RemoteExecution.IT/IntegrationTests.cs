@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using RemoteExecution.Dispatching;
 using RemoteExecution.Endpoints;
-using RemoteExecution.Endpoints.Processing;
 using RemoteExecution.IT.Services;
 
 namespace RemoteExecution.IT
@@ -12,7 +11,6 @@ namespace RemoteExecution.IT
 	{
 		private TestableServerEndpoint _serverEndpoint;
 
-		private IMessageLoop _serverLoop;
 		private const int _maxConnections = 2;
 		private const ushort _port = 3232;
 		private const string _appId = "testAppId";
@@ -23,13 +21,11 @@ namespace RemoteExecution.IT
 		{
 			_serverEndpoint = new TestableServerEndpoint(_appId, _maxConnections, _port);
 			_serverEndpoint.StartListening();
-			_serverLoop = new MessageLoop(_serverEndpoint);
 		}
 
 		[TestFixtureTearDown]
 		public void TearDown()
 		{
-			_serverLoop.Dispose();
 			_serverEndpoint.Dispose();
 		}
 

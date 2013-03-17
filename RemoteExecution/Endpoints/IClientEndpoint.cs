@@ -1,6 +1,8 @@
-﻿namespace RemoteExecution.Endpoints
+﻿using System;
+
+namespace RemoteExecution.Endpoints
 {
-	public interface IClientEndpoint : INetworkEndpoint
+	public interface IClientEndpoint : IDisposable
 	{
 		INetworkConnection ConnectTo(string host, ushort port);		
 	}

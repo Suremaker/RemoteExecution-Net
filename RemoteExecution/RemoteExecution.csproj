@@ -68,9 +68,7 @@
     <Compile Include="Messaging\Response.cs" />
     <Compile Include="Endpoints\ClientEndpoint.cs" />
     <Compile Include="Endpoints\IClientEndpoint.cs" />
-    <Compile Include="Endpoints\Processing\IMessageLoop.cs" />
     <Compile Include="Endpoints\INetworkConnection.cs" />
-    <Compile Include="Endpoints\INetworkEndpoint.cs" />
     <Compile Include="Endpoints\IServerEndpoint.cs" />
     <Compile Include="Endpoints\LidgrenEndpoint.cs" />
     <Compile Include="Endpoints\Processing\MessageLoop.cs" />

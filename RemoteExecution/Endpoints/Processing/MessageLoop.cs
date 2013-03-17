@@ -1,17 +1,23 @@
-﻿using System.Threading;
+﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+using Lidgren.Network;
 
 namespace RemoteExecution.Endpoints.Processing
 {
-	public class MessageLoop : IMessageLoop
+	internal class MessageLoop
 	{
-		private readonly INetworkEndpoint _endpoint;
+		private readonly NetPeer _peer;
+		private readonly Action<NetIncomingMessage> _handleMessage;
 		private readonly Thread _thread;
 		private bool _shouldStop;
 
-		public MessageLoop(INetworkEndpoint endpoint)
+		public MessageLoop(NetPeer peer, Action<NetIncomingMessage> handleMessage)
 		{
-			_endpoint = endpoint;
-			_thread = new Thread(Run) { Name = "Message loop" };
+			_peer = peer;
+			_handleMessage = handleMessage;
+			_thread = new Thread(Run) { Name = "Message loop", IsBackground = true };
 
 			_shouldStop = false;
 			_thread.Start();
@@ -19,11 +25,26 @@ namespace RemoteExecution.Endpoints.Processing
 
 		private void Run()
 		{
+			SetSynchronizationContext();
+			_peer.RegisterReceivedCallback(MessageReady);
 			while (!_shouldStop)
-			{
-				if (!_endpoint.ProcessMessage())
-					Thread.Sleep(50);
-			}
+				Thread.Sleep(500);
+			_peer.UnregisterReceivedCallback(MessageReady);
+		}
+
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		private static void SetSynchronizationContext()
+		{
+			if (SynchronizationContext.Current != null)
+				return;
+			SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+		}
+
+		private void MessageReady(object obj)
+		{
+			var msg = _peer.ReadMessage();
+			if(msg!=null)
+				Task.Factory.StartNew(() => _handleMessage(msg));
 		}
 
 		public void Dispose()

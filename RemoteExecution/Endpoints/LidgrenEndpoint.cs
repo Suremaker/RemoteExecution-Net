@@ -1,13 +1,13 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Lidgren.Network;
 using RemoteExecution.Dispatching;
 using RemoteExecution.Endpoints.Processing;
 
 namespace RemoteExecution.Endpoints
 {
-	public abstract class LidgrenEndpoint : INetworkEndpoint
+	public abstract class LidgrenEndpoint : IDisposable
 	{
 		private readonly IDictionary<NetConnection, LidgrenNetworkConnection> _connections = new ConcurrentDictionary<NetConnection, LidgrenNetworkConnection>();
 		protected readonly NetPeer Peer;
@@ -17,14 +17,13 @@ namespace RemoteExecution.Endpoints
 
 		protected void Start()
 		{
-			_messageLoop = new MessageLoop(this);
+			_messageLoop = new MessageLoop(Peer, HandleMessage);
 			Peer.Start();
 		}
 
 		protected LidgrenEndpoint(NetPeer peer)
 		{
 			Peer = peer;
-			_messageLoop = new MessageLoop(this);
 		}
 
 		public void Dispose()
@@ -33,15 +32,6 @@ namespace RemoteExecution.Endpoints
 			if (_messageLoop != null)
 				_messageLoop.Dispose();
 			_messageLoop = null;
-		}
-
-		public bool ProcessMessage()
-		{
-			var msg = Peer.ReadMessage();
-			if (msg == null)
-				return false;
-			Task.Factory.StartNew(() => HandleMessage(msg));
-			return true;
 		}
 
 		protected abstract bool HandleNewConnection(IConfigurableNetworkConnection connection);
