@@ -92,8 +92,8 @@ namespace RemoteExecution.IT
 		[Test]
 		[TestCase(1, 100)]
 		[TestCase(10, 100)]
-		[TestCase(100, 100)]
-		[TestCase(200, 100)]
+		[TestCase(50, 100)]
+		[TestCase(50, 200)]
 		public void ShouldPerformAllOperationsWithOwnConnection(int threadsCount, int times)
 		{
 			var tasks = new List<TaskData>();

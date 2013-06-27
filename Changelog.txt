@@ -1,6 +1,10 @@
 Remote Execution project changelog
 ---------------------------------------------------
 
+Version 1.0.6:
+----------------
++ refactored RemoteCallInterceptor
+
 Version 1.0.5:
 ----------------
 + added load tests and stabilized framework

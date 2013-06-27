@@ -32,7 +32,7 @@ namespace RemoteExecution.Handling
 			return _response.Value;
 		}
 
-		public void Wait()
+		public void WaitForResponse()
 		{
 			_resetEvent.Wait();
 		}

@@ -5,38 +5,43 @@ using RemoteExecution.Messaging;
 
 namespace RemoteExecution.Remoting
 {
-    internal class RemoteCallInterceptor : IMethodInterceptor
-    {
-        private readonly IMessageChannel _channel;
-        private readonly string _interfaceName;
-        private readonly IOperationDispatcher _operationDispatcher;
+	internal class RemoteCallInterceptor : IMethodInterceptor
+	{
+		private readonly IMessageChannel _channel;
+		private readonly string _interfaceName;
+		private readonly IOperationDispatcher _operationDispatcher;
 
-        public RemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageChannel channel, string interfaceName)
-        {
-            _operationDispatcher = operationDispatcher;
-            _channel = channel;
-            _interfaceName = interfaceName;
-        }
+		public RemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageChannel channel, string interfaceName)
+		{
+			_operationDispatcher = operationDispatcher;
+			_channel = channel;
+			_interfaceName = interfaceName;
+		}
 
-        #region IMethodInterceptor Members
+		#region IMethodInterceptor Members
 
-        public object Invoke(IMethodInvocation invocation)
-        {
-            var handler = new ResponseHandler(_channel);
+		public object Invoke(IMethodInvocation invocation)
+		{
+			var handler = CreateResponseHandler();
 
-            _operationDispatcher.RegisterResponseHandler(handler);
-            try
-            {
-                _channel.Send(new Request(handler.Id, _interfaceName, invocation.Method.Name, invocation.Arguments));
-                handler.Wait();
-            }
-            finally
-            {
-                _operationDispatcher.UnregisterResponseHandler(handler);
-            }
-            return handler.GetValue();
-        }
+			_operationDispatcher.RegisterResponseHandler(handler);
+			try
+			{
+				_channel.Send(new Request(handler.Id, _interfaceName, invocation.Method.Name, invocation.Arguments));
+				handler.WaitForResponse();
+			}
+			finally
+			{
+				_operationDispatcher.UnregisterResponseHandler(handler);
+			}
+			return handler.GetValue();
+		}
 
-        #endregion
-    }
+		protected virtual IResponseHandler CreateResponseHandler()
+		{
+			return new ResponseHandler(_channel);
+		}
+
+		#endregion
+	}
 }
