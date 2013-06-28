@@ -10,11 +10,11 @@ namespace RemoteExecution.Handling
 		private readonly object _handler;
 		private readonly Type _type;
 
-		public RequestHandler(string id, object handler)
+		public RequestHandler(Type interfaceType, object handler)
 		{
-			Id = id;
+			Id = interfaceType.Name;
 			_handler = handler;
-			_type = handler.GetType();
+			_type = interfaceType;
 		}
 
 		#region IHandler Members
@@ -22,6 +22,26 @@ namespace RemoteExecution.Handling
 		public string Id { get; private set; }
 
 		public void Handle(IMessage msg, IMessageChannel messageChannel)
+		{
+			if (msg.CorrelationId != null)
+				ExecuteWithResponse(msg, messageChannel);
+			else
+				ExecuteWithoutResponse(msg);
+		}
+
+		private void ExecuteWithoutResponse(IMessage msg)
+		{
+			try
+			{
+				Execute((Request)msg);
+			}
+			catch (Exception)
+			{
+
+			}
+		}
+
+		private void ExecuteWithResponse(IMessage msg, IMessageChannel messageChannel)
 		{
 			try
 			{

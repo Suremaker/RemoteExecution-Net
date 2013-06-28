@@ -63,6 +63,7 @@
     <Compile Include="RemoteCallInterceptorTests.cs" />
     <Compile Include="RemotingClientConcurrentTests.cs" />
     <Compile Include="RemotingClientTests.cs" />
+    <Compile Include="RequestHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

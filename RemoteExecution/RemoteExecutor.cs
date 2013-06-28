@@ -15,7 +15,12 @@ namespace RemoteExecution
 
 		public T Create<T>()
 		{
-			var factory = new ProxyFactory(typeof(T), new RemoteCallInterceptor(_networkConnection.OperationDispatcher, _networkConnection, typeof(T).Name));
+			return Create<T>(ExecutionMode.AlwaysWaitForResponse);
+		}
+
+		public T Create<T>(ExecutionMode executionMode)
+		{
+			var factory = new ProxyFactory(typeof(T), new RemoteCallInterceptor(_networkConnection.OperationDispatcher, _networkConnection, typeof(T).Name, executionMode));
 			return (T)factory.GetProxy();
 		}
 	}

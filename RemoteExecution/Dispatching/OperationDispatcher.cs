@@ -66,7 +66,7 @@ namespace RemoteExecution.Dispatching
 						handler.GetType().Name,
 						interfaceType.Name));
 
-			RegisterHandler(new RequestHandler(interfaceType.Name, handler));
+			RegisterHandler(new RequestHandler(interfaceType, handler));
 		}
 
 		private void HandleUndefinedType(IMessage msg, IMessageChannel messageChannel)

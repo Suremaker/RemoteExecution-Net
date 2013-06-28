@@ -16,8 +16,8 @@ namespace RemoteExecution.UT
 		{
 			private readonly IResponseHandler _responseHandler;
 
-			public TestableRemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageChannel channel, IResponseHandler responseHandler, string interfaceName)
-				: base(operationDispatcher, channel, interfaceName)
+			public TestableRemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageChannel channel, IResponseHandler responseHandler, string interfaceName, ExecutionMode executionMode)
+				: base(operationDispatcher, channel, interfaceName, executionMode)
 			{
 				_responseHandler = responseHandler;
 			}
@@ -31,13 +31,12 @@ namespace RemoteExecution.UT
 		public interface ITestInterface
 		{
 			string Hello(int x);
+			void Notify(string text);
 		}
 
-		private TestableRemoteCallInterceptor _subject;
 		private IOperationDispatcher _dispatcher;
 		private IMessageChannel _channel;
 		private IResponseHandler _responseHandler;
-		private ITestInterface _invocationHelper;
 		private MockRepository _repository;
 		private const string _handlerId = "handlerID";
 		private const string _interfaceName = "testInterface";
@@ -49,8 +48,12 @@ namespace RemoteExecution.UT
 			_dispatcher = _repository.DynamicMock<IOperationDispatcher>();
 			_channel = _repository.DynamicMock<IMessageChannel>();
 			_responseHandler = _repository.DynamicMock<IResponseHandler>();
-			_subject = new TestableRemoteCallInterceptor(_dispatcher, _channel, _responseHandler, _interfaceName);
-			_invocationHelper = (ITestInterface)new ProxyFactory(typeof(ITestInterface), _subject).GetProxy();
+		}
+
+		private ITestInterface GetInvocationHelper(ExecutionMode executionMode = ExecutionMode.AlwaysWaitForResponse)
+		{
+			var subject = new TestableRemoteCallInterceptor(_dispatcher, _channel, _responseHandler, _interfaceName, executionMode);
+			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
 		}
 
 		[Test]
@@ -65,8 +68,30 @@ namespace RemoteExecution.UT
 				Expect.Call(() => _responseHandler.GetValue());
 			}
 			_repository.ReplayAll();
-			_invocationHelper.Hello(5);
+			GetInvocationHelper().Hello(5);
 			_repository.VerifyAll();
+		}
+
+		[Test]
+		public void Should_not_wait_for_response_if_void_method_is_called_in_no_wait_mode()
+		{
+			_repository.ReplayAll();
+			GetInvocationHelper(ExecutionMode.NoWaitForVoidMethods).Notify("text");
+
+			_channel.AssertWasCalled(ch => ch.Send(Arg<IMessage>.Is.Anything));
+			_dispatcher.AssertWasNotCalled(d => d.RegisterResponseHandler(_responseHandler));
+			_responseHandler.AssertWasNotCalled(h => h.WaitForResponse());
+		}
+
+		[Test]
+		public void Should_wait_for_response_if_void_method_is_called()
+		{
+			_repository.ReplayAll();
+			GetInvocationHelper().Notify("text");
+
+			_channel.AssertWasCalled(ch => ch.Send(Arg<IMessage>.Is.Anything));
+			_dispatcher.AssertWasCalled(d => d.RegisterResponseHandler(_responseHandler));
+			_responseHandler.AssertWasCalled(h => h.WaitForResponse());
 		}
 
 		[Test]
@@ -74,7 +99,7 @@ namespace RemoteExecution.UT
 		{
 			Expect.Call(_responseHandler.Id).Return(_handlerId);
 			_repository.ReplayAll();
-			_invocationHelper.Hello(5);
+			GetInvocationHelper().Hello(5);
 			_channel.AssertWasCalled(ch => ch.Send(Arg<IMessage>.Matches(m => m.CorrelationId == _handlerId)));
 		}
 
@@ -85,11 +110,11 @@ namespace RemoteExecution.UT
 			_repository.ReplayAll();
 
 			const int methodArg = 5;
-			_invocationHelper.Hello(methodArg);
+			GetInvocationHelper().Hello(methodArg);
 
-			_channel.AssertWasCalled(ch => ch.Send(Arg<Request>.Matches(m => 
-				m.Args.SequenceEqual(new object[] { methodArg }) && 
-				m.OperationName == "Hello" && 
+			_channel.AssertWasCalled(ch => ch.Send(Arg<Request>.Matches(m =>
+				m.Args.SequenceEqual(new object[] { methodArg }) &&
+				m.OperationName == "Hello" &&
 				m.GroupId == _interfaceName)));
 		}
 	}
