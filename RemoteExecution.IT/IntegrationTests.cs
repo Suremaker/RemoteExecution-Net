@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.Dispatching;
@@ -13,7 +15,7 @@ namespace RemoteExecution.IT
 	{
 		private TestableServerEndpoint _serverEndpoint;
 
-		private const int _maxConnections = 2;
+		private const int _maxConnections = 10;
 		private const ushort _port = 3232;
 		private const string _appId = "testAppId";
 		private const string _localhost = "localhost";
@@ -115,7 +117,7 @@ namespace RemoteExecution.IT
 			using (var client = (IClientEndpoint)new ClientEndpoint(_appId, operationDispatcher))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
-				var remoteService = LoggingProxy.For(new RemoteExecutor(clientConnection).Create<IRemoteService>(OneWayMethodExcecution.Asynchronized), "CLIENT");
+				var remoteService = LoggingProxy.For(new RemoteExecutor(clientConnection).Create<IRemoteService>(NoResultMethodExecution.OneWay), "CLIENT");
 				var sleepTime = TimeSpan.FromSeconds(1);
 
 				var watch = new Stopwatch();
@@ -168,6 +170,43 @@ namespace RemoteExecution.IT
 				var ex = Assert.Throws<OperationAbortedException>(remoteService.CloseConnectionOnServerSide);
 				Assert.That(ex.Message, Is.EqualTo("Network connection has been closed."));
 			}
+		}
+
+		[Test]
+		public void ShouldServerBroadcastMessage()
+		{
+			var clients = CreateClients(_maxConnections);
+			try
+			{
+				const int expectedNumber = 55;
+
+				new RemoteExecutor(clients[0].Item1.Connection).Create<IRemoteService>().Broadcast(expectedNumber);
+				Thread.Sleep(1000);
+				Assert.That(clients.Count(c => c.Item2.ReceivedNumber == expectedNumber), Is.EqualTo(clients.Count));
+
+			}
+			finally
+			{
+				foreach (var client in clients)
+					client.Item1.Dispose();
+			}
+		}
+
+		private List<Tuple<ClientEndpoint, BroadcastService>> CreateClients(int count)
+		{
+			var clients = new List<Tuple<ClientEndpoint, BroadcastService>>();
+			for (int i = 0; i < count; ++i)
+			{
+				var operationDispatcher = new OperationDispatcher();
+				var broadcastService = new BroadcastService();
+				operationDispatcher.RegisterRequestHandler(LoggingProxy.For<IBroadcastService>(broadcastService, "CLIENT SERVICE"));
+				var client = new ClientEndpoint(_appId, operationDispatcher);
+
+				clients.Add(new Tuple<ClientEndpoint, BroadcastService>(client, broadcastService));
+
+				client.ConnectTo(_localhost, _port);
+			}
+			return clients;
 		}
 	}
 }

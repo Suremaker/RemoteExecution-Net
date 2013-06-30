@@ -6,31 +6,20 @@ using RemoteExecution.Messaging;
 
 namespace RemoteExecution.Remoting
 {
-	internal class RemoteCallInterceptor : IMethodInterceptor
+	internal class TwoWayRemoteCallInterceptor : IMethodInterceptor
 	{
 		private readonly IMessageChannel _channel;
 		private readonly string _interfaceName;
-		private readonly OneWayMethodExcecution _oneWayMethodExcecution;
 		private readonly IOperationDispatcher _operationDispatcher;
 
-		public RemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageChannel channel, string interfaceName, OneWayMethodExcecution oneWayMethodExcecution)
+		public TwoWayRemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageChannel channel, string interfaceName)
 		{
 			_operationDispatcher = operationDispatcher;
 			_channel = channel;
 			_interfaceName = interfaceName;
-			_oneWayMethodExcecution = oneWayMethodExcecution;
 		}
-
-		#region IMethodInterceptor Members
 
 		public object Invoke(IMethodInvocation invocation)
-		{
-			if (_oneWayMethodExcecution == OneWayMethodExcecution.Asynchronized && invocation.Method.ReturnType == typeof(void))
-				return InvokeNoWait(invocation);
-			return InvokeWithWait(invocation);
-		}
-
-		private object InvokeWithWait(IMethodInvocation invocation)
 		{
 			var handler = CreateResponseHandler();
 
@@ -47,15 +36,50 @@ namespace RemoteExecution.Remoting
 			return handler.GetValue();
 		}
 
-		private object InvokeNoWait(IMethodInvocation invocation)
+		protected virtual IResponseHandler CreateResponseHandler()
+		{
+			return new ResponseHandler(_channel);
+		}
+	}
+
+	internal class OneWayRemoteCallInterceptor : IMethodInterceptor
+	{
+		private readonly IMessageChannel _channel;
+		private readonly string _interfaceName;
+
+		public OneWayRemoteCallInterceptor(IMessageChannel channel, string interfaceName)
+		{
+			_channel = channel;
+			_interfaceName = interfaceName;
+		}
+
+		public object Invoke(IMethodInvocation invocation)
 		{
 			_channel.Send(new Request(Guid.NewGuid().ToString(), _interfaceName, invocation.Method.Name, invocation.Arguments, false));
 			return null;
 		}
+	}
 
-		protected virtual IResponseHandler CreateResponseHandler()
+	internal class RemoteCallInterceptor : IMethodInterceptor
+	{
+		private readonly IMethodInterceptor _oneWayInterceptor;
+		private readonly IMethodInterceptor _twoWayInterceptor;
+		private readonly NoResultMethodExecution _noResultMethodExecution;
+
+		public RemoteCallInterceptor(IMethodInterceptor oneWayInterceptor, IMethodInterceptor twoWayInterceptor, NoResultMethodExecution noResultMethodExecution)
 		{
-			return new ResponseHandler(_channel);
+			_oneWayInterceptor = oneWayInterceptor;
+			_twoWayInterceptor = twoWayInterceptor;
+			_noResultMethodExecution = noResultMethodExecution;
+		}
+
+		#region IMethodInterceptor Members
+
+		public object Invoke(IMethodInvocation invocation)
+		{
+			if (_noResultMethodExecution == NoResultMethodExecution.OneWay && invocation.Method.ReturnType == typeof(void))
+				return _oneWayInterceptor.Invoke(invocation);
+			return _twoWayInterceptor.Invoke(invocation);
 		}
 
 		#endregion

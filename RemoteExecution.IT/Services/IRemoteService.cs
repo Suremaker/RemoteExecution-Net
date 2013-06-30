@@ -10,5 +10,6 @@ namespace RemoteExecution.IT.Services
 		void ThrowException();
 		void CloseConnectionOnServerSide();
 		void Sleep(TimeSpan timeSpan);
+		void Broadcast(int number);
 	}
 }

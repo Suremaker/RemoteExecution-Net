@@ -4,7 +4,10 @@ Remote Execution project changelog
 Version 1.0.6:
 ----------------
 + refactored RemoteCallInterceptor
-+ added IRemoteExecutor.Create() overload with OneWayMethodExcecution allowing to no waiting for response if method returns void
++ added IRemoteExecutor.Create() overload with NoResultMethodExecution allowing to waiting (TwoWay) or no waiting (OneWay) for response if method returns void
++ introduced BroadcastRemoteExecutor allowing to broadcast OneWay operations to all clients (can be used only on server side)
++ extended IServerEndpoint to return BroadcastChannel
++ refactored code and adjusted names
 
 Version 1.0.5:
 ----------------

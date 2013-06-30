@@ -50,12 +50,16 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BroadcastRemoteExecutor.cs" />
     <Compile Include="Dispatching\IOperationDispatcher.cs" />
     <Compile Include="Dispatching\OperationAbortedException.cs" />
     <Compile Include="Dispatching\OperationDispatcher.cs" />
     <Compile Include="Endpoints\IConfigurableNetworkConnection.cs" />
+    <Compile Include="Endpoints\LindgrenBroadcastChannel.cs" />
     <Compile Include="Endpoints\NotConnectedException.cs" />
-    <Compile Include="OneWayMethodExcecution.cs" />
+    <Compile Include="IBroadcastRemoteExecutor.cs" />
+    <Compile Include="Messaging\IBroadcastChannel.cs" />
+    <Compile Include="NoResultMethodExecution.cs" />
     <Compile Include="Handling\IResponseHandler.cs" />
     <Compile Include="Messaging\ExceptionResponse.cs" />
     <Compile Include="Messaging\IMessage.cs" />

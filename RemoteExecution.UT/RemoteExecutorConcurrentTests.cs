@@ -9,7 +9,7 @@ using RemoteExecution.UT.Helpers;
 namespace RemoteExecution.UT
 {
 	[TestFixture]
-	public class RemotingClientConcurrentTests
+	public class RemoteExecutorConcurrentTests
 	{
 		#region Setup/Teardown
 

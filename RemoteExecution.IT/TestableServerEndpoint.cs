@@ -4,19 +4,24 @@ using RemoteExecution.IT.Services;
 
 namespace RemoteExecution.IT
 {
-	class TestableServerEndpoint:ServerEndpoint
+	class TestableServerEndpoint : ServerEndpoint
 	{
 		public List<INetworkConnection> ActiveConnections { get; private set; }
-		public TestableServerEndpoint(string appId, int maxConnections, ushort port) : base(appId, maxConnections, port)
+		public TestableServerEndpoint(string appId, int maxConnections, ushort port)
+			: base(appId, maxConnections, port)
 		{
-			ActiveConnections=new List<INetworkConnection>();
+			ActiveConnections = new List<INetworkConnection>();
 		}
 
 		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
 		{
 			ActiveConnections.Add(connection);
-			
-			var remoteService = new RemoteService(ActiveConnections.Count,new RemoteExecutor(connection).Create<IClientService>(),connection);
+
+			var remoteService = new RemoteService(
+				ActiveConnections.Count,
+				new RemoteExecutor(connection).Create<IClientService>(),
+				new BroadcastRemoteExecutor(BroadcastChannel).Create<IBroadcastService>(),
+				connection);
 			connection.OperationDispatcher.RegisterRequestHandler(LoggingProxy.For<IRemoteService>(remoteService, "SERVER"));
 			connection.OperationDispatcher.RegisterRequestHandler<ICalculatorService>(new CalculatorService());
 			return true;

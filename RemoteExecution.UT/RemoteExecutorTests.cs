@@ -11,7 +11,7 @@ using Rhino.Mocks;
 namespace RemoteExecution.UT
 {
 	[TestFixture]
-	public class RemotingClientTests
+	public class RemoteExecutorTests
 	{
 		#region Setup/Teardown
 

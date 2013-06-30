@@ -8,12 +8,14 @@ namespace RemoteExecution.IT.Services
 	{
 		private readonly int _connectionId;
 		private readonly IClientService _clientService;
+		private readonly IBroadcastService _broadcastService;
 		private readonly INetworkConnection _clientConnection;
 
-		public RemoteService(int connectionId, IClientService clientService, INetworkConnection clientConnection)
+		public RemoteService(int connectionId, IClientService clientService, IBroadcastService broadcastService, INetworkConnection clientConnection)
 		{
 			_connectionId = connectionId;
 			_clientService = clientService;
+			_broadcastService = broadcastService;
 			_clientConnection = clientConnection;
 		}
 
@@ -46,6 +48,11 @@ namespace RemoteExecution.IT.Services
 		{
 			Thread.Sleep(timeSpan);
 			_clientService.Callback(timeSpan);
+		}
+
+		public void Broadcast(int number)
+		{
+			_broadcastService.SetNumber(number);
 		}
 	}
 
