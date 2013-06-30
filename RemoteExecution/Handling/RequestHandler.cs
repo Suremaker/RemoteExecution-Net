@@ -23,17 +23,19 @@ namespace RemoteExecution.Handling
 
 		public void Handle(IMessage msg, IMessageChannel messageChannel)
 		{
-			if (msg.CorrelationId != null)
-				ExecuteWithResponse(msg, messageChannel);
+			var request = (Request)msg;
+
+			if (request.IsResponseExpected)
+				ExecuteWithResponse(request, messageChannel);
 			else
-				ExecuteWithoutResponse(msg);
+				ExecuteWithoutResponse(request);
 		}
 
-		private void ExecuteWithoutResponse(IMessage msg)
+		private void ExecuteWithoutResponse(Request msg)
 		{
 			try
 			{
-				Execute((Request)msg);
+				Execute(msg);
 			}
 			catch (Exception)
 			{
@@ -41,11 +43,11 @@ namespace RemoteExecution.Handling
 			}
 		}
 
-		private void ExecuteWithResponse(IMessage msg, IMessageChannel messageChannel)
+		private void ExecuteWithResponse(Request msg, IMessageChannel messageChannel)
 		{
 			try
 			{
-				messageChannel.Send(new Response(msg.CorrelationId, Execute((Request)msg)));
+				messageChannel.Send(new Response(msg.CorrelationId, Execute(msg)));
 			}
 			catch (Exception e)
 			{

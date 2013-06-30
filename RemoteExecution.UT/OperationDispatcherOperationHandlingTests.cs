@@ -35,8 +35,8 @@ namespace RemoteExecution.UT
 			_subject.RegisterRequestHandler(typeof(IGreeter), new Greeter());
 			_subject.RegisterRequestHandler(typeof(ICalculator), new Calculator());
 
-			_subject.Dispatch(new Request("1", "ICalculator", "Add", new object[] { 2, 3 }), _networkConnection);
-			_subject.Dispatch(new Request("2", "IGreeter", "Hello", new object[] { "Jack" }), _networkConnection);
+			_subject.Dispatch(new Request("1", "ICalculator", "Add", new object[] { 2, 3 }, true), _networkConnection);
+			_subject.Dispatch(new Request("2", "IGreeter", "Hello", new object[] { "Jack" }, true), _networkConnection);
 			Assert.That(GetResult<string>("1"), Is.EqualTo("5"));
 			Assert.That(GetResult<string>("2"), Is.EqualTo("Hello Jack"));
 		}
@@ -53,7 +53,7 @@ namespace RemoteExecution.UT
 		{
 			_subject.RegisterRequestHandler(typeof(ICalculator), new Calculator());
 
-			_subject.Dispatch(new Request("1", "ICalculator", "Subtract", new object[] { 3, 2 }), _networkConnection);
+			_subject.Dispatch(new Request("1", "ICalculator", "Subtract", new object[] { 3, 2 }, true), _networkConnection);
 			var ex = Assert.Throws<ArgumentException>(() => GetResult<Exception>("1"));
 			Assert.That(ex.Message, Is.EqualTo("test"));
 		}
@@ -61,7 +61,7 @@ namespace RemoteExecution.UT
 		[Test]
 		public void ShouldPassInvalidOperationExceptionIfNoHandlerIsRegistered()
 		{
-			_subject.Dispatch(new Request("1", "ICalculator", "Add", new object[] { 0, 1 }), _networkConnection);
+			_subject.Dispatch(new Request("1", "ICalculator", "Add", new object[] { 0, 1 }, true), _networkConnection);
 			var ex = Assert.Throws<InvalidOperationException>(() => GetResult<Exception>("1"));
 			Assert.That(ex.Message, Is.EqualTo("No handler is defined for ICalculator type."));
 		}
@@ -70,7 +70,7 @@ namespace RemoteExecution.UT
 		public void ShouldPassInvalidOperationExceptionIfNoOperationIsDefinedInHandler()
 		{
 			_subject.RegisterRequestHandler(typeof(ICalculator), new Calculator());
-			_subject.Dispatch(new Request("1", "ICalculator", "Add", new object[] { null, 3.14, "test" }), _networkConnection);
+			_subject.Dispatch(new Request("1", "ICalculator", "Add", new object[] { null, 3.14, "test" }, true), _networkConnection);
 
 			var ex = Assert.Throws<InvalidOperationException>(() => GetResult<Exception>("1"));
 			Assert.That(ex.Message, Is.EqualTo("Unable to call Add(null,Double,String) method on ICalculator handler: no matching method was found."));

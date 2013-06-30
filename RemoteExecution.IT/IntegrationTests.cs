@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Diagnostics;
+using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.Dispatching;
 using RemoteExecution.Endpoints;
@@ -71,13 +73,60 @@ namespace RemoteExecution.IT
 		{
 			const int baseValue = 32;
 			var operationDispatcher = new OperationDispatcher();
-			operationDispatcher.RegisterRequestHandler(LoggingProxy.For<IClientService>(new ClientService(baseValue)));
+			operationDispatcher.RegisterRequestHandler(LoggingProxy.For<IClientService>(new ClientService(baseValue), "CLIENT SERVICE"));
 
 			using (var client = (IClientEndpoint)new ClientEndpoint(_appId, operationDispatcher))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
 				var remoteExecutor = new RemoteExecutor(clientConnection);
 				Assert.That(remoteExecutor.Create<IRemoteService>().ExecuteChainedMethod(), Is.EqualTo(baseValue * 2));
+			}
+		}
+
+		[Test]
+		public void ShouldCallOneWayMethodSynchronouslyByDefault()
+		{
+			var operationDispatcher = new OperationDispatcher();
+			var clientService = new ClientService(33);
+			operationDispatcher.RegisterRequestHandler(LoggingProxy.For<IClientService>(clientService, "CLIENT SERVICE"));
+
+			using (var client = (IClientEndpoint)new ClientEndpoint(_appId, operationDispatcher))
+			using (var clientConnection = client.ConnectTo(_localhost, _port))
+			{
+				var remoteService = LoggingProxy.For(new RemoteExecutor(clientConnection).Create<IRemoteService>(), "CLIENT");
+				var sleepTime = TimeSpan.FromSeconds(1);
+
+				var watch = new Stopwatch();
+				watch.Start();
+				remoteService.Sleep(sleepTime);
+				watch.Stop();
+				Assert.That(watch.Elapsed, Is.GreaterThanOrEqualTo(sleepTime));
+				Assert.That(clientService.TimeSpan, Is.EqualTo(sleepTime));
+			}
+		}
+
+		[Test]
+		public void ShouldCallOneWayMethodAsynchronously()
+		{
+			var operationDispatcher = new OperationDispatcher();
+			var clientService = new ClientService(33);
+			operationDispatcher.RegisterRequestHandler(LoggingProxy.For<IClientService>(clientService, "CLIENT SERVICE"));
+
+			using (var client = (IClientEndpoint)new ClientEndpoint(_appId, operationDispatcher))
+			using (var clientConnection = client.ConnectTo(_localhost, _port))
+			{
+				var remoteService = LoggingProxy.For(new RemoteExecutor(clientConnection).Create<IRemoteService>(OneWayMethodExcecution.Asynchronized), "CLIENT");
+				var sleepTime = TimeSpan.FromSeconds(1);
+
+				var watch = new Stopwatch();
+				watch.Start();
+				remoteService.Sleep(sleepTime);
+				watch.Stop();
+				Assert.That(watch.Elapsed, Is.LessThan(sleepTime));
+				Assert.That(clientService.TimeSpan, Is.Not.EqualTo(sleepTime));
+
+				Thread.Sleep(sleepTime.Add(TimeSpan.FromMilliseconds(100)));
+				Assert.That(clientService.TimeSpan, Is.EqualTo(sleepTime));
 			}
 		}
 

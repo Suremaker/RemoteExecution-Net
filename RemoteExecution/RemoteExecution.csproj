@@ -55,7 +55,7 @@
     <Compile Include="Dispatching\OperationDispatcher.cs" />
     <Compile Include="Endpoints\IConfigurableNetworkConnection.cs" />
     <Compile Include="Endpoints\NotConnectedException.cs" />
-    <Compile Include="ExecutionMode.cs" />
+    <Compile Include="OneWayMethodExcecution.cs" />
     <Compile Include="Handling\IResponseHandler.cs" />
     <Compile Include="Messaging\ExceptionResponse.cs" />
     <Compile Include="Messaging\IMessage.cs" />

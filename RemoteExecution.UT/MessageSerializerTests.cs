@@ -31,7 +31,7 @@ namespace RemoteExecution.UT
 		[Test]
 		public void ShouldSerializeRequest()
 		{
-			var expected = new Request("1", "interface", "operation", new object[] { 1, 2, "string" });
+			var expected = new Request("1", "interface", "operation", new object[] { 1, 2, "string" }, true);
 			var actual = _serializer.Deserialize(_serializer.Serialize(expected));
 			Assert.That(actual, Is.TypeOf<Request>());
 			Assert.That(actual.GroupId, Is.EqualTo(expected.GroupId));
@@ -40,6 +40,7 @@ namespace RemoteExecution.UT
 			var actualRequest = (Request)actual;
 			Assert.That(actualRequest.Args.SequenceEqual(expected.Args));
 			Assert.That(actualRequest.OperationName, Is.EqualTo(expected.OperationName));
+			Assert.That(actualRequest.IsResponseExpected, Is.EqualTo(expected.IsResponseExpected));
 		}
 
 		[Test]

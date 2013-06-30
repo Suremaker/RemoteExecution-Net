@@ -1,3 +1,4 @@
+using System;
 using AopAlliance.Intercept;
 using RemoteExecution.Dispatching;
 using RemoteExecution.Handling;
@@ -9,22 +10,22 @@ namespace RemoteExecution.Remoting
 	{
 		private readonly IMessageChannel _channel;
 		private readonly string _interfaceName;
-		private readonly ExecutionMode _executionMode;
+		private readonly OneWayMethodExcecution _oneWayMethodExcecution;
 		private readonly IOperationDispatcher _operationDispatcher;
 
-		public RemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageChannel channel, string interfaceName, ExecutionMode executionMode)
+		public RemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageChannel channel, string interfaceName, OneWayMethodExcecution oneWayMethodExcecution)
 		{
 			_operationDispatcher = operationDispatcher;
 			_channel = channel;
 			_interfaceName = interfaceName;
-			_executionMode = executionMode;
+			_oneWayMethodExcecution = oneWayMethodExcecution;
 		}
 
 		#region IMethodInterceptor Members
 
 		public object Invoke(IMethodInvocation invocation)
 		{
-			if (_executionMode == ExecutionMode.NoWaitForVoidMethods && invocation.Method.ReturnType == typeof(void))
+			if (_oneWayMethodExcecution == OneWayMethodExcecution.Asynchronized && invocation.Method.ReturnType == typeof(void))
 				return InvokeNoWait(invocation);
 			return InvokeWithWait(invocation);
 		}
@@ -36,7 +37,7 @@ namespace RemoteExecution.Remoting
 			_operationDispatcher.RegisterResponseHandler(handler);
 			try
 			{
-				_channel.Send(new Request(handler.Id, _interfaceName, invocation.Method.Name, invocation.Arguments));
+				_channel.Send(new Request(handler.Id, _interfaceName, invocation.Method.Name, invocation.Arguments, true));
 				handler.WaitForResponse();
 			}
 			finally
@@ -48,7 +49,7 @@ namespace RemoteExecution.Remoting
 
 		private object InvokeNoWait(IMethodInvocation invocation)
 		{
-			_channel.Send(new Request(null, _interfaceName, invocation.Method.Name, invocation.Arguments));
+			_channel.Send(new Request(Guid.NewGuid().ToString(), _interfaceName, invocation.Method.Name, invocation.Arguments, false));
 			return null;
 		}
 

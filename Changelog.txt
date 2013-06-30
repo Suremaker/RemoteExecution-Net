@@ -4,7 +4,7 @@ Remote Execution project changelog
 Version 1.0.6:
 ----------------
 + refactored RemoteCallInterceptor
-+ added IRemoteExecutor.Create() overload with ExecutionMode allowing to no waiting for response if method returns void
++ added IRemoteExecutor.Create() overload with OneWayMethodExcecution allowing to no waiting for response if method returns void
 
 Version 1.0.5:
 ----------------

@@ -1,4 +1,6 @@
-﻿namespace RemoteExecution.IT.Services
+﻿using System;
+
+namespace RemoteExecution.IT.Services
 {
 	public interface IRemoteService
 	{
@@ -7,5 +9,6 @@
 		string Hello();
 		void ThrowException();
 		void CloseConnectionOnServerSide();
+		void Sleep(TimeSpan timeSpan);
 	}
 }

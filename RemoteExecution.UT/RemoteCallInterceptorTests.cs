@@ -16,8 +16,8 @@ namespace RemoteExecution.UT
 		{
 			private readonly IResponseHandler _responseHandler;
 
-			public TestableRemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageChannel channel, IResponseHandler responseHandler, string interfaceName, ExecutionMode executionMode)
-				: base(operationDispatcher, channel, interfaceName, executionMode)
+			public TestableRemoteCallInterceptor(IOperationDispatcher operationDispatcher, IMessageChannel channel, IResponseHandler responseHandler, string interfaceName, OneWayMethodExcecution oneWayMethodExcecution)
+				: base(operationDispatcher, channel, interfaceName, oneWayMethodExcecution)
 			{
 				_responseHandler = responseHandler;
 			}
@@ -50,14 +50,16 @@ namespace RemoteExecution.UT
 			_responseHandler = _repository.DynamicMock<IResponseHandler>();
 		}
 
-		private ITestInterface GetInvocationHelper(ExecutionMode executionMode = ExecutionMode.AlwaysWaitForResponse)
+		private ITestInterface GetInvocationHelper(OneWayMethodExcecution oneWayMethodExcecution = OneWayMethodExcecution.Synchronized)
 		{
-			var subject = new TestableRemoteCallInterceptor(_dispatcher, _channel, _responseHandler, _interfaceName, executionMode);
+			var subject = new TestableRemoteCallInterceptor(_dispatcher, _channel, _responseHandler, _interfaceName, oneWayMethodExcecution);
 			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
 		}
 
 		[Test]
-		public void Should_execute_operations_in_order()
+		[TestCase(OneWayMethodExcecution.Asynchronized)]
+		[TestCase(OneWayMethodExcecution.Synchronized)]
+		public void Should_always_execute_two_way_operations_synchronously(OneWayMethodExcecution executionMode)
 		{
 			using (_repository.Ordered())
 			{
@@ -68,15 +70,15 @@ namespace RemoteExecution.UT
 				Expect.Call(() => _responseHandler.GetValue());
 			}
 			_repository.ReplayAll();
-			GetInvocationHelper().Hello(5);
+			GetInvocationHelper(executionMode).Hello(5);
 			_repository.VerifyAll();
 		}
 
 		[Test]
-		public void Should_not_wait_for_response_if_void_method_is_called_in_no_wait_mode()
+		public void Should_not_wait_for_response_if_one_way_method_is_called_in_async_mode()
 		{
 			_repository.ReplayAll();
-			GetInvocationHelper(ExecutionMode.NoWaitForVoidMethods).Notify("text");
+			GetInvocationHelper(OneWayMethodExcecution.Asynchronized).Notify("text");
 
 			_channel.AssertWasCalled(ch => ch.Send(Arg<IMessage>.Is.Anything));
 			_dispatcher.AssertWasNotCalled(d => d.RegisterResponseHandler(_responseHandler));
@@ -84,7 +86,7 @@ namespace RemoteExecution.UT
 		}
 
 		[Test]
-		public void Should_wait_for_response_if_void_method_is_called()
+		public void Should_wait_for_response_if_one_way_method_is_called_in_sync_mode()
 		{
 			_repository.ReplayAll();
 			GetInvocationHelper().Notify("text");

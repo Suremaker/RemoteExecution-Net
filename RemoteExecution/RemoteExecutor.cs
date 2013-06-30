@@ -15,12 +15,12 @@ namespace RemoteExecution
 
 		public T Create<T>()
 		{
-			return Create<T>(ExecutionMode.AlwaysWaitForResponse);
+			return Create<T>(OneWayMethodExcecution.Synchronized);
 		}
 
-		public T Create<T>(ExecutionMode executionMode)
+		public T Create<T>(OneWayMethodExcecution oneWayMethodExcecution)
 		{
-			var factory = new ProxyFactory(typeof(T), new RemoteCallInterceptor(_networkConnection.OperationDispatcher, _networkConnection, typeof(T).Name, executionMode));
+			var factory = new ProxyFactory(typeof(T), new RemoteCallInterceptor(_networkConnection.OperationDispatcher, _networkConnection, typeof(T).Name, oneWayMethodExcecution));
 			return (T)factory.GetProxy();
 		}
 	}

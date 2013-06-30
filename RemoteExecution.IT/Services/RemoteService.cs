@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using RemoteExecution.Endpoints;
 
 namespace RemoteExecution.IT.Services
@@ -39,6 +40,12 @@ namespace RemoteExecution.IT.Services
 		public void CloseConnectionOnServerSide()
 		{
 			_clientConnection.Dispose();
+		}
+
+		public void Sleep(TimeSpan timeSpan)
+		{
+			Thread.Sleep(timeSpan);
+			_clientService.Callback(timeSpan);
 		}
 	}
 

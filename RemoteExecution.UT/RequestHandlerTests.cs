@@ -27,48 +27,48 @@ namespace RemoteExecution.UT
 		}
 
 		[Test]
-		[TestCase("some id")]
-		[TestCase(null)]
-		public void Should_call_handler(string correlationId)
+		[TestCase(true)]
+		[TestCase(false)]
+		public void Should_call_handler(bool isResponseExpected)
 		{
-			var reqest = new Request { CorrelationId = correlationId, Args = new object[0], GroupId = "group", OperationName = "Foo" };
+			var reqest = new Request(Guid.NewGuid().ToString(), "group", "Foo", new object[0], isResponseExpected);
 			_subject.Handle(reqest, _messageChannel);
 			_handler.AssertWasCalled(h => h.Foo());
 		}
 
 		[Test]
-		public void Should_send_response_if_correlation_id_is_specified()
+		public void Should_send_response_if_is_expected()
 		{
-			const string expectedId = "some id";
-			var reqest = new Request { CorrelationId = expectedId, Args = new object[0], GroupId = "group", OperationName = "Foo" };
+			var correlationId = Guid.NewGuid().ToString();
+			var reqest = new Request(correlationId, "group", "Foo", new object[0], true);
 			_subject.Handle(reqest, _messageChannel);
-			_messageChannel.AssertWasCalled(ch => ch.Send(Arg<Response>.Matches(r => r.CorrelationId == expectedId)));
+			_messageChannel.AssertWasCalled(ch => ch.Send(Arg<Response>.Matches(r => r.CorrelationId == correlationId)));
 		}
 
 		[Test]
-		public void Should_send_response_for_exception_if_correlation_id_is_specified()
+		public void Should_send_response_for_exception_if_response_is_expected()
 		{
 			_handler.Stub(h => h.Foo()).Throw(new Exception());
 
-			const string expectedId = "some id";
-			var reqest = new Request { CorrelationId = expectedId, Args = new object[0], GroupId = "group", OperationName = "Foo" };
+			var correlationId = Guid.NewGuid().ToString();
+			var reqest = new Request(correlationId, "group", "Foo", new object[0], true);
 			_subject.Handle(reqest, _messageChannel);
-			_messageChannel.AssertWasCalled(ch => ch.Send(Arg<ExceptionResponse>.Matches(r => r.CorrelationId == expectedId)));
+			_messageChannel.AssertWasCalled(ch => ch.Send(Arg<ExceptionResponse>.Matches(r => r.CorrelationId == correlationId)));
 		}
 
 		[Test]
-		public void Should_not_send_response_if_correlation_id_is_not_specified()
+		public void Should_not_send_response_if_is_not_expected()
 		{
-			var reqest = new Request { CorrelationId = null, Args = new object[0], GroupId = "group", OperationName = "Foo" };
+			var reqest = new Request(Guid.NewGuid().ToString(), "group", "Foo", new object[0], false);
 			_subject.Handle(reqest, _messageChannel);
 			_messageChannel.AssertWasNotCalled(ch => ch.Send(Arg<IResponse>.Is.Anything));
 		}
 
 		[Test]
-		public void Should_not_send_response_for_exception_if_correlation_id_is_not_specified()
+		public void Should_not_send_response_for_exception_if_is_not_expected()
 		{
 			_handler.Stub(h => h.Foo()).Throw(new Exception());
-			var reqest = new Request { CorrelationId = null, Args = new object[0], GroupId = "group", OperationName = "Foo" };
+			var reqest = new Request(Guid.NewGuid().ToString(), "group", "Foo", new object[0], false);
 			_subject.Handle(reqest, _messageChannel);
 			_messageChannel.AssertWasNotCalled(ch => ch.Send(Arg<IResponse>.Is.Anything));
 		}
