@@ -8,6 +8,7 @@ Version 1.0.6:
 + introduced BroadcastRemoteExecutor allowing to broadcast OneWay operations to all clients (can be used only on server side)
 + extended IServerEndpoint to return BroadcastChannel
 + refactored code and adjusted names
++ added example projects
 
 Version 1.0.5:
 ----------------
