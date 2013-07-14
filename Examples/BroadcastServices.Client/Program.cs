@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using BroadcastServices.Contracts;
+using Examples.Utils;
 using RemoteExecution;
 using RemoteExecution.Dispatching;
 using RemoteExecution.Endpoints;
@@ -12,15 +13,19 @@ namespace BroadcastServices.Client
 		static void Main(string[] args)
 		{
 			IOperationDispatcher callbackDispatcher = new OperationDispatcher();
-			callbackDispatcher.RegisterRequestHandler<IBroadcastService>(new BroadcastService());
+			IBroadcastService broadcastService = Aspects.WithTimeMeasure<IBroadcastService>(new BroadcastService());
+			callbackDispatcher.RegisterRequestHandler(broadcastService);
+
 			using (var client = new ClientEndpoint(Protocol.Id, callbackDispatcher))
 			using (var networkConnection = client.ConnectTo("localhost", 3135))
 			{
 				var remoteExecutor = new RemoteExecutor(networkConnection);
 
-				var userInfoService = remoteExecutor.Create<IUserInfoService>();
+				var userInfoService = Aspects.WithTimeMeasure(remoteExecutor.Create<IUserInfoService>());
+				var registrationService = Aspects.WithTimeMeasure(remoteExecutor.Create<IRegistrationService>());
+
 				GetUsers(userInfoService);
-				RegisterUser(remoteExecutor.Create<IRegistrationService>());
+				RegisterUser(registrationService);
 				GetUsers(userInfoService);
 
 				Console.WriteLine("Done. Press enter to exit.");
