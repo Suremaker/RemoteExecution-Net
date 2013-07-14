@@ -4,21 +4,21 @@ namespace StatefulServices.Server
 {
 	internal class RegistrationService : IRegistrationService
 	{
-		private readonly UserContext _userContext;
+		private readonly ClientContext _clientContext;
 
-		public RegistrationService(UserContext userContext)
+		public RegistrationService(ClientContext clientContext)
 		{
-			_userContext = userContext;
+			_clientContext = clientContext;
 		}
 
 		public void Register(string name)
 		{
-			_userContext.Name = name;
+			_clientContext.Name = name;
 		}
 
 		public string GetUserName()
 		{
-			return _userContext.Name;
+			return _clientContext.Name;
 		}
 	}
 }

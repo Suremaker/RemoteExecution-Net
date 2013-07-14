@@ -1,4 +1,5 @@
-﻿using Examples.Utils;
+﻿using System;
+using Examples.Utils;
 using OneWayMethodServices.Contracts;
 using RemoteExecution;
 using RemoteExecution.Endpoints;
@@ -15,8 +16,8 @@ namespace OneWayMethodServices.Server
 		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
 		{
 			var remoteExecutor = new RemoteExecutor(connection);
-			var twoWayCallback = Aspects.WithTimeMeasure(remoteExecutor.Create<IClientCallback>(NoResultMethodExecution.TwoWay));
-			var oneWayCallback = Aspects.WithTimeMeasure(remoteExecutor.Create<IClientCallback>(NoResultMethodExecution.OneWay));
+			var twoWayCallback = Aspects.WithTimeMeasure(remoteExecutor.Create<IClientCallback>(NoResultMethodExecution.TwoWay), ConsoleColor.DarkCyan);
+			var oneWayCallback = Aspects.WithTimeMeasure(remoteExecutor.Create<IClientCallback>(NoResultMethodExecution.OneWay), ConsoleColor.DarkCyan);
 			var longRunningOperation = Aspects.WithTimeMeasure<ILongRunningOperation>(new LongRunningOperation(twoWayCallback, oneWayCallback));
 
 			connection.OperationDispatcher.RegisterRequestHandler(longRunningOperation);

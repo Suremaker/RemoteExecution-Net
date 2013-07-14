@@ -12,7 +12,7 @@ namespace OneWayMethodServices.Client
 		static void Main(string[] args)
 		{
 			IOperationDispatcher callbackDispatcher = new OperationDispatcher();
-			callbackDispatcher.RegisterRequestHandler(Aspects.WithTimeMeasure<IClientCallback>(new ClientCallback()));
+			callbackDispatcher.RegisterRequestHandler(Aspects.WithTimeMeasure<IClientCallback>(new ClientCallback(), ConsoleColor.DarkCyan));
 
 			using (var client = new ClientEndpoint(Protocol.Id, callbackDispatcher))
 			using (var networkConnection = client.ConnectTo("localhost", 3134))

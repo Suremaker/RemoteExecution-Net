@@ -4,24 +4,24 @@ namespace BroadcastServices.Server
 {
 	internal class RegistrationService : IRegistrationService
 	{
-		private readonly UserContext _userContext;
+		private readonly ClientContext _clientContext;
 		private readonly IBroadcastService _broadcastService;
 
-		public RegistrationService(UserContext userContext, IBroadcastService broadcastService)
+		public RegistrationService(ClientContext clientContext, IBroadcastService broadcastService)
 		{
-			_userContext = userContext;
+			_clientContext = clientContext;
 			_broadcastService = broadcastService;
 		}
 
 		public void Register(string name)
 		{
-			_userContext.Name = name;
+			_clientContext.Name = name;
 			_broadcastService.UserRegistered(name);
 		}
 
 		public string GetUserName()
 		{
-			return _userContext.Name;
+			return _clientContext.Name;
 		}
 	}
 }

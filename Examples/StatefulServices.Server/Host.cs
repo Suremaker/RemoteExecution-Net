@@ -14,10 +14,10 @@ namespace StatefulServices.Server
 
 		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
 		{
-			var userContext = new UserContext();
-			_sharedContext.AddClient(connection, userContext);
-			connection.OperationDispatcher.RegisterRequestHandler<IRegistrationService>(new RegistrationService(userContext));
-			connection.OperationDispatcher.RegisterRequestHandler<IUserInfoService>(new UserInfoService(_sharedContext,userContext));
+			var clientContext = new ClientContext();
+			_sharedContext.AddClient(connection, clientContext);
+			connection.OperationDispatcher.RegisterRequestHandler<IRegistrationService>(new RegistrationService(clientContext));
+			connection.OperationDispatcher.RegisterRequestHandler<IUserInfoService>(new UserInfoService(_sharedContext, clientContext));
 			return true;
 		}
 

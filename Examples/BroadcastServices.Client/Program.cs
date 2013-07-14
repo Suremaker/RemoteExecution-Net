@@ -13,7 +13,7 @@ namespace BroadcastServices.Client
 		static void Main(string[] args)
 		{
 			IOperationDispatcher callbackDispatcher = new OperationDispatcher();
-			IBroadcastService broadcastService = Aspects.WithTimeMeasure<IBroadcastService>(new BroadcastService());
+			IBroadcastService broadcastService = Aspects.WithTimeMeasure<IBroadcastService>(new BroadcastService(), ConsoleColor.DarkCyan);
 			callbackDispatcher.RegisterRequestHandler(broadcastService);
 
 			using (var client = new ClientEndpoint(Protocol.Id, callbackDispatcher))

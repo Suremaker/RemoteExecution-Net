@@ -1,4 +1,5 @@
-﻿using BroadcastServices.Contracts;
+﻿using System;
+using BroadcastServices.Contracts;
 using Examples.Utils;
 using RemoteExecution;
 using RemoteExecution.Endpoints;
@@ -13,12 +14,12 @@ namespace BroadcastServices.Server
 		public Host(int maxConnections, ushort port)
 			: base(Protocol.Id, maxConnections, port)
 		{
-			_broadcastService = Aspects.WithTimeMeasure(new BroadcastRemoteExecutor(BroadcastChannel).Create<IBroadcastService>());
+			_broadcastService = Aspects.WithTimeMeasure(new BroadcastRemoteExecutor(BroadcastChannel).Create<IBroadcastService>(), ConsoleColor.DarkCyan);
 		}
 
 		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
 		{
-			var userContext = new UserContext();
+			var userContext = new ClientContext();
 			_sharedContext.AddClient(connection, userContext);
 
 			IRegistrationService registrationService = Aspects.WithTimeMeasure<IRegistrationService>(new RegistrationService(userContext, _broadcastService));

@@ -7,17 +7,17 @@ namespace BroadcastServices.Server
 	internal class UserInfoService : IUserInfoService
 	{
 		private readonly SharedContext _sharedContext;
-		private readonly UserContext _userContext;
+		private readonly ClientContext _clientContext;
 
-		public UserInfoService(SharedContext sharedContext, UserContext userContext)
+		public UserInfoService(SharedContext sharedContext, ClientContext clientContext)
 		{
 			_sharedContext = sharedContext;
-			_userContext = userContext;
+			_clientContext = clientContext;
 		}
 
 		public IEnumerable<string> GetRegisteredUsers()
 		{
-			if(!_userContext.IsRegistered)
+			if(!_clientContext.IsRegistered)
 				throw new UnauthorizedAccessException("User is not registered");
 			return _sharedContext.GetRegisteredClients();
 		}
