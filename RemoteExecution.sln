@@ -6,6 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Changelog.txt = Changelog.txt
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
+		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution", "RemoteExecution\RemoteExecution.csproj", "{A46D4206-7D05-4BF6-A30D-4D49A925323D}"

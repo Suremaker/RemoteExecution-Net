@@ -80,8 +80,10 @@
     <Compile Include="Endpoints\LidgrenNetworkConnection.cs" />
     <Compile Include="Endpoints\ServerEndpoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Remoting\OneWayRemoteCallInterceptor.cs" />
     <Compile Include="Remoting\RemoteCallInterceptor.cs" />
     <Compile Include="RemoteExecutor.cs" />
+    <Compile Include="Remoting\TwoWayRemoteCallInterceptor.cs" />
     <Compile Include="Serialization\MessageSerializer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,5 @@
+1.1.0:
+-------------------------------
++ reorganize Endpoints / Connections / RemoteExecutors in order to simplify usage
++ simplify usage of ServerEndpoint
++ add wiki page with tutorials and help
