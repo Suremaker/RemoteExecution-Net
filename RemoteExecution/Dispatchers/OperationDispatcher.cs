@@ -34,7 +34,7 @@ namespace RemoteExecution.Dispatchers
 			_handlers.TryRemove(handler.Id, out hnd);
 		}
 
-		public void DispatchAbortResponses(IMessageChannel originChannel, string message)
+		public void DispatchAbortResponsesFor(IMessageChannel originChannel, string message)
 		{
 			var handlers = _handlers.Values.OfType<IResponseHandler>().Where(h => h.TargetChannel == originChannel).ToArray();
 			foreach (var responseHandler in handlers)

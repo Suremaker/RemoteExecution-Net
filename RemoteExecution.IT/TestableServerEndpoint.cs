@@ -20,7 +20,7 @@ namespace RemoteExecution.IT
 			return new OperationDispatcher();
 		}
 
-		protected override bool HandleNewConnection(INetworkConnection connection)
+		protected override bool OnNewConnection(INetworkConnection connection)
 		{
 			ActiveConnections.Add(connection);
 

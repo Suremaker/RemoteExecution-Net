@@ -36,7 +36,7 @@ namespace RemoteExecution.Endpoints
 		}
 
 		protected abstract IOperationDispatcher GetDispatcherForNewConnection();
-		protected abstract bool HandleNewConnection(INetworkConnection connection);
+		protected virtual bool OnNewConnection(INetworkConnection connection) { return true; }
 		protected virtual void OnConnectionClose(INetworkConnection connection) { }
 
 		private void HandleClosedConnection(NetConnection connection)
@@ -52,7 +52,7 @@ namespace RemoteExecution.Endpoints
 		private void HandleNewConnection(NetConnection connection)
 		{
 			var conn = new LidgrenNetworkConnection(connection, GetDispatcherForNewConnection());
-			if (HandleNewConnection(conn))
+			if (OnNewConnection(conn))
 				_connections.Add(connection, conn);
 			else
 				conn.Dispose();

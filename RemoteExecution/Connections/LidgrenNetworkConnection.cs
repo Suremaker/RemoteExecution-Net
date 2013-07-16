@@ -18,7 +18,7 @@ namespace RemoteExecution.Connections
 
 		public void Dispose()
 		{
-			OperationDispatcher.DispatchAbortResponses(Channel, "Network connection has been closed.");
+			OperationDispatcher.DispatchAbortResponsesFor(Channel, "Network connection has been closed.");
 			Channel.Dispose();
 			Channel.Received -= DispatchMessage;
 		}

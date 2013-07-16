@@ -56,10 +56,5 @@ namespace RemoteExecution.Endpoints
 		{
 			return _operationDispatcher;
 		}
-
-		protected override bool HandleNewConnection(INetworkConnection connection)
-		{
-			return true;
-		}
 	}
 }
