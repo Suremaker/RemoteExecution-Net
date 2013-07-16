@@ -7,6 +7,12 @@ Version 1.1.0:
 + introduced IRequest
 + introduced IIncomingMessageChannel and IOutgoingMessageChannel
 + IBroadcastChannel: renamed ConnectionCount to ReceiverCount
++ modified RemoteExecutor to accept operation dispatcher and message channel instead of network connection
++ removed IConfigurableNetworkConnection
++ modified LidgrenEndpoint to use GetDispatcherForNewConnection() abstract method for creating operation dispatchers
++ splitted LidgrenNetworkConnection into connection and LidgrenMessageChannel
++ INetworkConnection no longer extends IMessageChannel and has RemoteExecutor property
++ IIncomingMessageChannel / IOutgoingMessageChannel have now IsOpen property
 
 Version 1.0.6:
 ----------------

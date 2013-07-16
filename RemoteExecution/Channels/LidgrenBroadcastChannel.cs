@@ -4,12 +4,12 @@ using RemoteExecution.Serialization;
 
 namespace RemoteExecution.Channels
 {
-	internal class LindgrenBroadcastChannel : IBroadcastChannel
+	internal class LidgrenBroadcastChannel : IBroadcastChannel
 	{
 		private static readonly MessageSerializer _serializer = new MessageSerializer();
 		private readonly NetServer _netServer;
 
-		public LindgrenBroadcastChannel(NetServer netServer)
+		public LidgrenBroadcastChannel(NetServer netServer)
 		{
 			_netServer = netServer;
 		}

@@ -24,7 +24,7 @@ namespace RemoteExecution.Handlers
 
 		public void Handle(IMessage msg, IMessageChannel messageChannel)
 		{
-			var request = (Request)msg;
+			var request = (IRequest)msg;
 
 			if (request.IsResponseExpected)
 				ExecuteWithResponse(request, messageChannel);
@@ -32,7 +32,7 @@ namespace RemoteExecution.Handlers
 				ExecuteWithoutResponse(request);
 		}
 
-		private void ExecuteWithoutResponse(Request msg)
+		private void ExecuteWithoutResponse(IRequest msg)
 		{
 			try
 			{
@@ -44,7 +44,7 @@ namespace RemoteExecution.Handlers
 			}
 		}
 
-		private void ExecuteWithResponse(Request msg, IOutgoingMessageChannel messageChannel)
+		private void ExecuteWithResponse(IRequest msg, IOutgoingMessageChannel messageChannel)
 		{
 			try
 			{
@@ -58,7 +58,7 @@ namespace RemoteExecution.Handlers
 
 		#endregion
 
-		private object Execute(Request request)
+		private object Execute(IRequest request)
 		{
 			try
 			{

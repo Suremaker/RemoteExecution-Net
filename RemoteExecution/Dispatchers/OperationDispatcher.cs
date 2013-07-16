@@ -72,7 +72,7 @@ namespace RemoteExecution.Dispatchers
 
 		private void HandleUndefinedType(IMessage msg, IMessageChannel messageChannel)
 		{
-			if (!(msg is Request))
+			if (!(msg is IRequest))
 				return;
 			string message = string.Format("No handler is defined for {0} type.", msg.GroupId);
 			messageChannel.Send(new ExceptionResponse(msg.CorrelationId, typeof(InvalidOperationException), message));

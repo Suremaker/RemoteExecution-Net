@@ -13,6 +13,7 @@ namespace RemoteExecution.Dispatchers
 
 		void RegisterResponseHandler(IResponseHandler handler);
 		void UnregisterResponseHandler(IResponseHandler handler);
+
 		void DispatchAbortResponses(IMessageChannel originChannel, string message);
 		void Dispatch(IMessage msg, IMessageChannel originChannel);
 	}

@@ -25,8 +25,8 @@ namespace RemoteExecution.Connections
 
 		public bool IsOpen { get { return Channel.IsOpen; } }
 		public IOperationDispatcher OperationDispatcher { get; set; }
-		public LidgrenMessageChannel Channel { get; private set; }
 		public IRemoteExecutor RemoteExecutor { get; private set; }
+		public LidgrenMessageChannel Channel { get; private set; }
 
 		public void DispatchMessage(IMessage message)
 		{

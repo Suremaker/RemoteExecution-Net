@@ -56,7 +56,7 @@
     <Compile Include="Dispatchers\IOperationDispatcher.cs" />
     <Compile Include="Dispatchers\OperationAbortedException.cs" />
     <Compile Include="Dispatchers\OperationDispatcher.cs" />
-    <Compile Include="Channels\LindgrenBroadcastChannel.cs" />
+    <Compile Include="Channels\LidgrenBroadcastChannel.cs" />
     <Compile Include="Connections\NotConnectedException.cs" />
     <Compile Include="IBroadcastRemoteExecutor.cs" />
     <Compile Include="Channels\IBroadcastChannel.cs" />

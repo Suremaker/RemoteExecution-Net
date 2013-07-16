@@ -15,7 +15,7 @@ namespace RemoteExecution.Endpoints
 		protected ServerEndpoint(string applicationId, int maxConnections, ushort port)
 			: base(new NetServer(new NetPeerConfiguration(applicationId) { MaximumConnections = maxConnections, Port = port }))
 		{
-			BroadcastChannel = new LindgrenBroadcastChannel((NetServer)Peer);
+			BroadcastChannel = new LidgrenBroadcastChannel((NetServer)Peer);
 		}
 	}
 }
