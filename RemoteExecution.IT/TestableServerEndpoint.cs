@@ -20,7 +20,7 @@ namespace RemoteExecution.IT
 			return new OperationDispatcher();
 		}
 
-		protected override bool OnNewConnection(INetworkConnection connection)
+		protected override void OnNewConnection(INetworkConnection connection)
 		{
 			ActiveConnections.Add(connection);
 
@@ -31,7 +31,6 @@ namespace RemoteExecution.IT
 				connection);
 			connection.OperationDispatcher.RegisterRequestHandler(LoggingProxy.For<IRemoteService>(remoteService, "SERVER"));
 			connection.OperationDispatcher.RegisterRequestHandler<ICalculatorService>(new CalculatorService());
-			return true;
 		}
 
 		protected override void OnConnectionClose(INetworkConnection connection)

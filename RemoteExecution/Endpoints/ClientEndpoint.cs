@@ -2,12 +2,14 @@
 using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints.Adapters;
+using RemoteExecution.Executors;
 
 namespace RemoteExecution.Endpoints
 {
 	public class ClientEndpoint : IClientEndpoint
 	{
 		private readonly IClientEndpointAdapter _endpointAdapter;
+		private INetworkConnection _connection;
 
 		public ClientEndpoint(string applicationId)
 			: this(applicationId, new OperationDispatcher())
@@ -15,23 +17,25 @@ namespace RemoteExecution.Endpoints
 		}
 
 		public ClientEndpoint(string applicationId, IOperationDispatcher operationDispatcher)
-			: this(new LidgrenClientEndpointAdapter(applicationId) { DispatcherCreator = () => operationDispatcher })
+			: this(new LidgrenClientEndpointAdapter(applicationId), operationDispatcher)
 		{
 		}
 
-		public ClientEndpoint(IClientEndpointAdapter endpointAdapter)
+		public ClientEndpoint(IClientEndpointAdapter endpointAdapter, IOperationDispatcher operationDispatcher)
 		{
 			_endpointAdapter = endpointAdapter;
+			_endpointAdapter.DispatcherCreator = () => operationDispatcher;
+			_endpointAdapter.NewConnectionHandler = connection => _connection = connection;
+			_endpointAdapter.ClosedConnectionHandler = connection => _connection = null;
 		}
 
 		public INetworkConnection Connection
 		{
 			get
 			{
-				var connection = _endpointAdapter.ActiveConnections.FirstOrDefault();
-				if (connection == null)
+				if (_connection == null)
 					throw new NotConnectedException("Network connection is not opened.");
-				return connection;
+				return _connection;
 			}
 		}
 
@@ -41,6 +45,8 @@ namespace RemoteExecution.Endpoints
 			_endpointAdapter.ConnectTo(host, port);
 			return Connection;
 		}
+
+		public IRemoteExecutor RemoteExecutor { get { return Connection.RemoteExecutor; } }
 
 		public void Dispose()
 		{

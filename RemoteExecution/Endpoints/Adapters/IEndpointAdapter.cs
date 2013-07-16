@@ -10,7 +10,7 @@ namespace RemoteExecution.Endpoints.Adapters
 		void StartListening();
 
 		Func<IOperationDispatcher> DispatcherCreator { set; }
-		Func<INetworkConnection, bool> NewConnectionHandler { set; }
+		Action<INetworkConnection> NewConnectionHandler { set; }
 		Action<INetworkConnection> ClosedConnectionHandler { set; }
 
 		IEnumerable<INetworkConnection> ActiveConnections { get; }

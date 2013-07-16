@@ -160,6 +160,16 @@ namespace RemoteExecution.IT
 		}
 
 		[Test]
+		public void ShouldThrowExceptionIfNotOpenedConnectionIsAccessedOnEndpoint()
+		{
+			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
+			{
+				var ex = Assert.Throws<NotConnectedException>(() => { var conn = client.Connection; });
+				Assert.That(ex.Message, Is.EqualTo("Network connection is not opened."));
+			}
+		}
+
+		[Test]
 		public void ShouldThrowExceptionIfConnectionIsClosedDuringRemoteOperationCall()
 		{
 			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))

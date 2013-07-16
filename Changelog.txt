@@ -16,6 +16,7 @@ Version 1.1.0:
 + added tests for OperationDispatcher, ExceptionResponse and ResponseHandler
 + refactored ClientEndpoint and ServerEndpoint to use adapters
 + simplified LidgrenEndpointAdapter
++ added RemoteExecutor property to IClientEndpoint
 
 Version 1.0.6:
 ----------------

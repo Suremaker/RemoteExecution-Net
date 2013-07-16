@@ -34,7 +34,7 @@ namespace RemoteExecution.Endpoints
 		}
 
 		protected abstract IOperationDispatcher GetDispatcherForNewConnection();
-		protected virtual bool OnNewConnection(INetworkConnection connection) { return true; }
+		protected virtual void OnNewConnection(INetworkConnection connection) { }
 		protected virtual void OnConnectionClose(INetworkConnection connection) { }
 	}
 }

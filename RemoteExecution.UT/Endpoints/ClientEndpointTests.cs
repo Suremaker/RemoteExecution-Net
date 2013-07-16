@@ -1,7 +1,10 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
 using RemoteExecution.Endpoints.Adapters;
+using RemoteExecution.Executors;
 using Rhino.Mocks;
 
 namespace RemoteExecution.UT.Endpoints
@@ -11,12 +14,24 @@ namespace RemoteExecution.UT.Endpoints
 	{
 		private ClientEndpoint _subject;
 		private IClientEndpointAdapter _endpointAdapter;
+		private IOperationDispatcher _operationDispatcher;
+		private Action<INetworkConnection> _newConnectionHandler;
 
 		[SetUp]
 		public void SetUp()
 		{
 			_endpointAdapter = MockRepository.GenerateMock<IClientEndpointAdapter>();
-			_subject = new ClientEndpoint(_endpointAdapter);
+			_operationDispatcher = MockRepository.GenerateMock<IOperationDispatcher>();
+
+			_newConnectionHandler = null;
+			_endpointAdapter.Stub(a => a.NewConnectionHandler = null).IgnoreArguments().WhenCalled(SetConnectionHandler);
+
+			_subject = new ClientEndpoint(_endpointAdapter, _operationDispatcher);
+		}
+
+		private void SetConnectionHandler(MethodInvocation mi)
+		{
+			_newConnectionHandler = (Action<INetworkConnection>)mi.Arguments[0];
 		}
 
 		[Test]
@@ -24,7 +39,7 @@ namespace RemoteExecution.UT.Endpoints
 		{
 			const string host = "localhost";
 			const ushort port = 5555;
-			StubActiveConnection();
+			StubConnectToReturnActiveConnection();
 
 			_subject.ConnectTo(host, port);
 			_endpointAdapter.AssertWasCalled(a => a.ConnectTo(host, port));
@@ -33,15 +48,27 @@ namespace RemoteExecution.UT.Endpoints
 		[Test]
 		public void Should_return_active_connection()
 		{
-			var connection = StubActiveConnection();
+			var connection = StubConnectToReturnActiveConnection();
 
+			_subject.ConnectTo("localhost", 5555);
 			Assert.That(_subject.Connection, Is.SameAs(connection));
 		}
 
-		private INetworkConnection StubActiveConnection()
+		[Test]
+		public void Should_return_remote_executor_of_opened_connection()
+		{
+			var remoteExecutor = MockRepository.GenerateMock<IRemoteExecutor>();
+			var connection = StubConnectToReturnActiveConnection();
+			connection.Stub(c => c.RemoteExecutor).Return(remoteExecutor);
+
+			_subject.ConnectTo("localhost", 5555);
+			Assert.That(_subject.RemoteExecutor, Is.SameAs(remoteExecutor));
+		}
+
+		private INetworkConnection StubConnectToReturnActiveConnection()
 		{
 			var connection = MockRepository.GenerateMock<INetworkConnection>();
-			_endpointAdapter.Stub(a => a.ActiveConnections).Return(new[] { connection });
+			_endpointAdapter.Stub(a => a.ConnectTo(Arg<string>.Is.Anything, Arg<ushort>.Is.Anything)).WhenCalled(inv => _newConnectionHandler(connection));
 			return connection;
 		}
 	}

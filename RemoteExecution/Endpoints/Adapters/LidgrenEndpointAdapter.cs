@@ -23,7 +23,7 @@ namespace RemoteExecution.Endpoints.Adapters
 		}
 
 		public Func<IOperationDispatcher> DispatcherCreator { set; private get; }
-		public Func<INetworkConnection, bool> NewConnectionHandler { set; private get; }
+		public Action<INetworkConnection> NewConnectionHandler { set; private get; }
 
 		public LidgrenEndpointAdapter(NetPeer peer)
 		{
@@ -31,7 +31,7 @@ namespace RemoteExecution.Endpoints.Adapters
 
 			ClosedConnectionHandler = connection => { };
 			DispatcherCreator = () => new OperationDispatcher();
-			NewConnectionHandler = connection => true;
+			NewConnectionHandler = connection => { };
 		}
 
 		public void Dispose()
@@ -57,9 +57,7 @@ namespace RemoteExecution.Endpoints.Adapters
 		{
 			var connection = new LidgrenNetworkConnection(netConnection, DispatcherCreator.Invoke());
 			netConnection.Tag = connection;
-
-			if (!NewConnectionHandler.Invoke(connection))
-				connection.Dispose();
+			NewConnectionHandler.Invoke(connection);
 		}
 
 		private void HandleMessage(NetIncomingMessage msg)
