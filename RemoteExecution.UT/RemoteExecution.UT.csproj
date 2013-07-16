@@ -53,12 +53,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Executors\BroadcastRemoteExecutorTests.cs" />
+    <Compile Include="Handlers\ResponseHandlerTests.cs" />
     <Compile Include="Helpers\Calculator.cs" />
     <Compile Include="Helpers\Greeter.cs" />
     <Compile Include="Helpers\ICalculator.cs" />
     <Compile Include="Helpers\IGreeter.cs" />
     <Compile Include="Helpers\INotifier.cs" />
     <Compile Include="Helpers\MockMessageChannel.cs" />
+    <Compile Include="Messages\ExceptionResponseTests.cs" />
     <Compile Include="Serialization\MessageSerializerTests.cs" />
     <Compile Include="Remoting\OneWayRemoteCallInterceptorTests.cs" />
     <Compile Include="Dispatchers\OperationDispatcherTests.cs" />

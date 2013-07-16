@@ -13,6 +13,7 @@ Version 1.1.0:
 + splitted LidgrenNetworkConnection into connection and LidgrenMessageChannel
 + INetworkConnection no longer extends IMessageChannel and has RemoteExecutor property
 + IIncomingMessageChannel / IOutgoingMessageChannel have now IsOpen property
++ added tests for OperationDispatcher, ExceptionResponse and ResponseHandler
 
 Version 1.0.6:
 ----------------

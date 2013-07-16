@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using RemoteExecution.Connections;
-using RemoteExecution.Endpoints;
 
 namespace RemoteExecution.IT.Services
 {
