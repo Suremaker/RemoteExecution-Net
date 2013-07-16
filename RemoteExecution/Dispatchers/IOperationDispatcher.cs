@@ -1,8 +1,9 @@
 using System;
-using RemoteExecution.Handling;
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
+using RemoteExecution.Handlers;
+using RemoteExecution.Messages;
 
-namespace RemoteExecution.Dispatching
+namespace RemoteExecution.Dispatchers
 {
 	public interface IOperationDispatcher
 	{

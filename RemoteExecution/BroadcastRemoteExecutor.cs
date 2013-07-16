@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
 using RemoteExecution.Remoting;
 using Spring.Aop.Framework;
 

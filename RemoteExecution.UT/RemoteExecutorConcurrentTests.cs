@@ -2,8 +2,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
-using RemoteExecution.Dispatching;
-using RemoteExecution.Messaging;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Messages;
 using RemoteExecution.UT.Helpers;
 
 namespace RemoteExecution.UT

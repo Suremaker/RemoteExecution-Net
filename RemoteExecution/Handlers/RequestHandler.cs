@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
+using RemoteExecution.Messages;
 
-namespace RemoteExecution.Handling
+namespace RemoteExecution.Handlers
 {
 	internal class RequestHandler : IHandler
 	{
@@ -43,7 +44,7 @@ namespace RemoteExecution.Handling
 			}
 		}
 
-		private void ExecuteWithResponse(Request msg, IMessageChannel messageChannel)
+		private void ExecuteWithResponse(Request msg, IOutgoingMessageChannel messageChannel)
 		{
 			try
 			{

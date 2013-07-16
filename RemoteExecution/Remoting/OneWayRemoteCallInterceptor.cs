@@ -1,15 +1,16 @@
 using System;
 using AopAlliance.Intercept;
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
+using RemoteExecution.Messages;
 
 namespace RemoteExecution.Remoting
 {
 	internal class OneWayRemoteCallInterceptor : IMethodInterceptor
 	{
-		private readonly IMessageChannel _channel;
+		private readonly IOutgoingMessageChannel _channel;
 		private readonly string _interfaceName;
 
-		public OneWayRemoteCallInterceptor(IMessageChannel channel, string interfaceName)
+		public OneWayRemoteCallInterceptor(IOutgoingMessageChannel channel, string interfaceName)
 		{
 			_channel = channel;
 			_interfaceName = interfaceName;

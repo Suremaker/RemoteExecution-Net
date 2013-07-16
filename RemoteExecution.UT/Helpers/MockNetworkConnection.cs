@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using RemoteExecution.Dispatching;
+using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
-using RemoteExecution.Messaging;
+using RemoteExecution.Messages;
 
 namespace RemoteExecution.UT.Helpers
 {
@@ -34,5 +34,6 @@ namespace RemoteExecution.UT.Helpers
 
 		public bool IsOpen { get { return true; } }
 		public IOperationDispatcher OperationDispatcher { get; private set; }
+		public event Action<IMessage> Received;
 	}
 }

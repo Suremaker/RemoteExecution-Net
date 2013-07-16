@@ -1,6 +1,6 @@
 using System;
 
-namespace RemoteExecution.Messaging
+namespace RemoteExecution.Messages
 {
 	[Serializable]
 	public class Response : IResponse

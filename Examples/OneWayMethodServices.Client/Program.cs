@@ -2,7 +2,7 @@
 using Examples.Utils;
 using OneWayMethodServices.Contracts;
 using RemoteExecution;
-using RemoteExecution.Dispatching;
+using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
 
 namespace OneWayMethodServices.Client

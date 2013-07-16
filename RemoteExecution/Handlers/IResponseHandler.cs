@@ -1,6 +1,6 @@
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
 
-namespace RemoteExecution.Handling
+namespace RemoteExecution.Handlers
 {
 	public interface IResponseHandler : IHandler
 	{

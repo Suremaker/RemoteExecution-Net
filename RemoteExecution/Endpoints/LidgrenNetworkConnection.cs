@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Lidgren.Network;
-using RemoteExecution.Dispatching;
-using RemoteExecution.Messaging;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Messages;
 using RemoteExecution.Serialization;
 
 namespace RemoteExecution.Endpoints
@@ -46,5 +47,7 @@ namespace RemoteExecution.Endpoints
 			msg.Write(content);
 			return msg;
 		}
+
+		public event Action<IMessage> Received;
 	}
 }

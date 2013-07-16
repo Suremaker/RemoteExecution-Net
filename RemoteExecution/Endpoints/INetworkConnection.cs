@@ -1,6 +1,6 @@
 ﻿using System;
-using RemoteExecution.Dispatching;
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
+using RemoteExecution.Dispatchers;
 
 namespace RemoteExecution.Endpoints
 {

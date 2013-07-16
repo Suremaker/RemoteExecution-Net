@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
-using RemoteExecution.Dispatching;
-using RemoteExecution.Messaging;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Messages;
 using RemoteExecution.UT.Helpers;
 
 namespace RemoteExecution.UT

@@ -1,5 +1,5 @@
 ﻿using Lidgren.Network;
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
 
 namespace RemoteExecution.Endpoints
 {

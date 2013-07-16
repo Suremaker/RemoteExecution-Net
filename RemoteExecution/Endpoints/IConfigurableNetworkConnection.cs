@@ -1,4 +1,4 @@
-﻿using RemoteExecution.Dispatching;
+﻿using RemoteExecution.Dispatchers;
 
 namespace RemoteExecution.Endpoints
 {

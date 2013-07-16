@@ -1,8 +1,9 @@
 using System;
 using System.Threading;
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
+using RemoteExecution.Messages;
 
-namespace RemoteExecution.Handling
+namespace RemoteExecution.Handlers
 {
 	internal class ResponseHandler : IResponseHandler
 	{

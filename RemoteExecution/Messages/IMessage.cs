@@ -1,4 +1,4 @@
-namespace RemoteExecution.Messaging
+namespace RemoteExecution.Messages
 {
     public interface IMessage
     {

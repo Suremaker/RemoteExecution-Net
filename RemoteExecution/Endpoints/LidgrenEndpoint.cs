@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Lidgren.Network;
-using RemoteExecution.Dispatching;
+using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints.Processing;
 
 namespace RemoteExecution.Endpoints

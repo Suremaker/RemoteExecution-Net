@@ -1,6 +1,12 @@
 Remote Execution project changelog
 ---------------------------------------------------
 
+Version 1.1.0:
+---------------------
++ renamed namespaces
++ introduced IRequest
++ introduced IIncomingMessageChannel and IOutgoingMessageChannel
+
 Version 1.0.6:
 ----------------
 + refactored RemoteCallInterceptor

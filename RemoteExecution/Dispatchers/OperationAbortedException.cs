@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RemoteExecution.Dispatching
+namespace RemoteExecution.Dispatchers
 {
 	public class OperationAbortedException : Exception
 	{

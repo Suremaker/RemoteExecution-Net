@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
+using RemoteExecution.Messages;
 using RemoteExecution.Serialization;
 
 namespace RemoteExecution.Endpoints

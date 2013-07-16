@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
-using RemoteExecution.Messaging;
+using RemoteExecution.Messages;
 using RemoteExecution.Serialization;
 
 namespace RemoteExecution.UT

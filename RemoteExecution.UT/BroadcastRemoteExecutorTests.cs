@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
+using RemoteExecution.Messages;
 using RemoteExecution.UT.Helpers;
 using Rhino.Mocks;
 

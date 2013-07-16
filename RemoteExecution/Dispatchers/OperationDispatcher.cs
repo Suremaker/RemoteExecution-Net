@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using RemoteExecution.Handling;
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
+using RemoteExecution.Handlers;
+using RemoteExecution.Messages;
 
-namespace RemoteExecution.Dispatching
+namespace RemoteExecution.Dispatchers
 {
 	public class OperationDispatcher : IOperationDispatcher
 	{

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading;
 using Lidgren.Network;
-using RemoteExecution.Dispatching;
+using RemoteExecution.Dispatchers;
 
 namespace RemoteExecution.Endpoints
 {

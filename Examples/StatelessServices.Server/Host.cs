@@ -1,4 +1,4 @@
-﻿using RemoteExecution.Dispatching;
+﻿using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
 using StatelessServices.Contracts;
 

@@ -1,7 +1,8 @@
 using AopAlliance.Intercept;
-using RemoteExecution.Dispatching;
-using RemoteExecution.Handling;
-using RemoteExecution.Messaging;
+using RemoteExecution.Channels;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Handlers;
+using RemoteExecution.Messages;
 
 namespace RemoteExecution.Remoting
 {

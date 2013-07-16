@@ -1,9 +1,9 @@
 using System;
 
-namespace RemoteExecution.Messaging
+namespace RemoteExecution.Messages
 {
 	[Serializable]
-	public class Request : IMessage
+	public class Request : IRequest
 	{
 		private static readonly object[] EMPTY = new object[0];
 
