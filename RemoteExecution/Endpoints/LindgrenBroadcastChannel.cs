@@ -17,7 +17,7 @@ namespace RemoteExecution.Endpoints
 
 		public void Send(IMessage message)
 		{
-			if (ConnectionCount > 0)
+			if (ReceiverCount > 0)
 				_netServer.SendToAll(CreateOutgoingMessage(message), NetDeliveryMethod.ReliableUnordered);
 		}
 
@@ -29,6 +29,6 @@ namespace RemoteExecution.Endpoints
 			return msg;
 		}
 
-		public int ConnectionCount { get { return _netServer.ConnectionsCount; } }
+		public int ReceiverCount { get { return _netServer.ConnectionsCount; } }
 	}
 }
