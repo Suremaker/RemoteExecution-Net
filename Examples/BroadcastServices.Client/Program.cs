@@ -2,7 +2,6 @@
 using System.Linq;
 using BroadcastServices.Contracts;
 using Examples.Utils;
-using RemoteExecution;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
 
@@ -17,12 +16,11 @@ namespace BroadcastServices.Client
 			callbackDispatcher.RegisterRequestHandler(broadcastService);
 
 			using (var client = new ClientEndpoint(Protocol.Id, callbackDispatcher))
-			using (var networkConnection = client.ConnectTo("localhost", 3135))
 			{
-				var remoteExecutor = new RemoteExecutor(networkConnection);
+				client.ConnectTo("localhost", 3135);
 
-				var userInfoService = Aspects.WithTimeMeasure(remoteExecutor.Create<IUserInfoService>());
-				var registrationService = Aspects.WithTimeMeasure(remoteExecutor.Create<IRegistrationService>());
+				var userInfoService = Aspects.WithTimeMeasure(client.RemoteExecutor.Create<IUserInfoService>());
+				var registrationService = Aspects.WithTimeMeasure(client.RemoteExecutor.Create<IRegistrationService>());
 
 				GetUsers(userInfoService);
 				RegisterUser(registrationService);

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using RemoteExecution.Connections;
+﻿using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints.Adapters;
 using RemoteExecution.Executors;

@@ -1,7 +1,8 @@
 ﻿using System;
 using BroadcastServices.Contracts;
 using Examples.Utils;
-using RemoteExecution;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
 
 namespace BroadcastServices.Server
@@ -14,10 +15,15 @@ namespace BroadcastServices.Server
 		public Host(int maxConnections, ushort port)
 			: base(Protocol.Id, maxConnections, port)
 		{
-			_broadcastService = Aspects.WithTimeMeasure(new BroadcastRemoteExecutor(BroadcastChannel).Create<IBroadcastService>(), ConsoleColor.DarkCyan);
+			_broadcastService = Aspects.WithTimeMeasure(BroadcastRemoteExecutor.Create<IBroadcastService>(), ConsoleColor.DarkCyan);
 		}
 
-		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
+		protected override IOperationDispatcher GetDispatcherForNewConnection()
+		{
+			return new OperationDispatcher();
+		}
+
+		protected override void OnNewConnection(INetworkConnection connection)
 		{
 			var userContext = new ClientContext();
 			_sharedContext.AddClient(connection, userContext);
@@ -27,7 +33,6 @@ namespace BroadcastServices.Server
 
 			connection.OperationDispatcher.RegisterRequestHandler(registrationService);
 			connection.OperationDispatcher.RegisterRequestHandler(userInfoService);
-			return true;
 		}
 
 		protected override void OnConnectionClose(INetworkConnection connection)

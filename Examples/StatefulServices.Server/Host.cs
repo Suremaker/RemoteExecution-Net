@@ -1,4 +1,6 @@
-﻿using RemoteExecution.Endpoints;
+﻿using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Endpoints;
 using StatefulServices.Contracts;
 
 namespace StatefulServices.Server
@@ -12,13 +14,17 @@ namespace StatefulServices.Server
 		{
 		}
 
-		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
+		protected override IOperationDispatcher GetDispatcherForNewConnection()
+		{
+			return new OperationDispatcher();
+		}
+
+		protected override void OnNewConnection(INetworkConnection connection)
 		{
 			var clientContext = new ClientContext();
 			_sharedContext.AddClient(connection, clientContext);
 			connection.OperationDispatcher.RegisterRequestHandler<IRegistrationService>(new RegistrationService(clientContext));
 			connection.OperationDispatcher.RegisterRequestHandler<IUserInfoService>(new UserInfoService(_sharedContext, clientContext));
-			return true;
 		}
 
 		protected override void OnConnectionClose(INetworkConnection connection)

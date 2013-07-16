@@ -1,8 +1,10 @@
 ﻿using System;
 using Examples.Utils;
 using OneWayMethodServices.Contracts;
-using RemoteExecution;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
+using RemoteExecution.Executors;
 
 namespace OneWayMethodServices.Server
 {
@@ -13,15 +15,19 @@ namespace OneWayMethodServices.Server
 		{
 		}
 
-		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
+		protected override IOperationDispatcher GetDispatcherForNewConnection()
 		{
-			var remoteExecutor = new RemoteExecutor(connection);
+			return new OperationDispatcher();
+		}
+
+		protected override void OnNewConnection(INetworkConnection connection)
+		{
+			var remoteExecutor = connection.RemoteExecutor;
 			var twoWayCallback = Aspects.WithTimeMeasure(remoteExecutor.Create<IClientCallback>(NoResultMethodExecution.TwoWay), ConsoleColor.DarkCyan);
 			var oneWayCallback = Aspects.WithTimeMeasure(remoteExecutor.Create<IClientCallback>(NoResultMethodExecution.OneWay), ConsoleColor.DarkCyan);
 			var longRunningOperation = Aspects.WithTimeMeasure<ILongRunningOperation>(new LongRunningOperation(twoWayCallback, oneWayCallback));
 
 			connection.OperationDispatcher.RegisterRequestHandler(longRunningOperation);
-			return true;
 		}
 	}
 }

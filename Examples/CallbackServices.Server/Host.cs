@@ -1,5 +1,6 @@
 ﻿using CallbackServices.Contracts;
-using RemoteExecution;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
 
 namespace CallbackServices.Server
@@ -11,11 +12,15 @@ namespace CallbackServices.Server
 		{
 		}
 
-		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
+		protected override IOperationDispatcher GetDispatcherForNewConnection()
 		{
-			var clientCallback = new RemoteExecutor(connection).Create<IClientCallback>();
+			return new OperationDispatcher();
+		}
+
+		protected override void OnNewConnection(INetworkConnection connection)
+		{
+			var clientCallback = connection.RemoteExecutor.Create<IClientCallback>();
 			connection.OperationDispatcher.RegisterRequestHandler<ILongRunningOperation>(new LongRunningOperation(clientCallback));
-			return true;
 		}
 	}
 }

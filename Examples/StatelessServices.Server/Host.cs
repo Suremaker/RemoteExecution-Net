@@ -16,10 +16,10 @@ namespace StatelessServices.Server
 			_dispatcher.RegisterRequestHandler<IGreeter>(new GreeterService());
 		}
 
-		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
+
+		protected override IOperationDispatcher GetDispatcherForNewConnection()
 		{
-			connection.OperationDispatcher = _dispatcher;
-			return true;
+			return _dispatcher;
 		}
 	}
 }

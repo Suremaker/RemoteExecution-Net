@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using RemoteExecution.Endpoints;
+using RemoteExecution.Connections;
 
 namespace BroadcastServices.Server
 {

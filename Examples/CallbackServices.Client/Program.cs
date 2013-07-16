@@ -1,6 +1,5 @@
 ﻿using System;
 using CallbackServices.Contracts;
-using RemoteExecution;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
 
@@ -14,11 +13,10 @@ namespace CallbackServices.Client
 			callbackDispatcher.RegisterRequestHandler<IClientCallback>(new ClientCallback());
 
 			using (var client = new ClientEndpoint(Protocol.Id, callbackDispatcher))
-			using (var networkConnection = client.ConnectTo("localhost", 3133))
 			{
-				var remoteExecutor = new RemoteExecutor(networkConnection);
+				client.ConnectTo("localhost", 3133);
 
-				var userInfoService = remoteExecutor.Create<ILongRunningOperation>();
+				var userInfoService = client.RemoteExecutor.Create<ILongRunningOperation>();
 				userInfoService.Perform(5);
 				Console.WriteLine("Done. Press enter to exit.");
 				Console.ReadLine();
