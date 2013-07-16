@@ -14,7 +14,7 @@ namespace RemoteExecution.Endpoints.Adapters
 		protected readonly NetPeer Peer;
 
 		public Action<INetworkConnection> ClosedConnectionHandler { set; private get; }
-		public IEnumerable<INetworkConnection> ActiveConnections { get { return Peer.Connections.Select(ToNetworkConnection); } }
+		public IEnumerable<INetworkConnection> ActiveConnections { get { return Peer.Connections.Select(ToNetworkConnection).Where(conn => conn != null); } }
 
 		public void StartListening()
 		{

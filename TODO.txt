@@ -3,3 +3,4 @@
 + reorganize Endpoints / Connections / RemoteExecutors in order to simplify usage
 + simplify usage of ServerEndpoint
 + add wiki page with tutorials and help
++ fix dispose on client (boradcast example)

@@ -1,7 +1,7 @@
 Remote Execution project changelog
 ---------------------------------------------------
 
-Version 1.1.0:
+Version 1.0.7:
 ---------------------
 + renamed namespaces
 + introduced IRequest
