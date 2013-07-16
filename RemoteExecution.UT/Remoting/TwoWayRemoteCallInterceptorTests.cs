@@ -8,7 +8,7 @@ using RemoteExecution.Remoting;
 using Rhino.Mocks;
 using Spring.Aop.Framework;
 
-namespace RemoteExecution.UT
+namespace RemoteExecution.UT.Remoting
 {
 	[TestFixture]
 	public class TwoWayRemoteCallInterceptorTests

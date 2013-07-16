@@ -5,9 +5,9 @@ using RemoteExecution.Channels;
 using RemoteExecution.Remoting;
 using Spring.Aop.Framework;
 
-namespace RemoteExecution
+namespace RemoteExecution.Executors
 {
-	public class BroadcastRemoteExecutor : IBroadcastRemoteExecutor
+	internal class BroadcastRemoteExecutor : IBroadcastRemoteExecutor
 	{
 		private readonly IBroadcastChannel _broadcastChannel;
 

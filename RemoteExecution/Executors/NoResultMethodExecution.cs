@@ -1,4 +1,4 @@
-namespace RemoteExecution
+namespace RemoteExecution.Executors
 {
 	public enum NoResultMethodExecution
 	{

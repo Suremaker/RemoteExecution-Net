@@ -27,7 +27,7 @@ namespace RemoteExecution.IT
 			var remoteService = new RemoteService(
 				ActiveConnections.Count,
 				connection.RemoteExecutor.Create<IClientService>(),
-				new BroadcastRemoteExecutor(BroadcastChannel).Create<IBroadcastService>(),
+				BroadcastRemoteExecutor.Create<IBroadcastService>(),
 				connection);
 			connection.OperationDispatcher.RegisterRequestHandler(LoggingProxy.For<IRemoteService>(remoteService, "SERVER"));
 			connection.OperationDispatcher.RegisterRequestHandler<ICalculatorService>(new CalculatorService());

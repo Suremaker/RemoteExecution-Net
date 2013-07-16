@@ -3,9 +3,9 @@ using RemoteExecution.Dispatchers;
 using RemoteExecution.Remoting;
 using Spring.Aop.Framework;
 
-namespace RemoteExecution
+namespace RemoteExecution.Executors
 {
-	public class RemoteExecutor : IRemoteExecutor
+	internal class RemoteExecutor : IRemoteExecutor
 	{
 		private readonly IOperationDispatcher _dispatcher;
 		private readonly IMessageChannel _channel;

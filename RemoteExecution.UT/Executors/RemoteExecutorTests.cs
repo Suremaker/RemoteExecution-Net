@@ -3,12 +3,13 @@ using System.Linq;
 using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.Dispatchers;
+using RemoteExecution.Executors;
 using RemoteExecution.Handlers;
 using RemoteExecution.Messages;
 using RemoteExecution.UT.Helpers;
 using Rhino.Mocks;
 
-namespace RemoteExecution.UT
+namespace RemoteExecution.UT.Executors
 {
 	[TestFixture]
 	public class RemoteExecutorTests

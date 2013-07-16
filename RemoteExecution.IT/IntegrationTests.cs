@@ -7,6 +7,7 @@ using NUnit.Framework;
 using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
+using RemoteExecution.Executors;
 using RemoteExecution.IT.Services;
 
 namespace RemoteExecution.IT

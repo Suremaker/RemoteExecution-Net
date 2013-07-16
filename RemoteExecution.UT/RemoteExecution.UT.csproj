@@ -52,22 +52,22 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BroadcastRemoteExecutorTests.cs" />
+    <Compile Include="Executors\BroadcastRemoteExecutorTests.cs" />
     <Compile Include="Helpers\Calculator.cs" />
     <Compile Include="Helpers\Greeter.cs" />
     <Compile Include="Helpers\ICalculator.cs" />
     <Compile Include="Helpers\IGreeter.cs" />
     <Compile Include="Helpers\INotifier.cs" />
     <Compile Include="Helpers\MockMessageChannel.cs" />
-    <Compile Include="MessageSerializerTests.cs" />
-    <Compile Include="OneWayRemoteCallInterceptorTests.cs" />
-    <Compile Include="OperationDispatcherOperationHandlingTests.cs" />
+    <Compile Include="Serialization\MessageSerializerTests.cs" />
+    <Compile Include="Remoting\OneWayRemoteCallInterceptorTests.cs" />
+    <Compile Include="Dispatchers\OperationDispatcherTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemoteCallInterceptorTests.cs" />
-    <Compile Include="RemoteExecutorConcurrentTests.cs" />
-    <Compile Include="RemoteExecutorTests.cs" />
-    <Compile Include="RequestHandlerTests.cs" />
-    <Compile Include="TwoWayRemoteCallInterceptorTests.cs" />
+    <Compile Include="Remoting\RemoteCallInterceptorTests.cs" />
+    <Compile Include="Executors\RemoteExecutorConcurrentTests.cs" />
+    <Compile Include="Executors\RemoteExecutorTests.cs" />
+    <Compile Include="Handlers\RequestHandlerTests.cs" />
+    <Compile Include="Remoting\TwoWayRemoteCallInterceptorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

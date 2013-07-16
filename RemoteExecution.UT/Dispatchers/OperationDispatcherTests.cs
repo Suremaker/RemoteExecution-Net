@@ -5,10 +5,10 @@ using RemoteExecution.Dispatchers;
 using RemoteExecution.Messages;
 using RemoteExecution.UT.Helpers;
 
-namespace RemoteExecution.UT
+namespace RemoteExecution.UT.Dispatchers
 {
 	[TestFixture]
-	public class OperationDispatcherOperationHandlingTests
+	public class OperationDispatcherTests
 	{
 		#region Setup/Teardown
 

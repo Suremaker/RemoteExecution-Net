@@ -1,11 +1,11 @@
 ﻿using System;
-using RemoteExecution.Channels;
+using RemoteExecution.Executors;
 
 namespace RemoteExecution.Endpoints
 {
 	public interface IServerEndpoint : IDisposable
 	{
 		void StartListening();
-		IBroadcastChannel BroadcastChannel { get; }
+		IBroadcastRemoteExecutor BroadcastRemoteExecutor { get; }
 	}
 }

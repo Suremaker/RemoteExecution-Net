@@ -50,7 +50,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BroadcastRemoteExecutor.cs" />
+    <Compile Include="Executors\BroadcastRemoteExecutor.cs" />
     <Compile Include="Channels\LidgrenMessageChannel.cs" />
     <Compile Include="Connections\INetworkConnection.cs" />
     <Compile Include="Dispatchers\IOperationDispatcher.cs" />
@@ -58,20 +58,20 @@
     <Compile Include="Dispatchers\OperationDispatcher.cs" />
     <Compile Include="Channels\LidgrenBroadcastChannel.cs" />
     <Compile Include="Connections\NotConnectedException.cs" />
-    <Compile Include="IBroadcastRemoteExecutor.cs" />
+    <Compile Include="Executors\IBroadcastRemoteExecutor.cs" />
     <Compile Include="Channels\IBroadcastChannel.cs" />
     <Compile Include="Channels\IIncomingMessageChannel.cs" />
     <Compile Include="Channels\IMessageChannel.cs" />
     <Compile Include="Channels\IOutgoingMessageChannel.cs" />
     <Compile Include="Messages\IRequest.cs" />
-    <Compile Include="NoResultMethodExecution.cs" />
+    <Compile Include="Executors\NoResultMethodExecution.cs" />
     <Compile Include="Handlers\IResponseHandler.cs" />
     <Compile Include="Messages\ExceptionResponse.cs" />
     <Compile Include="Messages\IMessage.cs" />
     <Compile Include="Handlers\IHandler.cs" />
     <Compile Include="Handlers\RequestHandler.cs" />
     <Compile Include="Handlers\ResponseHandler.cs" />
-    <Compile Include="IRemoteExecutor.cs" />
+    <Compile Include="Executors\IRemoteExecutor.cs" />
     <Compile Include="Messages\IResponse.cs" />
     <Compile Include="Messages\Request.cs" />
     <Compile Include="Messages\Response.cs" />
@@ -85,7 +85,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remoting\OneWayRemoteCallInterceptor.cs" />
     <Compile Include="Remoting\RemoteCallInterceptor.cs" />
-    <Compile Include="RemoteExecutor.cs" />
+    <Compile Include="Executors\RemoteExecutor.cs" />
     <Compile Include="Remoting\TwoWayRemoteCallInterceptor.cs" />
     <Compile Include="Serialization\MessageSerializer.cs" />
   </ItemGroup>

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.Dispatchers;
+using RemoteExecution.Executors;
 using RemoteExecution.Messages;
 using RemoteExecution.UT.Helpers;
 
-namespace RemoteExecution.UT
+namespace RemoteExecution.UT.Executors
 {
 	[TestFixture]
 	public class RemoteExecutorConcurrentTests

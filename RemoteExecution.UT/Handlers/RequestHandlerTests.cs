@@ -5,7 +5,7 @@ using RemoteExecution.Handlers;
 using RemoteExecution.Messages;
 using Rhino.Mocks;
 
-namespace RemoteExecution.UT
+namespace RemoteExecution.UT.Handlers
 {
 	[TestFixture]
 	public class RequestHandlerTests

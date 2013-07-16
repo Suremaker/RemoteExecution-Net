@@ -1,10 +1,11 @@
 ﻿using AopAlliance.Intercept;
 using NUnit.Framework;
+using RemoteExecution.Executors;
 using RemoteExecution.Remoting;
 using Rhino.Mocks;
 using Spring.Aop.Framework;
 
-namespace RemoteExecution.UT
+namespace RemoteExecution.UT.Remoting
 {
 	[TestFixture]
 	public class RemoteCallInterceptorTests

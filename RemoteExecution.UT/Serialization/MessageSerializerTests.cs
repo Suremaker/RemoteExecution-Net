@@ -4,7 +4,7 @@ using NUnit.Framework;
 using RemoteExecution.Messages;
 using RemoteExecution.Serialization;
 
-namespace RemoteExecution.UT
+namespace RemoteExecution.UT.Serialization
 {
 	[Serializable]
 	class Greeting1
