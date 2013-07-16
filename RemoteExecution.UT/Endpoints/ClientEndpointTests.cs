@@ -50,7 +50,7 @@ namespace RemoteExecution.UT.Endpoints
 		{
 			var connection = StubConnectToReturnActiveConnection();
 
-			_subject.ConnectTo("localhost", 5555);
+			Assert.That(_subject.ConnectTo("localhost", 5555), Is.SameAs(connection));
 			Assert.That(_subject.Connection, Is.SameAs(connection));
 		}
 
