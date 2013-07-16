@@ -14,6 +14,7 @@ Version 1.1.0:
 + INetworkConnection no longer extends IMessageChannel and has RemoteExecutor property
 + IIncomingMessageChannel / IOutgoingMessageChannel have now IsOpen property
 + added tests for OperationDispatcher, ExceptionResponse and ResponseHandler
++ refactored ClientEndpoint and ServerEndpoint to use adapters
 
 Version 1.0.6:
 ----------------

@@ -1,43 +1,51 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using Lidgren.Network;
 using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints.Processing;
 
-namespace RemoteExecution.Endpoints
+namespace RemoteExecution.Endpoints.Adapters
 {
-	public abstract class LidgrenEndpoint : IDisposable
+	public class LidgrenEndpointAdapter : IEndpointAdapter
 	{
 		private readonly IDictionary<NetConnection, LidgrenNetworkConnection> _connections = new ConcurrentDictionary<NetConnection, LidgrenNetworkConnection>();
-		protected readonly NetPeer Peer;
 		private MessageLoop _messageLoop;
+		protected readonly NetPeer Peer;
 
-		protected IEnumerable<INetworkConnection> Connections { get { return _connections.Values; } }
+		public Action<INetworkConnection> ClosedConnectionHandler { set; private get; }
+		public IEnumerable<INetworkConnection> ActiveConnections { get { return _connections.Values; } }
 
-		protected void Start()
+		public void StartListening()
 		{
 			_messageLoop = new MessageLoop(Peer, HandleMessage);
 			Peer.Start();
 		}
 
-		protected LidgrenEndpoint(NetPeer peer)
+		public Func<IOperationDispatcher> DispatcherCreator { set; private get; }
+		public Func<INetworkConnection, bool> NewConnectionHandler { set; private get; }
+
+		public LidgrenEndpointAdapter(NetPeer peer)
 		{
 			Peer = peer;
+
+			ClosedConnectionHandler = connection => { };
+			DispatcherCreator = () => new OperationDispatcher();
+			NewConnectionHandler = connection => true;
 		}
 
 		public void Dispose()
 		{
+			foreach (var connection in _connections.Values.ToArray())
+				connection.Dispose();
+
 			Peer.Shutdown("Endpoint disposed");
 			if (_messageLoop != null)
 				_messageLoop.Dispose();
 			_messageLoop = null;
 		}
-
-		protected abstract IOperationDispatcher GetDispatcherForNewConnection();
-		protected virtual bool OnNewConnection(INetworkConnection connection) { return true; }
-		protected virtual void OnConnectionClose(INetworkConnection connection) { }
 
 		private void HandleClosedConnection(NetConnection connection)
 		{
@@ -45,14 +53,14 @@ namespace RemoteExecution.Endpoints
 			if (!_connections.TryGetValue(connection, out conn))
 				return;
 			_connections.Remove(connection);
-			OnConnectionClose(conn);
+			ClosedConnectionHandler.Invoke(conn);
 			conn.Dispose();
 		}
 
 		private void HandleNewConnection(NetConnection connection)
 		{
-			var conn = new LidgrenNetworkConnection(connection, GetDispatcherForNewConnection());
-			if (OnNewConnection(conn))
+			var conn = new LidgrenNetworkConnection(connection, DispatcherCreator.Invoke());
+			if (NewConnectionHandler.Invoke(conn))
 				_connections.Add(connection, conn);
 			else
 				conn.Dispose();
@@ -87,7 +95,6 @@ namespace RemoteExecution.Endpoints
 					HandleClosedConnection(msg.SenderConnection);
 					break;
 			}
-
 		}
 	}
 }

@@ -50,6 +50,12 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Endpoints\Adapters\IClientEndpointAdapter.cs" />
+    <Compile Include="Endpoints\Adapters\IEndpointAdapter.cs" />
+    <Compile Include="Endpoints\Adapters\IServerEndpointAdapter.cs" />
+    <Compile Include="Endpoints\Adapters\LidgrenClientEndpointAdapter.cs" />
+    <Compile Include="Endpoints\Adapters\LidgrenEndpointAdapter.cs" />
+    <Compile Include="Endpoints\Adapters\LidgrenServerEndpointAdapter.cs" />
     <Compile Include="Executors\BroadcastRemoteExecutor.cs" />
     <Compile Include="Channels\LidgrenMessageChannel.cs" />
     <Compile Include="Connections\INetworkConnection.cs" />
@@ -78,7 +84,6 @@
     <Compile Include="Endpoints\ClientEndpoint.cs" />
     <Compile Include="Endpoints\IClientEndpoint.cs" />
     <Compile Include="Endpoints\IServerEndpoint.cs" />
-    <Compile Include="Endpoints\LidgrenEndpoint.cs" />
     <Compile Include="Endpoints\Processing\MessageLoop.cs" />
     <Compile Include="Connections\LidgrenNetworkConnection.cs" />
     <Compile Include="Endpoints\ServerEndpoint.cs" />

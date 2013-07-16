@@ -1,15 +1,13 @@
-﻿using System.IO;
-using System.Linq;
-using System.Threading;
-using Lidgren.Network;
+﻿using System.Linq;
 using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
+using RemoteExecution.Endpoints.Adapters;
 
 namespace RemoteExecution.Endpoints
 {
-	public class ClientEndpoint : LidgrenEndpoint, IClientEndpoint
+	public class ClientEndpoint : IClientEndpoint
 	{
-		private readonly IOperationDispatcher _operationDispatcher;
+		private readonly IClientEndpointAdapter _endpointAdapter;
 
 		public ClientEndpoint(string applicationId)
 			: this(applicationId, new OperationDispatcher())
@@ -17,16 +15,20 @@ namespace RemoteExecution.Endpoints
 		}
 
 		public ClientEndpoint(string applicationId, IOperationDispatcher operationDispatcher)
-			: base(new NetClient(new NetPeerConfiguration(applicationId)))
+			: this(new LidgrenClientEndpointAdapter(applicationId) { DispatcherCreator = () => operationDispatcher })
 		{
-			_operationDispatcher = operationDispatcher;
+		}
+
+		public ClientEndpoint(IClientEndpointAdapter endpointAdapter)
+		{
+			_endpointAdapter = endpointAdapter;
 		}
 
 		public INetworkConnection Connection
 		{
 			get
 			{
-				var connection = Connections.SingleOrDefault();
+				var connection = _endpointAdapter.ActiveConnections.FirstOrDefault();
 				if (connection == null)
 					throw new NotConnectedException("Network connection is not opened.");
 				return connection;
@@ -35,26 +37,14 @@ namespace RemoteExecution.Endpoints
 
 		public INetworkConnection ConnectTo(string host, ushort port)
 		{
-			Start();
-			OpenConnection(host, port);
+			_endpointAdapter.StartListening();
+			_endpointAdapter.ConnectTo(host, port);
 			return Connection;
 		}
 
-		private void OpenConnection(string host, ushort port)
+		public void Dispose()
 		{
-			NetConnection conn = Peer.Connect(host, port);
-			while (conn.Status != NetConnectionStatus.Connected || !Connections.Any())
-			{
-				if (conn.Status == NetConnectionStatus.Disconnected)
-					throw new IOException("Connection closed.");
-
-				Thread.Sleep(150);
-			}
-		}
-
-		protected override IOperationDispatcher GetDispatcherForNewConnection()
-		{
-			return _operationDispatcher;
+			_endpointAdapter.Dispose();
 		}
 	}
 }
