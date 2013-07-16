@@ -2,42 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using Lidgren.Network;
-using RemoteExecution.Dispatchers;
+using RemoteExecution.Connections;
 using RemoteExecution.Messages;
 using RemoteExecution.Serialization;
 
-namespace RemoteExecution.Endpoints
+namespace RemoteExecution.Channels
 {
-	internal class LidgrenNetworkConnection : IConfigurableNetworkConnection
+	internal class LidgrenMessageChannel : IMessageChannel, IDisposable
 	{
 		private static readonly IEnumerable<NetConnectionStatus> _validConnectionStatus = new[] { NetConnectionStatus.Connected, NetConnectionStatus.RespondedConnect };
 		private static readonly MessageSerializer _serializer = new MessageSerializer();
 		private readonly NetConnection _connection;
 
-		public LidgrenNetworkConnection(NetConnection connection, IOperationDispatcher operationDispatcher)
+		public LidgrenMessageChannel(NetConnection connection)
 		{
 			_connection = connection;
-			OperationDispatcher = operationDispatcher;
-		}
-
-		public void Dispose()
-		{
-			_connection.Disconnect("Connection disposed");
 		}
 
 		public bool IsOpen { get { return _validConnectionStatus.Contains(_connection.Status); } }
-		public IOperationDispatcher OperationDispatcher { get; set; }
 
-		public void HandleIncomingMessage(NetIncomingMessage message)
-		{
-			OperationDispatcher.Dispatch(_serializer.Deserialize(message.ReadBytes(message.LengthBytes)), this);
-		}
+		public event Action<IMessage> Received;
 
 		public void Send(IMessage message)
 		{
 			if (!IsOpen)
 				throw new NotConnectedException("Network connection is not opened.");
 			_connection.Peer.SendMessage(CreateOutgoingMessage(message), _connection, NetDeliveryMethod.ReliableUnordered, 0);
+		}
+
+		public void HandleIncomingMessage(NetIncomingMessage message)
+		{
+			Received.Invoke(_serializer.Deserialize(message.ReadBytes(message.LengthBytes)));
 		}
 
 		private NetOutgoingMessage CreateOutgoingMessage(IMessage message)
@@ -48,6 +43,9 @@ namespace RemoteExecution.Endpoints
 			return msg;
 		}
 
-		public event Action<IMessage> Received;
+		public void Dispose()
+		{
+			_connection.Disconnect("Connection disposed");
+		}
 	}
 }

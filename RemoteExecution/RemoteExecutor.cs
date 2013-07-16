@@ -1,4 +1,5 @@
-using RemoteExecution.Endpoints;
+using RemoteExecution.Channels;
+using RemoteExecution.Dispatchers;
 using RemoteExecution.Remoting;
 using Spring.Aop.Framework;
 
@@ -6,11 +7,13 @@ namespace RemoteExecution
 {
 	public class RemoteExecutor : IRemoteExecutor
 	{
-		private readonly INetworkConnection _networkConnection;
+		private readonly IOperationDispatcher _dispatcher;
+		private readonly IMessageChannel _channel;
 
-		public RemoteExecutor(INetworkConnection networkConnection)
+		public RemoteExecutor(IOperationDispatcher dispatcher, IMessageChannel channel)
 		{
-			_networkConnection = networkConnection;
+			_dispatcher = dispatcher;
+			_channel = channel;
 		}
 
 		public T Create<T>()
@@ -21,8 +24,8 @@ namespace RemoteExecution
 		public T Create<T>(NoResultMethodExecution noResultMethodExcecution)
 		{
 			var remoteCallInterceptor = new RemoteCallInterceptor(
-				new OneWayRemoteCallInterceptor(_networkConnection, typeof(T).Name),
-				new TwoWayRemoteCallInterceptor(_networkConnection.OperationDispatcher, _networkConnection, typeof(T).Name),
+				new OneWayRemoteCallInterceptor(_channel, typeof(T).Name),
+				new TwoWayRemoteCallInterceptor(_dispatcher, _channel, typeof(T).Name),
 				noResultMethodExcecution);
 
 			var factory = new ProxyFactory(typeof(T), remoteCallInterceptor);

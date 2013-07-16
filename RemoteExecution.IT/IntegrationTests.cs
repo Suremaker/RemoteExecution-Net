@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework;
+using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
 using RemoteExecution.IT.Services;
@@ -52,8 +53,7 @@ namespace RemoteExecution.IT
 			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
-				var remoteExecutor = new RemoteExecutor(clientConnection);
-				Assert.That(remoteExecutor.Create<IRemoteService>().Hello(), Is.EqualTo("world"));
+				Assert.That(clientConnection.RemoteExecutor.Create<IRemoteService>().Hello(), Is.EqualTo("world"));
 			}
 		}
 
@@ -65,8 +65,8 @@ namespace RemoteExecution.IT
 			using (var clientConnection1 = client1.ConnectTo(_localhost, _port))
 			using (var clientConnection2 = client2.ConnectTo(_localhost, _port))
 			{
-				Assert.That(new RemoteExecutor(clientConnection1).Create<IRemoteService>().GetConnectionId(), Is.EqualTo(1));
-				Assert.That(new RemoteExecutor(clientConnection2).Create<IRemoteService>().GetConnectionId(), Is.EqualTo(2));
+				Assert.That(clientConnection1.RemoteExecutor.Create<IRemoteService>().GetConnectionId(), Is.EqualTo(1));
+				Assert.That(clientConnection2.RemoteExecutor.Create<IRemoteService>().GetConnectionId(), Is.EqualTo(2));
 			}
 		}
 
@@ -80,8 +80,7 @@ namespace RemoteExecution.IT
 			using (var client = (IClientEndpoint)new ClientEndpoint(_appId, operationDispatcher))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
-				var remoteExecutor = new RemoteExecutor(clientConnection);
-				Assert.That(remoteExecutor.Create<IRemoteService>().ExecuteChainedMethod(), Is.EqualTo(baseValue * 2));
+				Assert.That(clientConnection.RemoteExecutor.Create<IRemoteService>().ExecuteChainedMethod(), Is.EqualTo(baseValue * 2));
 			}
 		}
 
@@ -95,7 +94,7 @@ namespace RemoteExecution.IT
 			using (var client = (IClientEndpoint)new ClientEndpoint(_appId, operationDispatcher))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
-				var remoteService = LoggingProxy.For(new RemoteExecutor(clientConnection).Create<IRemoteService>(), "CLIENT");
+				var remoteService = LoggingProxy.For(clientConnection.RemoteExecutor.Create<IRemoteService>(), "CLIENT");
 				var sleepTime = TimeSpan.FromSeconds(1);
 
 				var watch = new Stopwatch();
@@ -117,7 +116,7 @@ namespace RemoteExecution.IT
 			using (var client = (IClientEndpoint)new ClientEndpoint(_appId, operationDispatcher))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
-				var remoteService = LoggingProxy.For(new RemoteExecutor(clientConnection).Create<IRemoteService>(NoResultMethodExecution.OneWay), "CLIENT");
+				var remoteService = LoggingProxy.For(clientConnection.RemoteExecutor.Create<IRemoteService>(NoResultMethodExecution.OneWay), "CLIENT");
 				var sleepTime = TimeSpan.FromSeconds(1);
 
 				var watch = new Stopwatch();
@@ -138,7 +137,7 @@ namespace RemoteExecution.IT
 			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
-				var remoteService = new RemoteExecutor(clientConnection).Create<IRemoteService>();
+				var remoteService = clientConnection.RemoteExecutor.Create<IRemoteService>();
 
 				var ex = Assert.Throws<MyException>(remoteService.ThrowException);
 				Assert.That(ex.Message, Is.EqualTo("test"));
@@ -151,7 +150,7 @@ namespace RemoteExecution.IT
 			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
-				var remoteService = new RemoteExecutor(clientConnection).Create<IRemoteService>();
+				var remoteService = clientConnection.RemoteExecutor.Create<IRemoteService>();
 				_serverEndpoint.Dispose();
 				Thread.Sleep(100);
 				var ex = Assert.Throws<NotConnectedException>(() => remoteService.Hello());
@@ -165,7 +164,7 @@ namespace RemoteExecution.IT
 			using (var client = new ClientEndpoint(_appId, new OperationDispatcher()))
 			using (var clientConnection = client.ConnectTo(_localhost, _port))
 			{
-				var remoteService = new RemoteExecutor(clientConnection).Create<IRemoteService>();
+				var remoteService = clientConnection.RemoteExecutor.Create<IRemoteService>();
 
 				var ex = Assert.Throws<OperationAbortedException>(remoteService.CloseConnectionOnServerSide);
 				Assert.That(ex.Message, Is.EqualTo("Network connection has been closed."));
@@ -180,7 +179,7 @@ namespace RemoteExecution.IT
 			{
 				const int expectedNumber = 55;
 
-				new RemoteExecutor(clients[0].Item1.Connection).Create<IRemoteService>().Broadcast(expectedNumber);
+				clients[0].Item1.Connection.RemoteExecutor.Create<IRemoteService>().Broadcast(expectedNumber);
 				Thread.Sleep(1000);
 				Assert.That(clients.Count(c => c.Item2.ReceivedNumber == expectedNumber), Is.EqualTo(clients.Count));
 

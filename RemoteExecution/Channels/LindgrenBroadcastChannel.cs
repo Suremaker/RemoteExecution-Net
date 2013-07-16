@@ -1,9 +1,8 @@
 ﻿using Lidgren.Network;
-using RemoteExecution.Channels;
 using RemoteExecution.Messages;
 using RemoteExecution.Serialization;
 
-namespace RemoteExecution.Endpoints
+namespace RemoteExecution.Channels
 {
 	internal class LindgrenBroadcastChannel : IBroadcastChannel
 	{
@@ -14,6 +13,8 @@ namespace RemoteExecution.Endpoints
 		{
 			_netServer = netServer;
 		}
+
+		public bool IsOpen { get { return _netServer.Status == NetPeerStatus.Running; } }
 
 		public void Send(IMessage message)
 		{

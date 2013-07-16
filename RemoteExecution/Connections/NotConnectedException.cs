@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace RemoteExecution.Endpoints
+namespace RemoteExecution.Connections
 {
 	public class NotConnectedException : IOException
 	{

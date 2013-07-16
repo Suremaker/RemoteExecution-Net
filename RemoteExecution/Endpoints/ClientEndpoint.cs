@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using Lidgren.Network;
+using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
 
 namespace RemoteExecution.Endpoints
@@ -51,9 +52,13 @@ namespace RemoteExecution.Endpoints
 			}
 		}
 
-		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
+		protected override IOperationDispatcher GetDispatcherForNewConnection()
 		{
-			connection.OperationDispatcher = _operationDispatcher;
+			return _operationDispatcher;
+		}
+
+		protected override bool HandleNewConnection(INetworkConnection connection)
+		{
 			return true;
 		}
 	}

@@ -19,8 +19,8 @@ namespace RemoteExecution.UT
 		public void SetUp()
 		{
 			_operationDispatcher = MockRepository.GenerateMock<IOperationDispatcher>();
-			_connection = new MockNetworkConnection(_operationDispatcher);
-			_remoteExecutor = new RemoteExecutor(_connection);
+			_channel = new MockMessageChannel();
+			_remoteExecutor = new RemoteExecutor(_operationDispatcher, _channel);
 			_subject = _remoteExecutor.Create<ICalculator>();
 			_currentHandler = null;
 		}
@@ -29,7 +29,7 @@ namespace RemoteExecution.UT
 
 		private ICalculator _subject;
 		private IOperationDispatcher _operationDispatcher;
-		private MockNetworkConnection _connection;
+		private MockMessageChannel _channel;
 		private IResponseHandler _currentHandler;
 		private RemoteExecutor _remoteExecutor;
 
@@ -56,8 +56,8 @@ namespace RemoteExecution.UT
 
 		private Request EnsureRequest()
 		{
-			Assert.That(_connection.SentMessages.Count, Is.EqualTo(1));
-			var request = (Request)_connection.SentMessages.Single();
+			Assert.That(_channel.SentMessages.Count, Is.EqualTo(1));
+			var request = (Request)_channel.SentMessages.Single();
 			return request;
 		}
 
@@ -65,14 +65,14 @@ namespace RemoteExecution.UT
 		{
 			_operationDispatcher.Stub(d => d.RegisterResponseHandler(null)).IgnoreArguments().WhenCalled(UpdateCurrentHandler);
 
-			_connection.OnMessageSend = m => _currentHandler.Handle(new Response(m.CorrelationId, value), _connection);
+			_channel.OnMessageSend = m => _currentHandler.Handle(new Response(m.CorrelationId, value), _channel);
 		}
 
 		private void BindThrowMessageLoopback(Exception value)
 		{
 			_operationDispatcher.Stub(d => d.RegisterResponseHandler(null)).IgnoreArguments().WhenCalled(UpdateCurrentHandler);
 
-			_connection.OnMessageSend = m => _currentHandler.Handle(new ExceptionResponse(m.CorrelationId, value.GetType(), value.Message), _connection);
+			_channel.OnMessageSend = m => _currentHandler.Handle(new ExceptionResponse(m.CorrelationId, value.GetType(), value.Message), _channel);
 		}
 
 		private void UpdateCurrentHandler(MethodInvocation a)

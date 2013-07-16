@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
 using RemoteExecution.IT.Services;
 
@@ -13,13 +15,18 @@ namespace RemoteExecution.IT
 			ActiveConnections = new List<INetworkConnection>();
 		}
 
-		protected override bool HandleNewConnection(IConfigurableNetworkConnection connection)
+		protected override IOperationDispatcher GetDispatcherForNewConnection()
+		{
+			return new OperationDispatcher();
+		}
+
+		protected override bool HandleNewConnection(INetworkConnection connection)
 		{
 			ActiveConnections.Add(connection);
 
 			var remoteService = new RemoteService(
 				ActiveConnections.Count,
-				new RemoteExecutor(connection).Create<IClientService>(),
+				connection.RemoteExecutor.Create<IClientService>(),
 				new BroadcastRemoteExecutor(BroadcastChannel).Create<IBroadcastService>(),
 				connection);
 			connection.OperationDispatcher.RegisterRequestHandler(LoggingProxy.For<IRemoteService>(remoteService, "SERVER"));

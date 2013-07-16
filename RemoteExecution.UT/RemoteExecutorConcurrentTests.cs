@@ -17,15 +17,15 @@ namespace RemoteExecution.UT
 		public void SetUp()
 		{
 			_operationDispatcher = new OperationDispatcher();
-			_connection = new MockNetworkConnection(_operationDispatcher);
-			_remoteExecutor = new RemoteExecutor(_connection);
+			_channel = new MockMessageChannel();
+			_remoteExecutor = new RemoteExecutor(_operationDispatcher, _channel);
 			_subject = _remoteExecutor.Create<ICalculator>();
 		}
 
 		#endregion
 
 		private OperationDispatcher _operationDispatcher;
-		private MockNetworkConnection _connection;
+		private MockMessageChannel _channel;
 		private ICalculator _subject;
 		private RemoteExecutor _remoteExecutor;
 
@@ -33,7 +33,7 @@ namespace RemoteExecution.UT
 		public void ShouldSupportConcurrentOperations()
 		{
 			var requests = new ConcurrentStack<Request>();
-			_connection.OnMessageSend = r => requests.Push((Request)r);
+			_channel.OnMessageSend = r => requests.Push((Request)r);
 
 			int validResults = 0;
 

@@ -58,7 +58,7 @@
     <Compile Include="Helpers\ICalculator.cs" />
     <Compile Include="Helpers\IGreeter.cs" />
     <Compile Include="Helpers\INotifier.cs" />
-    <Compile Include="Helpers\MockNetworkConnection.cs" />
+    <Compile Include="Helpers\MockMessageChannel.cs" />
     <Compile Include="MessageSerializerTests.cs" />
     <Compile Include="OneWayRemoteCallInterceptorTests.cs" />
     <Compile Include="OperationDispatcherOperationHandlingTests.cs" />

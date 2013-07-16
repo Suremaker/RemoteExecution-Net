@@ -21,7 +21,7 @@ namespace RemoteExecution.IT
 			public TaskData(ClientEndpoint endpoint, int times)
 			{
 				_times = times;
-				_calculator = new RemoteExecutor(endpoint.Connection).Create<ICalculatorService>();
+				_calculator = endpoint.Connection.RemoteExecutor.Create<ICalculatorService>();
 			}
 
 			public void ExecuteTask()

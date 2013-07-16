@@ -51,12 +51,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BroadcastRemoteExecutor.cs" />
+    <Compile Include="Channels\LidgrenMessageChannel.cs" />
+    <Compile Include="Connections\INetworkConnection.cs" />
     <Compile Include="Dispatchers\IOperationDispatcher.cs" />
     <Compile Include="Dispatchers\OperationAbortedException.cs" />
     <Compile Include="Dispatchers\OperationDispatcher.cs" />
-    <Compile Include="Endpoints\IConfigurableNetworkConnection.cs" />
-    <Compile Include="Endpoints\LindgrenBroadcastChannel.cs" />
-    <Compile Include="Endpoints\NotConnectedException.cs" />
+    <Compile Include="Channels\LindgrenBroadcastChannel.cs" />
+    <Compile Include="Connections\NotConnectedException.cs" />
     <Compile Include="IBroadcastRemoteExecutor.cs" />
     <Compile Include="Channels\IBroadcastChannel.cs" />
     <Compile Include="Channels\IIncomingMessageChannel.cs" />
@@ -76,11 +77,10 @@
     <Compile Include="Messages\Response.cs" />
     <Compile Include="Endpoints\ClientEndpoint.cs" />
     <Compile Include="Endpoints\IClientEndpoint.cs" />
-    <Compile Include="Endpoints\INetworkConnection.cs" />
     <Compile Include="Endpoints\IServerEndpoint.cs" />
     <Compile Include="Endpoints\LidgrenEndpoint.cs" />
     <Compile Include="Endpoints\Processing\MessageLoop.cs" />
-    <Compile Include="Endpoints\LidgrenNetworkConnection.cs" />
+    <Compile Include="Connections\LidgrenNetworkConnection.cs" />
     <Compile Include="Endpoints\ServerEndpoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remoting\OneWayRemoteCallInterceptor.cs" />

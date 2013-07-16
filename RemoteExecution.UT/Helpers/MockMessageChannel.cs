@@ -1,24 +1,21 @@
 using System;
 using System.Collections.Generic;
-using RemoteExecution.Dispatchers;
-using RemoteExecution.Endpoints;
+using RemoteExecution.Channels;
 using RemoteExecution.Messages;
 
 namespace RemoteExecution.UT.Helpers
 {
-	class MockNetworkConnection : INetworkConnection
+	class MockMessageChannel : IMessageChannel
 	{
+		public bool IsOpen { get { return true; } }
 		public Action<IMessage> OnMessageSend { get; set; }
 		public List<IMessage> SentMessages { get; private set; }
 
-		public MockNetworkConnection(IOperationDispatcher operationDispatcher)
+		public MockMessageChannel()
 		{
-			OperationDispatcher = operationDispatcher;
 			SentMessages = new List<IMessage>();
 			OnMessageSend = m => { };
 		}
-
-		#region IWriteEndpoint Members
 
 		public void Send(IMessage message)
 		{
@@ -26,14 +23,6 @@ namespace RemoteExecution.UT.Helpers
 			OnMessageSend(message);
 		}
 
-		#endregion
-
-		public void Dispose()
-		{
-		}
-
-		public bool IsOpen { get { return true; } }
-		public IOperationDispatcher OperationDispatcher { get; private set; }
 		public event Action<IMessage> Received;
 	}
 }

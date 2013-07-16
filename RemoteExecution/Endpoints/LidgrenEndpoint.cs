@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Lidgren.Network;
+using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints.Processing;
 
@@ -34,7 +35,8 @@ namespace RemoteExecution.Endpoints
 			_messageLoop = null;
 		}
 
-		protected abstract bool HandleNewConnection(IConfigurableNetworkConnection connection);
+		protected abstract IOperationDispatcher GetDispatcherForNewConnection();
+		protected abstract bool HandleNewConnection(INetworkConnection connection);
 		protected virtual void OnConnectionClose(INetworkConnection connection) { }
 
 		private void HandleClosedConnection(NetConnection connection)
@@ -44,13 +46,12 @@ namespace RemoteExecution.Endpoints
 				return;
 			_connections.Remove(connection);
 			OnConnectionClose(conn);
-			conn.OperationDispatcher.DispatchAbortResponses(conn, "Network connection has been closed.");
 			conn.Dispose();
 		}
 
 		private void HandleNewConnection(NetConnection connection)
 		{
-			var conn = new LidgrenNetworkConnection(connection, new OperationDispatcher());
+			var conn = new LidgrenNetworkConnection(connection, GetDispatcherForNewConnection());
 			if (HandleNewConnection(conn))
 				_connections.Add(connection, conn);
 			else
@@ -72,7 +73,7 @@ namespace RemoteExecution.Endpoints
 
 		private void HandleData(NetIncomingMessage message)
 		{
-			_connections[message.SenderConnection].HandleIncomingMessage(message);
+			_connections[message.SenderConnection].Channel.HandleIncomingMessage(message);
 		}
 
 		private void HandleStatusChange(NetIncomingMessage msg)
