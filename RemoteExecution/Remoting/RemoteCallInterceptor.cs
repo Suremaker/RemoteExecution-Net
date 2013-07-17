@@ -5,9 +5,9 @@ namespace RemoteExecution.Remoting
 {
 	internal class RemoteCallInterceptor : IMethodInterceptor
 	{
+		private readonly NoResultMethodExecution _noResultMethodExecution;
 		private readonly IMethodInterceptor _oneWayInterceptor;
 		private readonly IMethodInterceptor _twoWayInterceptor;
-		private readonly NoResultMethodExecution _noResultMethodExecution;
 
 		public RemoteCallInterceptor(IMethodInterceptor oneWayInterceptor, IMethodInterceptor twoWayInterceptor, NoResultMethodExecution noResultMethodExecution)
 		{

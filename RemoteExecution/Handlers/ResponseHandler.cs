@@ -16,7 +16,7 @@ namespace RemoteExecution.Handlers
 			Id = Guid.NewGuid().ToString();
 		}
 
-		#region IHandler Members
+		#region IResponseHandler Members
 
 		public string Id { get; private set; }
 
@@ -25,8 +25,6 @@ namespace RemoteExecution.Handlers
 			_response = ((IResponse)msg);
 			_resetEvent.Set();
 		}
-
-		#endregion
 
 		public object GetValue()
 		{
@@ -39,5 +37,7 @@ namespace RemoteExecution.Handlers
 		}
 
 		public IMessageChannel TargetChannel { get; private set; }
+
+		#endregion
 	}
 }

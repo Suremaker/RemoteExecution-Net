@@ -7,14 +7,16 @@ namespace RemoteExecution.Executors
 {
 	internal class RemoteExecutor : IRemoteExecutor
 	{
-		private readonly IOperationDispatcher _dispatcher;
 		private readonly IMessageChannel _channel;
+		private readonly IOperationDispatcher _dispatcher;
 
 		public RemoteExecutor(IOperationDispatcher dispatcher, IMessageChannel channel)
 		{
 			_dispatcher = dispatcher;
 			_channel = channel;
 		}
+
+		#region IRemoteExecutor Members
 
 		public T Create<T>()
 		{
@@ -31,5 +33,7 @@ namespace RemoteExecution.Executors
 			var factory = new ProxyFactory(typeof(T), remoteCallInterceptor);
 			return (T)factory.GetProxy();
 		}
+
+		#endregion
 	}
 }

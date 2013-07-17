@@ -23,11 +23,6 @@ namespace RemoteExecution.Dispatchers
 			RegisterHandler(handler);
 		}
 
-		private void RegisterHandler(IHandler handler)
-		{
-			_handlers.AddOrUpdate(handler.Id, k => handler, (k, v) => handler);
-		}
-
 		public void UnregisterResponseHandler(IResponseHandler handler)
 		{
 			IHandler hnd;
@@ -56,8 +51,6 @@ namespace RemoteExecution.Dispatchers
 				HandleUndefinedType(msg, originChannel);
 		}
 
-		#endregion
-
 		public void RegisterRequestHandler(Type interfaceType, object handler)
 		{
 			if (!interfaceType.IsInstanceOfType(handler))
@@ -70,12 +63,19 @@ namespace RemoteExecution.Dispatchers
 			RegisterHandler(new RequestHandler(interfaceType, handler));
 		}
 
+		#endregion
+
 		private void HandleUndefinedType(IMessage msg, IMessageChannel messageChannel)
 		{
 			if (!(msg is IRequest))
 				return;
 			string message = string.Format("No handler is defined for {0} type.", msg.GroupId);
 			messageChannel.Send(new ExceptionResponse(msg.CorrelationId, typeof(InvalidOperationException), message));
+		}
+
+		private void RegisterHandler(IHandler handler)
+		{
+			_handlers.AddOrUpdate(handler.Id, k => handler, (k, v) => handler);
 		}
 	}
 }

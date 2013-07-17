@@ -16,6 +16,8 @@ namespace RemoteExecution.Executors
 			_broadcastChannel = broadcastChannel;
 		}
 
+		#region IBroadcastRemoteExecutor Members
+
 		public T Create<T>()
 		{
 			var interfaceType = typeof(T);
@@ -24,6 +26,8 @@ namespace RemoteExecution.Executors
 
 			return (T)new ProxyFactory(interfaceType, new OneWayRemoteCallInterceptor(_broadcastChannel, interfaceType.Name)).GetProxy();
 		}
+
+		#endregion
 
 		private static void VerifyInterfaceMethods(Type interfaceType, string name)
 		{

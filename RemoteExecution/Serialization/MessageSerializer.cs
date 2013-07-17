@@ -14,6 +14,11 @@ namespace RemoteExecution.Serialization
 			TypeInfoRepository.RegisterPredefinedUsingSerializableFrom(typeof(Request).Assembly);
 		}
 
+		public static void RegsterSerializableFrom(Assembly assembly)
+		{
+			TypeInfoRepository.RegisterPredefinedUsingSerializableFrom(assembly);
+		}
+
 		public IMessage Deserialize(byte[] msg)
 		{
 			return _serializer.Deserialize<IMessage>(msg);
@@ -22,11 +27,6 @@ namespace RemoteExecution.Serialization
 		public byte[] Serialize(IMessage msg)
 		{
 			return _serializer.Serialize(msg);
-		}
-
-		public static void RegsterSerializableFrom(Assembly assembly)
-		{
-			TypeInfoRepository.RegisterPredefinedUsingSerializableFrom(assembly);
 		}
 	}
 }

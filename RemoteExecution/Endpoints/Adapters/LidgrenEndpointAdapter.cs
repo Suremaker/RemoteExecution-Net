@@ -11,9 +11,20 @@ namespace RemoteExecution.Endpoints.Adapters
 {
 	public class LidgrenEndpointAdapter : IEndpointAdapter
 	{
-		private MessageLoop _messageLoop;
 		protected static readonly TimeSpan SynchronizationTimeSpan = TimeSpan.FromMilliseconds(25);
 		protected readonly NetPeer Peer;
+		private MessageLoop _messageLoop;
+
+		public LidgrenEndpointAdapter(NetPeer peer)
+		{
+			Peer = peer;
+
+			ClosedConnectionHandler = connection => { };
+			DispatcherCreator = () => new OperationDispatcher();
+			NewConnectionHandler = connection => { };
+		}
+
+		#region IEndpointAdapter Members
 
 		public Action<INetworkConnection> ClosedConnectionHandler { set; private get; }
 		public IEnumerable<INetworkConnection> ActiveConnections { get { return Peer.Connections.Select(ExtractConnection).Where(conn => conn != null); } }
@@ -27,15 +38,6 @@ namespace RemoteExecution.Endpoints.Adapters
 		public Func<IOperationDispatcher> DispatcherCreator { set; private get; }
 		public Action<INetworkConnection> NewConnectionHandler { set; private get; }
 
-		public LidgrenEndpointAdapter(NetPeer peer)
-		{
-			Peer = peer;
-
-			ClosedConnectionHandler = connection => { };
-			DispatcherCreator = () => new OperationDispatcher();
-			NewConnectionHandler = connection => { };
-		}
-
 		public void Dispose()
 		{
 			foreach (var connection in ActiveConnections.ToArray())
@@ -48,11 +50,21 @@ namespace RemoteExecution.Endpoints.Adapters
 			_messageLoop = null;
 		}
 
-		private void ShutdownPeer()
+		#endregion
+
+		private LidgrenNetworkConnection ExtractConnection(NetConnection netConnection)
 		{
-			Peer.Shutdown("Endpoint disposed");
-			while (Peer.Status != NetPeerStatus.NotRunning)
-				Thread.Sleep(SynchronizationTimeSpan);
+			return netConnection.Tag as LidgrenNetworkConnection;
+		}
+
+		private LidgrenNetworkConnection ExtractConnectionWithWait(NetConnection netConnection)
+		{
+			var connection = ExtractConnection(netConnection);
+			if (connection != null)
+				return connection;
+
+			lock (netConnection)
+				return ExtractConnection(netConnection);
 		}
 
 		private void HandleClosedConnection(NetConnection netConnection)
@@ -63,14 +75,9 @@ namespace RemoteExecution.Endpoints.Adapters
 			connection.Dispose();
 		}
 
-		private void HandleNewConnection(NetConnection netConnection)
+		private void HandleData(NetIncomingMessage message)
 		{
-			lock (netConnection)
-			{
-				var connection = new LidgrenNetworkConnection(netConnection, DispatcherCreator.Invoke());
-				NewConnectionHandler.Invoke(connection);
-				netConnection.Tag = connection;
-			}
+			ExtractConnectionWithWait(message.SenderConnection).Channel.HandleIncomingMessage(message);
 		}
 
 		private void HandleMessage(NetIncomingMessage msg)
@@ -86,24 +93,14 @@ namespace RemoteExecution.Endpoints.Adapters
 			}
 		}
 
-		private void HandleData(NetIncomingMessage message)
+		private void HandleNewConnection(NetConnection netConnection)
 		{
-			ExtractConnectionWithWait(message.SenderConnection).Channel.HandleIncomingMessage(message);
-		}
-
-		private LidgrenNetworkConnection ExtractConnectionWithWait(NetConnection netConnection)
-		{
-			var connection = ExtractConnection(netConnection);
-			if (connection != null)
-				return connection;
-
 			lock (netConnection)
-				return ExtractConnection(netConnection);
-		}
-
-		private LidgrenNetworkConnection ExtractConnection(NetConnection netConnection)
-		{
-			return netConnection.Tag as LidgrenNetworkConnection;
+			{
+				var connection = new LidgrenNetworkConnection(netConnection, DispatcherCreator.Invoke());
+				NewConnectionHandler.Invoke(connection);
+				netConnection.Tag = connection;
+			}
 		}
 
 		private void HandleStatusChange(NetIncomingMessage msg)
@@ -117,6 +114,13 @@ namespace RemoteExecution.Endpoints.Adapters
 					HandleClosedConnection(msg.SenderConnection);
 					break;
 			}
+		}
+
+		private void ShutdownPeer()
+		{
+			Peer.Shutdown("Endpoint disposed");
+			while (Peer.Status != NetPeerStatus.NotRunning)
+				Thread.Sleep(SynchronizationTimeSpan);
 		}
 	}
 }

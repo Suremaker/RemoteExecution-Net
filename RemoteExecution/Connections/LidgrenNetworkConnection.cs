@@ -8,6 +8,8 @@ namespace RemoteExecution.Connections
 {
 	internal class LidgrenNetworkConnection : INetworkConnection
 	{
+		public LidgrenMessageChannel Channel { get; private set; }
+
 		public LidgrenNetworkConnection(NetConnection connection, IOperationDispatcher operationDispatcher)
 		{
 			Channel = new LidgrenMessageChannel(connection);
@@ -16,6 +18,8 @@ namespace RemoteExecution.Connections
 			OperationDispatcher = operationDispatcher;
 			RemoteExecutor = new RemoteExecutor(operationDispatcher, Channel);
 		}
+
+		#region INetworkConnection Members
 
 		public void Dispose()
 		{
@@ -27,7 +31,8 @@ namespace RemoteExecution.Connections
 		public bool IsOpen { get { return Channel.IsOpen; } }
 		public IOperationDispatcher OperationDispatcher { get; set; }
 		public IRemoteExecutor RemoteExecutor { get; private set; }
-		public LidgrenMessageChannel Channel { get; private set; }
+
+		#endregion
 
 		public void DispatchMessage(IMessage message)
 		{

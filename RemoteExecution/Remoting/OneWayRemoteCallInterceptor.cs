@@ -16,10 +16,14 @@ namespace RemoteExecution.Remoting
 			_interfaceName = interfaceName;
 		}
 
+		#region IMethodInterceptor Members
+
 		public object Invoke(IMethodInvocation invocation)
 		{
 			_channel.Send(new Request(Guid.NewGuid().ToString(), _interfaceName, invocation.Method.Name, invocation.Arguments, false));
 			return null;
 		}
+
+		#endregion
 	}
 }

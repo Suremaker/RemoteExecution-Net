@@ -19,6 +19,8 @@ namespace RemoteExecution.Remoting
 			_interfaceName = interfaceName;
 		}
 
+		#region IMethodInterceptor Members
+
 		public object Invoke(IMethodInvocation invocation)
 		{
 			var handler = CreateResponseHandler();
@@ -35,6 +37,8 @@ namespace RemoteExecution.Remoting
 			}
 			return handler.GetValue();
 		}
+
+		#endregion
 
 		protected virtual IResponseHandler CreateResponseHandler()
 		{

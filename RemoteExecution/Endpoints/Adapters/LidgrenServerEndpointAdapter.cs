@@ -11,6 +11,10 @@ namespace RemoteExecution.Endpoints.Adapters
 			BroadcastChannel = new LidgrenBroadcastChannel((NetServer)Peer);
 		}
 
+		#region IServerEndpointAdapter Members
+
 		public IBroadcastChannel BroadcastChannel { get; private set; }
+
+		#endregion
 	}
 }

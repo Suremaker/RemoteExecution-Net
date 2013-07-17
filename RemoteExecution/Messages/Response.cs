@@ -5,8 +5,6 @@ namespace RemoteExecution.Messages
 	[Serializable]
 	public class Response : IResponse
 	{
-		public object Value { get; set; }
-
 		public Response(string id, object value)
 		{
 			CorrelationId = id;
@@ -15,7 +13,9 @@ namespace RemoteExecution.Messages
 
 		public Response() { }
 
-		#region IMessage Members
+		#region IResponse Members
+
+		public object Value { get; set; }
 
 		public string CorrelationId { get; set; }
 		public string GroupId { get { return CorrelationId; } }

@@ -15,12 +15,12 @@ namespace RemoteExecution.Messages
 			CorrelationId = id;
 		}
 
+		#region IResponse Members
+
 		public object Value
 		{
 			get { throw (Exception)Activator.CreateInstance(Type.GetType(ExceptionType, true), Message); }
 		}
-
-		#region IMessage Members
 
 		public string CorrelationId { get; set; }
 		public string GroupId { get { return CorrelationId; } }

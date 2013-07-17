@@ -10,6 +10,16 @@ namespace RemoteExecution.Endpoints
 		private readonly IClientEndpointAdapter _endpointAdapter;
 		private INetworkConnection _connection;
 
+		public INetworkConnection Connection
+		{
+			get
+			{
+				if (_connection == null)
+					throw new NotConnectedException("Network connection is not opened.");
+				return _connection;
+			}
+		}
+
 		public ClientEndpoint(string applicationId)
 			: this(applicationId, new OperationDispatcher())
 		{
@@ -28,15 +38,7 @@ namespace RemoteExecution.Endpoints
 			_endpointAdapter.ClosedConnectionHandler = connection => _connection = null;
 		}
 
-		public INetworkConnection Connection
-		{
-			get
-			{
-				if (_connection == null)
-					throw new NotConnectedException("Network connection is not opened.");
-				return _connection;
-			}
-		}
+		#region IClientEndpoint Members
 
 		public INetworkConnection ConnectTo(string host, ushort port)
 		{
@@ -51,5 +53,7 @@ namespace RemoteExecution.Endpoints
 		{
 			_endpointAdapter.Dispose();
 		}
+
+		#endregion
 	}
 }

@@ -32,30 +32,6 @@ namespace RemoteExecution.Handlers
 				ExecuteWithoutResponse(request);
 		}
 
-		private void ExecuteWithoutResponse(IRequest msg)
-		{
-			try
-			{
-				Execute(msg);
-			}
-			catch (Exception)
-			{
-
-			}
-		}
-
-		private void ExecuteWithResponse(IRequest msg, IOutgoingMessageChannel messageChannel)
-		{
-			try
-			{
-				messageChannel.Send(new Response(msg.CorrelationId, Execute(msg)));
-			}
-			catch (Exception e)
-			{
-				messageChannel.Send(new ExceptionResponse(msg.CorrelationId, e.GetType(), e.Message));
-			}
-		}
-
 		#endregion
 
 		private object Execute(IRequest request)
@@ -75,6 +51,30 @@ namespace RemoteExecution.Handlers
 			catch (TargetInvocationException e)
 			{
 				throw e.InnerException;
+			}
+		}
+
+		private void ExecuteWithResponse(IRequest msg, IOutgoingMessageChannel messageChannel)
+		{
+			try
+			{
+				messageChannel.Send(new Response(msg.CorrelationId, Execute(msg)));
+			}
+			catch (Exception e)
+			{
+				messageChannel.Send(new ExceptionResponse(msg.CorrelationId, e.GetType(), e.Message));
+			}
+		}
+
+		private void ExecuteWithoutResponse(IRequest msg)
+		{
+			try
+			{
+				Execute(msg);
+			}
+			catch (Exception)
+			{
+
 			}
 		}
 	}

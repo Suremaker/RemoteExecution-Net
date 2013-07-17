@@ -8,10 +8,10 @@ namespace RemoteExecution.Endpoints.Processing
 {
 	internal class MessageLoop
 	{
-		private readonly NetPeer _peer;
 		private readonly Action<NetIncomingMessage> _handleMessage;
-		private readonly Thread _thread;
+		private readonly NetPeer _peer;
 		private readonly SemaphoreSlim _semaphore;
+		private readonly Thread _thread;
 
 		public MessageLoop(NetPeer peer, Action<NetIncomingMessage> handleMessage)
 		{
@@ -23,20 +23,19 @@ namespace RemoteExecution.Endpoints.Processing
 			_thread.Start();
 		}
 
-		private void Run()
-		{
-			SetSynchronizationContext();
-			_peer.RegisterReceivedCallback(MessageReady);
-			_semaphore.Wait();
-			_peer.UnregisterReceivedCallback(MessageReady);
-		}
-
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		private static void SetSynchronizationContext()
 		{
 			if (SynchronizationContext.Current != null)
 				return;
 			SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+		}
+
+		public void Dispose()
+		{
+			_semaphore.Release();
+			_thread.Join();
+			_semaphore.Dispose();
 		}
 
 		private void MessageReady(object obj)
@@ -46,11 +45,12 @@ namespace RemoteExecution.Endpoints.Processing
 				Task.Factory.StartNew(() => _handleMessage(msg));
 		}
 
-		public void Dispose()
+		private void Run()
 		{
-			_semaphore.Release();
-			_thread.Join();
-			_semaphore.Dispose();
+			SetSynchronizationContext();
+			_peer.RegisterReceivedCallback(MessageReady);
+			_semaphore.Wait();
+			_peer.UnregisterReceivedCallback(MessageReady);
 		}
 	}
 }

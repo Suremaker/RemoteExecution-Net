@@ -7,10 +7,6 @@ namespace RemoteExecution.Messages
 	{
 		private static readonly object[] EMPTY = new object[0];
 
-		public object[] Args { get; set; }
-		public string OperationName { get; set; }
-		public bool IsResponseExpected { get; set; }
-
 		public Request()
 		{
 			IsResponseExpected = true;
@@ -25,7 +21,11 @@ namespace RemoteExecution.Messages
 			IsResponseExpected = isResponseExpected;
 		}
 
-		#region IMessage Members
+		#region IRequest Members
+
+		public object[] Args { get; set; }
+		public string OperationName { get; set; }
+		public bool IsResponseExpected { get; set; }
 
 		public string CorrelationId { get; set; }
 		public string GroupId { get; set; }

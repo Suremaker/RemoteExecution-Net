@@ -7,12 +7,10 @@ namespace RemoteExecution.Endpoints.Adapters
 {
 	public interface IEndpointAdapter : IDisposable
 	{
-		void StartListening();
-
+		IEnumerable<INetworkConnection> ActiveConnections { get; }
+		Action<INetworkConnection> ClosedConnectionHandler { set; }
 		Func<IOperationDispatcher> DispatcherCreator { set; }
 		Action<INetworkConnection> NewConnectionHandler { set; }
-		Action<INetworkConnection> ClosedConnectionHandler { set; }
-
-		IEnumerable<INetworkConnection> ActiveConnections { get; }
+		void StartListening();
 	}
 }

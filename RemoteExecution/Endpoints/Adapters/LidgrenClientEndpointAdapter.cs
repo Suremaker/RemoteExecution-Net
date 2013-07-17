@@ -12,6 +12,8 @@ namespace RemoteExecution.Endpoints.Adapters
 		{
 		}
 
+		#region IClientEndpointAdapter Members
+
 		public void ConnectTo(string host, ushort port)
 		{
 			NetConnection conn = Peer.Connect(host, port);
@@ -23,5 +25,7 @@ namespace RemoteExecution.Endpoints.Adapters
 				Thread.Sleep(SynchronizationTimeSpan);
 			}
 		}
+
+		#endregion
 	}
 }

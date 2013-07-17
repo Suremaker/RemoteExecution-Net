@@ -14,6 +14,8 @@ namespace RemoteExecution.Channels
 			_netServer = netServer;
 		}
 
+		#region IBroadcastChannel Members
+
 		public bool IsOpen { get { return _netServer.Status == NetPeerStatus.Running; } }
 
 		public void Send(IMessage message)
@@ -22,6 +24,10 @@ namespace RemoteExecution.Channels
 				_netServer.SendToAll(CreateOutgoingMessage(message), NetDeliveryMethod.ReliableUnordered);
 		}
 
+		public int ReceiverCount { get { return _netServer.ConnectionsCount; } }
+
+		#endregion
+
 		private NetOutgoingMessage CreateOutgoingMessage(IMessage message)
 		{
 			byte[] content = _serializer.Serialize(message);
@@ -29,7 +35,5 @@ namespace RemoteExecution.Channels
 			msg.Write(content);
 			return msg;
 		}
-
-		public int ReceiverCount { get { return _netServer.ConnectionsCount; } }
 	}
 }

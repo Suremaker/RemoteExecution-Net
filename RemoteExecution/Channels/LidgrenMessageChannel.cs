@@ -13,15 +13,25 @@ namespace RemoteExecution.Channels
 		private static readonly IEnumerable<NetConnectionStatus> _validConnectionStatus = new[] { NetConnectionStatus.Connected, NetConnectionStatus.RespondedConnect };
 		private static readonly MessageSerializer _serializer = new MessageSerializer();
 		private readonly NetConnection _connection;
+		public event Action<IMessage> Received;
 
 		public LidgrenMessageChannel(NetConnection connection)
 		{
 			_connection = connection;
 		}
 
-		public bool IsOpen { get { return _validConnectionStatus.Contains(_connection.Status); } }
+		#region IDisposable Members
 
-		public event Action<IMessage> Received;
+		public void Dispose()
+		{
+			_connection.Disconnect("Connection disposed");
+		}
+
+		#endregion
+
+		#region IMessageChannel Members
+
+		public bool IsOpen { get { return _validConnectionStatus.Contains(_connection.Status); } }
 
 		public void Send(IMessage message)
 		{
@@ -29,6 +39,8 @@ namespace RemoteExecution.Channels
 				throw new NotConnectedException("Network connection is not opened.");
 			_connection.Peer.SendMessage(CreateOutgoingMessage(message), _connection, NetDeliveryMethod.ReliableUnordered, 0);
 		}
+
+		#endregion
 
 		public void HandleIncomingMessage(NetIncomingMessage message)
 		{
@@ -41,11 +53,6 @@ namespace RemoteExecution.Channels
 			NetOutgoingMessage msg = _connection.Peer.CreateMessage(content.Length);
 			msg.Write(content);
 			return msg;
-		}
-
-		public void Dispose()
-		{
-			_connection.Disconnect("Connection disposed");
 		}
 	}
 }
