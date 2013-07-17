@@ -42,11 +42,11 @@ namespace RemoteExecution.IT
 			{
 				client.ConnectTo(_localhost, _port);
 				Assert.That(client.Connection.IsOpen, Is.True);
-				Assert.That(_serverEndpoint.ActiveConnections.Count, Is.EqualTo(1));
+				Assert.That(_serverEndpoint.ActiveConnections.Count(), Is.EqualTo(1));
 			}
-			SyncHelper.WaitUntil(() => _serverEndpoint.ActiveConnections.Count == 0, 250);
+			SyncHelper.WaitUntil(() => !_serverEndpoint.ActiveConnections.Any(), 250);
 
-			Assert.That(_serverEndpoint.ActiveConnections.Count, Is.EqualTo(0));
+			Assert.That(_serverEndpoint.ActiveConnections.Count(), Is.EqualTo(0));
 		}
 
 		[Test]
@@ -67,8 +67,8 @@ namespace RemoteExecution.IT
 			{
 				client1.ConnectTo(_localhost, _port);
 				client2.ConnectTo(_localhost, _port);
-				Assert.That(client1.RemoteExecutor.Create<IRemoteService>().GetConnectionId(), Is.EqualTo(1));
-				Assert.That(client2.RemoteExecutor.Create<IRemoteService>().GetConnectionId(), Is.EqualTo(2));
+				Assert.That(client1.RemoteExecutor.Create<IRemoteService>().GetConnectionId(), Is.EqualTo(0));
+				Assert.That(client2.RemoteExecutor.Create<IRemoteService>().GetConnectionId(), Is.EqualTo(1));
 			}
 		}
 

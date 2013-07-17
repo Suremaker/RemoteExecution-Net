@@ -16,7 +16,7 @@ namespace RemoteExecution.Endpoints.Adapters
 		protected readonly NetPeer Peer;
 
 		public Action<INetworkConnection> ClosedConnectionHandler { set; private get; }
-		public IEnumerable<INetworkConnection> ActiveConnections { get { return Peer.Connections.Select(ToNetworkConnection).Where(conn => conn != null); } }
+		public IEnumerable<INetworkConnection> ActiveConnections { get { return Peer.Connections.Select(ExtractConnection).Where(conn => conn != null); } }
 
 		public void StartListening()
 		{
@@ -57,7 +57,7 @@ namespace RemoteExecution.Endpoints.Adapters
 
 		private void HandleClosedConnection(NetConnection netConnection)
 		{
-			var connection = ToNetworkConnection(netConnection);
+			var connection = ExtractConnectionWithWait(netConnection);
 
 			ClosedConnectionHandler.Invoke(connection);
 			connection.Dispose();
@@ -88,26 +88,17 @@ namespace RemoteExecution.Endpoints.Adapters
 
 		private void HandleData(NetIncomingMessage message)
 		{
-			ToNetworkConnection(message.SenderConnection).Channel.HandleIncomingMessage(message);
+			ExtractConnectionWithWait(message.SenderConnection).Channel.HandleIncomingMessage(message);
 		}
 
-		private LidgrenNetworkConnection ToNetworkConnection(NetConnection netConnection)
+		private LidgrenNetworkConnection ExtractConnectionWithWait(NetConnection netConnection)
 		{
 			var connection = ExtractConnection(netConnection);
-			if (connection != null) 
+			if (connection != null)
 				return connection;
 
-			while (true)
-			{
-				lock (netConnection)
-				{
-					connection = ExtractConnection(netConnection);
-
-					if (connection != null) 
-						return connection;
-				}
-				Thread.Sleep(SynchronizationTimeSpan);
-			}
+			lock (netConnection)
+				return ExtractConnection(netConnection);
 		}
 
 		private LidgrenNetworkConnection ExtractConnection(NetConnection netConnection)

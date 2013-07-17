@@ -19,6 +19,7 @@ Version 1.0.7:
 + added RemoteExecutor property to IClientEndpoint
 + changed load tests to be faster, more stable and test higher load
 + made LidgrenEndpointAdapter more thread safe
++ added ActiveConnections to IServerEndpoint
 
 Version 1.0.6:
 ----------------

@@ -1,4 +1,5 @@
-﻿using RemoteExecution.Connections;
+﻿using System.Collections.Generic;
+using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints.Adapters;
 using RemoteExecution.Executors;
@@ -15,6 +16,7 @@ namespace RemoteExecution.Endpoints
 		}
 
 		public IBroadcastRemoteExecutor BroadcastRemoteExecutor { get; private set; }
+		public IEnumerable<INetworkConnection> ActiveConnections { get { return _endpointAdapter.ActiveConnections; } }
 
 		protected ServerEndpoint(string applicationId, int maxConnections, ushort port)
 		{
