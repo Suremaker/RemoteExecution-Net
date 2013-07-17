@@ -20,7 +20,7 @@ namespace RemoteExecution.Endpoints.Adapters
 				if (conn.Status == NetConnectionStatus.Disconnected)
 					throw new IOException("Connection closed.");
 
-				Thread.Sleep(150);
+				Thread.Sleep(SynchronizationTimeSpan);
 			}
 		}
 	}

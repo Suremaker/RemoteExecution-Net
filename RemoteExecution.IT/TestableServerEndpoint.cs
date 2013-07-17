@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
@@ -9,6 +10,7 @@ namespace RemoteExecution.IT
 	class TestableServerEndpoint : ServerEndpoint
 	{
 		public List<INetworkConnection> ActiveConnections { get; private set; }
+
 		public TestableServerEndpoint(string appId, int maxConnections, ushort port)
 			: base(appId, maxConnections, port)
 		{
@@ -20,6 +22,7 @@ namespace RemoteExecution.IT
 			return new OperationDispatcher();
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		protected override void OnNewConnection(INetworkConnection connection)
 		{
 			ActiveConnections.Add(connection);
@@ -33,6 +36,7 @@ namespace RemoteExecution.IT
 			connection.OperationDispatcher.RegisterRequestHandler<ICalculatorService>(new CalculatorService());
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		protected override void OnConnectionClose(INetworkConnection connection)
 		{
 			ActiveConnections.Remove(connection);

@@ -58,6 +58,7 @@
     <Compile Include="Services\IClientService.cs" />
     <Compile Include="Services\IRemoteService.cs" />
     <Compile Include="Services\RemoteService.cs" />
+    <Compile Include="SyncHelper.cs" />
     <Compile Include="TestableServerEndpoint.cs" />
   </ItemGroup>
   <ItemGroup>

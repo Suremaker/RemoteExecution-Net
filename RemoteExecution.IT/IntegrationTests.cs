@@ -44,7 +44,8 @@ namespace RemoteExecution.IT
 				Assert.That(client.Connection.IsOpen, Is.True);
 				Assert.That(_serverEndpoint.ActiveConnections.Count, Is.EqualTo(1));
 			}
-			Thread.Sleep(250);
+			SyncHelper.WaitUntil(() => _serverEndpoint.ActiveConnections.Count == 0, 250);
+
 			Assert.That(_serverEndpoint.ActiveConnections.Count, Is.EqualTo(0));
 		}
 

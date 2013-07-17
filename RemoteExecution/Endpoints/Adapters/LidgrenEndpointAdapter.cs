@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Lidgren.Network;
 using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
@@ -11,6 +12,7 @@ namespace RemoteExecution.Endpoints.Adapters
 	public class LidgrenEndpointAdapter : IEndpointAdapter
 	{
 		private MessageLoop _messageLoop;
+		protected static readonly TimeSpan SynchronizationTimeSpan = TimeSpan.FromMilliseconds(25);
 		protected readonly NetPeer Peer;
 
 		public Action<INetworkConnection> ClosedConnectionHandler { set; private get; }
@@ -39,10 +41,18 @@ namespace RemoteExecution.Endpoints.Adapters
 			foreach (var connection in ActiveConnections.ToArray())
 				connection.Dispose();
 
-			Peer.Shutdown("Endpoint disposed");
+			ShutdownPeer();
+
 			if (_messageLoop != null)
 				_messageLoop.Dispose();
 			_messageLoop = null;
+		}
+
+		private void ShutdownPeer()
+		{
+			Peer.Shutdown("Endpoint disposed");
+			while (Peer.Status != NetPeerStatus.NotRunning)
+				Thread.Sleep(SynchronizationTimeSpan);
 		}
 
 		private void HandleClosedConnection(NetConnection netConnection)
@@ -55,9 +65,12 @@ namespace RemoteExecution.Endpoints.Adapters
 
 		private void HandleNewConnection(NetConnection netConnection)
 		{
-			var connection = new LidgrenNetworkConnection(netConnection, DispatcherCreator.Invoke());
-			netConnection.Tag = connection;
-			NewConnectionHandler.Invoke(connection);
+			lock (netConnection)
+			{
+				var connection = new LidgrenNetworkConnection(netConnection, DispatcherCreator.Invoke());
+				NewConnectionHandler.Invoke(connection);
+				netConnection.Tag = connection;
+			}
 		}
 
 		private void HandleMessage(NetIncomingMessage msg)
@@ -80,7 +93,26 @@ namespace RemoteExecution.Endpoints.Adapters
 
 		private LidgrenNetworkConnection ToNetworkConnection(NetConnection netConnection)
 		{
-			return (LidgrenNetworkConnection)netConnection.Tag;
+			var connection = ExtractConnection(netConnection);
+			if (connection != null) 
+				return connection;
+
+			while (true)
+			{
+				lock (netConnection)
+				{
+					connection = ExtractConnection(netConnection);
+
+					if (connection != null) 
+						return connection;
+				}
+				Thread.Sleep(SynchronizationTimeSpan);
+			}
+		}
+
+		private LidgrenNetworkConnection ExtractConnection(NetConnection netConnection)
+		{
+			return netConnection.Tag as LidgrenNetworkConnection;
 		}
 
 		private void HandleStatusChange(NetIncomingMessage msg)
