@@ -1,4 +1,7 @@
 ﻿using System;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Endpoints;
+using StatelessServices.Contracts;
 
 namespace StatelessServices.Server
 {
@@ -6,7 +9,13 @@ namespace StatelessServices.Server
 	{
 		static void Main(string[] args)
 		{
-			using (var host = new Host(10, 3131))
+			var dispatcher = new OperationDispatcher()
+				.RegisterRequestHandler<ICalculator>(new CalculatorService())
+				.RegisterRequestHandler<IGreeter>(new GreeterService());
+
+			var config = new ServerEndpointConfig(Protocol.Id, 3131);
+
+			using (var host = new StatelessServerEndpoint(config, dispatcher))
 			{
 				host.StartListening();
 				Console.WriteLine("Server started...\nPress enter to stop");

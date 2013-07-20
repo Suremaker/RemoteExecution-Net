@@ -1,4 +1,6 @@
 ﻿using System;
+using RemoteExecution.Endpoints;
+using StatefulServices.Contracts;
 
 namespace StatefulServices.Server
 {
@@ -6,7 +8,7 @@ namespace StatefulServices.Server
 	{
 		static void Main(string[] args)
 		{
-			using (var host = new Host(10, 3132))
+			using (var host = new Host(new ServerEndpointConfig(Protocol.Id, 3132)))
 			{
 				host.StartListening();
 				Console.WriteLine("Server started...\nPress enter to stop");

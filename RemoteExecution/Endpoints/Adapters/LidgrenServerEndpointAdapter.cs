@@ -5,10 +5,19 @@ namespace RemoteExecution.Endpoints.Adapters
 {
 	internal class LidgrenServerEndpointAdapter : LidgrenEndpointAdapter, IServerEndpointAdapter
 	{
-		public LidgrenServerEndpointAdapter(string applicationId, int maxConnections, ushort port)
-			: base(new NetServer(new NetPeerConfiguration(applicationId) { MaximumConnections = maxConnections, Port = port }))
+		public LidgrenServerEndpointAdapter(ServerEndpointConfig config)
+			: base(new NetServer(ToNetPeerConfiguration(config)))
 		{
 			BroadcastChannel = new LidgrenBroadcastChannel((NetServer)Peer);
+		}
+
+		private static NetPeerConfiguration ToNetPeerConfiguration(ServerEndpointConfig config)
+		{
+			return new NetPeerConfiguration(config.ApplicationId)
+			{
+				MaximumConnections = config.MaxConnections,
+				Port = config.Port
+			};
 		}
 
 		#region IServerEndpointAdapter Members

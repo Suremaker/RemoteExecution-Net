@@ -62,11 +62,11 @@ namespace RemoteExecution.UT.Remoting
 		{
 			using (_repository.Ordered())
 			{
-				Expect.Call(() => _dispatcher.RegisterResponseHandler(_responseHandler));
+				Expect.Call(_dispatcher.RegisterResponseHandler(_responseHandler)).Return(_dispatcher);
 				Expect.Call(() => _channel.Send(Arg<IMessage>.Is.Anything));
 				Expect.Call(() => _responseHandler.WaitForResponse());
-				Expect.Call(() => _dispatcher.UnregisterResponseHandler(_responseHandler));
-				Expect.Call(() => _responseHandler.GetValue());
+				Expect.Call(_dispatcher.UnregisterResponseHandler(_responseHandler)).Return(_dispatcher);
+				Expect.Call(_responseHandler.GetValue());
 			}
 			_repository.ReplayAll();
 			GetInvocationHelper().Hello(5);

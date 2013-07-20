@@ -9,8 +9,8 @@ namespace StatefulServices.Server
 	{
 		readonly SharedContext _sharedContext = new SharedContext();
 
-		public Host(int maxConnections, ushort port)
-			: base(Protocol.Id, maxConnections, port)
+		public Host(ServerEndpointConfig config)
+			: base(config)
 		{
 		}
 
@@ -23,8 +23,10 @@ namespace StatefulServices.Server
 		{
 			var clientContext = new ClientContext();
 			_sharedContext.AddClient(connection, clientContext);
-			connection.OperationDispatcher.RegisterRequestHandler<IRegistrationService>(new RegistrationService(clientContext));
-			connection.OperationDispatcher.RegisterRequestHandler<IUserInfoService>(new UserInfoService(_sharedContext, clientContext));
+
+			connection.OperationDispatcher
+				.RegisterRequestHandler<IRegistrationService>(new RegistrationService(clientContext))
+				.RegisterRequestHandler<IUserInfoService>(new UserInfoService(_sharedContext, clientContext));
 		}
 
 		protected override void OnConnectionClose(INetworkConnection connection)

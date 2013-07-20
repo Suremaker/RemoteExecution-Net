@@ -56,6 +56,10 @@
     <Compile Include="Endpoints\Adapters\LidgrenClientEndpointAdapter.cs" />
     <Compile Include="Endpoints\Adapters\LidgrenEndpointAdapter.cs" />
     <Compile Include="Endpoints\Adapters\LidgrenServerEndpointAdapter.cs" />
+    <Compile Include="Endpoints\GenericServerEndpoint.cs" />
+    <Compile Include="Endpoints\ServerEndpointConfig.cs" />
+    <Compile Include="Endpoints\StatefulServerEndpoint.cs" />
+    <Compile Include="Endpoints\StatelessServerEndpoint.cs" />
     <Compile Include="Executors\BroadcastRemoteExecutor.cs" />
     <Compile Include="Channels\LidgrenMessageChannel.cs" />
     <Compile Include="Connections\INetworkConnection.cs" />

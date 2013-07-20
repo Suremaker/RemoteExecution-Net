@@ -1,6 +1,5 @@
 1.1.0:
 -------------------------------
-+ simplify usage of ServerEndpoint
 + add wiki page with tutorials and help
 + add connection details if possible
 + add aspects for channels / dispatchers / executors ?

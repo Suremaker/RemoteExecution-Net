@@ -2,25 +2,19 @@
 using Examples.Utils;
 using OneWayMethodServices.Contracts;
 using RemoteExecution.Connections;
-using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
 using RemoteExecution.Executors;
 
 namespace OneWayMethodServices.Server
 {
-	class Host : ServerEndpoint
+	class Host : StatefulServerEndpoint
 	{
-		public Host(int maxConnections, ushort port)
-			: base(Protocol.Id, maxConnections, port)
+		public Host(ServerEndpointConfig config)
+			: base(config)
 		{
 		}
 
-		protected override IOperationDispatcher GetDispatcherForNewConnection()
-		{
-			return new OperationDispatcher();
-		}
-
-		protected override void OnNewConnection(INetworkConnection connection)
+		protected override void RegisterServicesFor(INetworkConnection connection)
 		{
 			var remoteExecutor = connection.RemoteExecutor;
 			var twoWayCallback = Aspects.WithTimeMeasure(remoteExecutor.Create<IClientCallback>(NoResultMethodExecution.TwoWay), ConsoleColor.DarkCyan);

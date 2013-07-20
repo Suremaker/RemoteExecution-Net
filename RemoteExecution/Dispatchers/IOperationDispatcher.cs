@@ -9,11 +9,11 @@ namespace RemoteExecution.Dispatchers
 	{
 		void Dispatch(IMessage msg, IMessageChannel originChannel);
 		void DispatchAbortResponsesFor(IMessageChannel originChannel, string message);
-		void RegisterRequestHandler<TInterface>(TInterface handler);
-		void RegisterRequestHandler(Type interfaceType, object handler);
+		IOperationDispatcher RegisterRequestHandler<TInterface>(TInterface handler);
+		IOperationDispatcher RegisterRequestHandler(Type interfaceType, object handler);
 
-		void RegisterResponseHandler(IResponseHandler handler);
-		void UnregisterRequestHandler<TInterface>();
-		void UnregisterResponseHandler(IResponseHandler handler);
+		IOperationDispatcher RegisterResponseHandler(IResponseHandler handler);
+		IOperationDispatcher UnregisterRequestHandler<TInterface>();
+		IOperationDispatcher UnregisterResponseHandler(IResponseHandler handler);
 	}
 }

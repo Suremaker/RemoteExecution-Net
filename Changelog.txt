@@ -20,6 +20,11 @@ Version 1.0.7:
 + changed load tests to be faster, more stable and test higher load
 + made LidgrenEndpointAdapter more thread safe
 + added ActiveConnections to IServerEndpoint
++ aggregated example projects output into bin folder to simplify usage of them
++ modified OperationDispatcher.RegisterRequestHandler to accept only interface types
++ modified IOperationDispatcher registration methods to support fluent configuration
++ grouped ServerEndpoint constructor arguments into ServerEndpointConfig object
++ added GenericServerEndpoint, StatelessServerEndpoint and StatefulServerEndpoint to simplify ServerEndpoint usage
 
 Version 1.0.6:
 ----------------

@@ -9,8 +9,8 @@ namespace RemoteExecution.IT
 {
 	class TestableServerEndpoint : ServerEndpoint
 	{
-		public TestableServerEndpoint(string appId, int maxConnections, ushort port)
-			: base(appId, maxConnections, port)
+		public TestableServerEndpoint(string applicationId, int maxConnections, ushort port)
+			: base(new ServerEndpointConfig(applicationId, port) { MaxConnections = maxConnections })
 		{
 		}
 

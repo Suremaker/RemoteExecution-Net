@@ -52,6 +52,20 @@ namespace RemoteExecution.UT.Dispatchers
 		}
 
 		[Test]
+		public void ShouldNotAllowToRegisterHandlerIfTheSpecifiedTypeIsNotAnInterface()
+		{
+			var ex = Assert.Throws<ArgumentException>(() => _subject.RegisterRequestHandler(typeof(Calculator), new Calculator()));
+			Assert.That(ex.Message, Is.StringStarting("Unable to register handler: Calculator type is not an interface."));
+		}
+
+		[Test]
+		public void ShouldNotAllowToRegisterHandlerIfTheSpecifiedHandlerObjectIsNotOfInterfaceType()
+		{
+			var ex = Assert.Throws<ArgumentException>(() => _subject.RegisterRequestHandler(new Calculator()));
+			Assert.That(ex.Message, Is.StringStarting("Unable to register handler: Calculator type is not an interface."));
+		}
+
+		[Test]
 		public void ShouldPassHandlerExceptions()
 		{
 			_subject.RegisterRequestHandler(typeof(ICalculator), new Calculator());

@@ -10,14 +10,14 @@ namespace RemoteExecution.Endpoints
 	{
 		private readonly LidgrenServerEndpointAdapter _endpointAdapter;
 
-		protected ServerEndpoint(string applicationId, int maxConnections, ushort port)
+		protected ServerEndpoint(ServerEndpointConfig config)
 		{
-			_endpointAdapter = new LidgrenServerEndpointAdapter(applicationId, maxConnections, port)
-				{
-					DispatcherCreator = GetDispatcherForNewConnection,
-					NewConnectionHandler = OnNewConnection,
-					ClosedConnectionHandler = OnConnectionClose
-				};
+			_endpointAdapter = new LidgrenServerEndpointAdapter(config)
+			{
+				DispatcherCreator = GetDispatcherForNewConnection,
+				NewConnectionHandler = OnNewConnection,
+				ClosedConnectionHandler = OnConnectionClose
+			};
 
 			BroadcastRemoteExecutor = new BroadcastRemoteExecutor(_endpointAdapter.BroadcastChannel);
 		}

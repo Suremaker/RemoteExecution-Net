@@ -1,4 +1,6 @@
 ﻿using System;
+using BroadcastServices.Contracts;
+using RemoteExecution.Endpoints;
 
 namespace BroadcastServices.Server
 {
@@ -6,7 +8,7 @@ namespace BroadcastServices.Server
 	{
 		static void Main(string[] args)
 		{
-			using (var host = new Host(10, 3135))
+			using (var host = new Host(new ServerEndpointConfig(Protocol.Id, 3135)))
 			{
 				host.StartListening();
 				Console.WriteLine("Server started...\nPress enter to stop");
