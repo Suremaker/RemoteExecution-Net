@@ -6,6 +6,9 @@ Version 1.0.8:
 + introduced RemoteExecution.Core project
 + reimplemented IMessageDispatcher
 + reimplemented IOperationDispatcher
++ reimplemented RequestMessage / ResponseMessage / ExceptionResponseMessage
++ reimplemented RequestHandler
++ introduced IChannelProvider
 
 Version 1.0.7:
 ---------------------
