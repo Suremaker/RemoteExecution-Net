@@ -1,7 +1,7 @@
 ﻿namespace RemoteExecution.Core.Dispatchers
 {
 	/// <summary>
-	/// Message dispatcher interface, allowing to register message handlers and dispatch messages.
+	/// Message dispatcher interface allowing to register message handlers and dispatch messages.
 	/// </summary>
 	public interface IMessageDispatcher
 	{

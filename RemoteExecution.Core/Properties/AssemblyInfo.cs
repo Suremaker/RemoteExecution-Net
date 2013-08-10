@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+[assembly: InternalsVisibleTo("RemoteExecution.Core.UT")]
 [assembly: AssemblyTitle("RemoteExecution.Core")]
 [assembly: AssemblyDescription("Remote method execution framework based on client-server model. Framework core classes.")]
 [assembly: AssemblyConfiguration("")]

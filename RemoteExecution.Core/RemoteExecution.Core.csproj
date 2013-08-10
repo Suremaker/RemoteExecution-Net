@@ -42,10 +42,14 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Dispatchers\Handlers\DefaultRequestHandler.cs" />
+    <Compile Include="Dispatchers\Handlers\RequestHandler.cs" />
     <Compile Include="Dispatchers\IMessage.cs" />
     <Compile Include="Dispatchers\IMessageDispatcher.cs" />
     <Compile Include="Dispatchers\IMessageHandler.cs" />
+    <Compile Include="Dispatchers\IOperationDispatcher.cs" />
     <Compile Include="Dispatchers\MessageDispatcher.cs" />
+    <Compile Include="Dispatchers\OperationDispatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

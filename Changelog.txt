@@ -5,6 +5,7 @@ Version 1.0.8:
 ---------------------
 + introduced RemoteExecution.Core project
 + reimplemented IMessageDispatcher
++ reimplemented IOperationDispatcher
 
 Version 1.0.7:
 ---------------------
