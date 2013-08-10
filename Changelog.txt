@@ -1,6 +1,11 @@
 Remote Execution project changelog
 ---------------------------------------------------
 
+Version 1.0.8:
+---------------------
++ introduced RemoteExecution.Core project
++ reimplemented IMessageDispatcher
+
 Version 1.0.7:
 ---------------------
 + renamed namespaces

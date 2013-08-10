@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9ED67244-9589-4908-9F8E-56EA1E7556CF}"
 	ProjectSection(SolutionItems) = preProject
+		AssemblyVersion.cs = AssemblyVersion.cs
 		Changelog.txt = Changelog.txt
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
@@ -58,6 +59,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneWayMethodServices.Client", "Examples\OneWayMethodServices.Client\OneWayMethodServices.Client.csproj", "{2E57CCD2-AEBA-4756-A022-57C2D46CFBE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.Utils", "Examples\Examples.Utils\Examples.Utils.csproj", "{5FF9A87A-D4DF-4739-A113-2F8F75359E06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.Core", "RemoteExecution.Core\RemoteExecution.Core.csproj", "{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{30F692B0-D812-4D12-B5F0-5244A9B3C988}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.Core.UT", "RemoteExecution.Core.UT\RemoteExecution.Core.UT.csproj", "{66DCA91C-293D-4B82-802C-E081EB1BB062}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -141,6 +148,14 @@ Global
 		{5FF9A87A-D4DF-4739-A113-2F8F75359E06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FF9A87A-D4DF-4739-A113-2F8F75359E06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FF9A87A-D4DF-4739-A113-2F8F75359E06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66DCA91C-293D-4B82-802C-E081EB1BB062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66DCA91C-293D-4B82-802C-E081EB1BB062}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66DCA91C-293D-4B82-802C-E081EB1BB062}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66DCA91C-293D-4B82-802C-E081EB1BB062}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,5 +182,8 @@ Global
 		{3F78029F-D917-4779-A37E-7FD5B9F48786} = {61D69426-49AB-4102-9E49-6AFF89BBCFE2}
 		{8E6FC415-3FC5-40A8-9F6A-0C8482AE3D41} = {61D69426-49AB-4102-9E49-6AFF89BBCFE2}
 		{CF75D7A1-198B-405E-BE5A-45F65C632E4B} = {61D69426-49AB-4102-9E49-6AFF89BBCFE2}
+		{789D86AE-BB79-45FF-A84C-9BC29428AF40} = {30F692B0-D812-4D12-B5F0-5244A9B3C988}
+		{13A84EFA-0E79-4FD5-A08E-A5932856624F} = {30F692B0-D812-4D12-B5F0-5244A9B3C988}
+		{66DCA91C-293D-4B82-802C-E081EB1BB062} = {30F692B0-D812-4D12-B5F0-5244A9B3C988}
 	EndGlobalSection
 EndGlobal
