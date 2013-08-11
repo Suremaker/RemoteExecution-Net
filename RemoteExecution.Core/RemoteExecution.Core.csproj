@@ -47,6 +47,7 @@
     <Compile Include="Channels\IOutgoingMessageChannel.cs" />
     <Compile Include="Dispatchers\Handlers\DefaultRequestHandler.cs" />
     <Compile Include="Dispatchers\Handlers\RequestHandler.cs" />
+    <Compile Include="Dispatchers\Handlers\ResponseHandler.cs" />
     <Compile Include="Dispatchers\IMessage.cs" />
     <Compile Include="Dispatchers\IMessageDispatcher.cs" />
     <Compile Include="Dispatchers\IMessageHandler.cs" />

@@ -1,0 +1,37 @@
+using System;
+using System.Threading;
+using RemoteExecution.Core.Dispatchers.Messages;
+
+namespace RemoteExecution.Core.Dispatchers.Handlers
+{
+	internal class ResponseHandler : IMessageHandler
+	{
+		private readonly ManualResetEventSlim _resetEvent = new ManualResetEventSlim(false);
+		private IResponseMessage _response;
+
+		public ResponseHandler(string handlerGroupId)
+		{
+			HandlerGroupId = handlerGroupId;
+			HandledMessageType = Guid.NewGuid().ToString();
+		}
+
+		public string HandledMessageType { get; private set; }
+		public string HandlerGroupId { get; private set; }
+
+		public void Handle(IMessage msg)
+		{
+			_response = ((IResponseMessage)msg);
+			_resetEvent.Set();
+		}
+
+		public object GetValue()
+		{
+			return _response.Value;
+		}
+
+		public void WaitForResponse()
+		{
+			_resetEvent.Wait();
+		}
+	}
+}

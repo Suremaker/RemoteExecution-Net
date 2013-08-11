@@ -1,4 +1,4 @@
-Remote Execution project changelog
+Remote Execution project change log
 ---------------------------------------------------
 
 Version 1.0.8:
@@ -10,6 +10,7 @@ Version 1.0.8:
 + reimplemented RequestHandler
 + introduced IChannelProvider
 + reimplemented DefaultRequestHandler
++ reimplemented ResponseHandler
 
 Version 1.0.7:
 ---------------------
@@ -20,7 +21,7 @@ Version 1.0.7:
 + modified RemoteExecutor to accept operation dispatcher and message channel instead of network connection
 + removed IConfigurableNetworkConnection
 + modified LidgrenEndpoint to use GetDispatcherForNewConnection() abstract method for creating operation dispatchers
-+ splitted LidgrenNetworkConnection into connection and LidgrenMessageChannel
++ split LidgrenNetworkConnection into connection and LidgrenMessageChannel
 + INetworkConnection no longer extends IMessageChannel and has RemoteExecutor property
 + IIncomingMessageChannel / IOutgoingMessageChannel have now IsOpen property
 + added tests for OperationDispatcher, ExceptionResponse and ResponseHandler
