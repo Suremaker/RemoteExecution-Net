@@ -3,10 +3,14 @@ using System;
 namespace RemoteExecution.Core.Dispatchers.Messages
 {
 	[Serializable]
-	public class ExceptionResponseMessage : IResponseMessage
+	internal class ExceptionResponseMessage : IResponseMessage
 	{
-		public string ExceptionType { get; private set; }
-		public string Message { get; private set; }
+		public string ExceptionType { get; set; }
+		public string Message { get; set; }
+
+		public ExceptionResponseMessage()
+		{
+		}
 
 		public ExceptionResponseMessage(string id, Type exceptionType, string message)
 		{

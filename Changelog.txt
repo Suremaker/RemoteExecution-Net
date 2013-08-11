@@ -9,6 +9,7 @@ Version 1.0.8:
 + reimplemented RequestMessage / ResponseMessage / ExceptionResponseMessage
 + reimplemented RequestHandler
 + introduced IChannelProvider
++ reimplemented DefaultRequestHandler
 
 Version 1.0.7:
 ---------------------

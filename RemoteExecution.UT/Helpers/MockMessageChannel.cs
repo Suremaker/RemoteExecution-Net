@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using RemoteExecution.Channels;
 using RemoteExecution.Messages;
 
@@ -17,6 +18,7 @@ namespace RemoteExecution.UT.Helpers
 			OnMessageSend = m => { };
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Send(IMessage message)
 		{
 			SentMessages.Add(message);

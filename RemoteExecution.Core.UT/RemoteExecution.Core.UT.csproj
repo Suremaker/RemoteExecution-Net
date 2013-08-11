@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dispatchers\Handlers\DefaultRequestHandlerTests.cs" />
     <Compile Include="Dispatchers\Handlers\RequestHandlerTests.cs" />
     <Compile Include="Dispatchers\MessageDispatcherTests.cs" />
     <Compile Include="Dispatchers\Messages\ExceptionResponseMessageTests.cs" />
