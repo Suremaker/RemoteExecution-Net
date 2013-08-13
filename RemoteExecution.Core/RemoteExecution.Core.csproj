@@ -30,6 +30,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.1.2.0\lib\1.0\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Aop">
+      <HintPath>..\packages\Spring.Aop.1.3.2\lib\net40\Spring.Aop.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\packages\Spring.Core.1.3.2\lib\net40\Spring.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,6 +55,7 @@
     <Compile Include="Channels\IIncomingMessageChannel.cs" />
     <Compile Include="Channels\IOutgoingMessageChannel.cs" />
     <Compile Include="Dispatchers\Handlers\DefaultRequestHandler.cs" />
+    <Compile Include="Dispatchers\Handlers\IResponseHandler.cs" />
     <Compile Include="Dispatchers\Handlers\RequestHandler.cs" />
     <Compile Include="Dispatchers\Handlers\ResponseHandler.cs" />
     <Compile Include="Dispatchers\IMessage.cs" />
@@ -59,7 +69,17 @@
     <Compile Include="Dispatchers\Messages\RequestMessage.cs" />
     <Compile Include="Dispatchers\Messages\ResponseMessage.cs" />
     <Compile Include="Dispatchers\OperationDispatcher.cs" />
+    <Compile Include="Executors\NoResultMethodExecution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Remoting\OneWayRemoteCallInterceptor.cs" />
+    <Compile Include="Remoting\RemoteCallInterceptor.cs" />
+    <Compile Include="Remoting\TwoWayRemoteCallInterceptor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Connections\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

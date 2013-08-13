@@ -10,7 +10,7 @@ namespace RemoteExecution.Core.UT.Dispatchers.Handlers
 	public class ResponseHandlerTests
 	{
 		private ResponseHandler _subject;
-		private const string _groupId = "someGroupId";
+		private readonly Guid _groupId = Guid.NewGuid();
 
 		[SetUp]
 		public void SetUp()
@@ -21,13 +21,13 @@ namespace RemoteExecution.Core.UT.Dispatchers.Handlers
 		[Test]
 		public void Should_set_handler_group_id()
 		{
-			Assert.That(_subject.HandlerGroupId, Is.SameAs(_groupId));
+			Assert.That(_subject.HandlerGroupId, Is.EqualTo(_groupId.ToString()));
 		}
 
 		[Test]
 		public void Should_generate_handled_message_type()
 		{
-			Assert.That(Guid.Parse(_subject.HandledMessageType),Is.Not.EqualTo(Guid.Empty));
+			Assert.That(Guid.Parse(_subject.HandledMessageType), Is.Not.EqualTo(Guid.Empty));
 		}
 
 		[Test]

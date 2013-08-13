@@ -4,14 +4,14 @@ using RemoteExecution.Core.Dispatchers.Messages;
 
 namespace RemoteExecution.Core.Dispatchers.Handlers
 {
-	internal class ResponseHandler : IMessageHandler
+	internal class ResponseHandler : IResponseHandler
 	{
 		private readonly ManualResetEventSlim _resetEvent = new ManualResetEventSlim(false);
 		private IResponseMessage _response;
 
-		public ResponseHandler(string handlerGroupId)
+		public ResponseHandler(Guid handlerGroupId)
 		{
-			HandlerGroupId = handlerGroupId;
+			HandlerGroupId = handlerGroupId.ToString();
 			HandledMessageType = Guid.NewGuid().ToString();
 		}
 
