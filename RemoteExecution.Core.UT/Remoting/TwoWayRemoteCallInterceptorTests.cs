@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 using RemoteExecution.Core.Channels;
+using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Dispatchers.Handlers;
 using RemoteExecution.Core.Dispatchers.Messages;
@@ -17,8 +18,8 @@ namespace RemoteExecution.Core.UT.Remoting
 		{
 			private readonly IResponseHandler _responseHandler;
 
-			public TestableTwoWayRemoteCallInterceptor(IMessageDispatcher messageDispatcher, IChannelProvider channelProvider, IResponseHandler responseHandler, string interfaceName)
-				: base(messageDispatcher, channelProvider, interfaceName)
+			public TestableTwoWayRemoteCallInterceptor(IRemoteConnection connection, IResponseHandler responseHandler, string interfaceName)
+				: base(connection, interfaceName)
 			{
 				_responseHandler = responseHandler;
 			}
@@ -35,11 +36,12 @@ namespace RemoteExecution.Core.UT.Remoting
 			void Notify(string text);
 		}
 
-		private IMessageDispatcher _dispatcher;
+		private IMessageDispatcher _messageDispatcher;
 		private IOutgoingMessageChannel _channel;
 		private IResponseHandler _responseHandler;
 		private MockRepository _repository;
-		private IChannelProvider _channelProvider;
+		private IRemoteConnection _connection;
+		private IOperationDispatcher _operationDispatcher;
 		private const string _handlerId = "handlerID";
 		private const string _interfaceName = "testInterface";
 
@@ -47,16 +49,20 @@ namespace RemoteExecution.Core.UT.Remoting
 		public void SetUp()
 		{
 			_repository = new MockRepository();
-			_dispatcher = _repository.DynamicMock<IMessageDispatcher>();
+			_messageDispatcher = _repository.DynamicMock<IMessageDispatcher>();
 			_channel = _repository.DynamicMock<IOutgoingMessageChannel>();
 			_responseHandler = _repository.DynamicMock<IResponseHandler>();
-			_channelProvider = _repository.DynamicMock<IChannelProvider>();
-			_channelProvider.Stub(p => p.GetOutgoingChannel()).Return(_channel);
+			_connection = _repository.DynamicMock<IRemoteConnection>();
+			_operationDispatcher = _repository.DynamicMock<IOperationDispatcher>();
+
+			_connection.Stub(p => p.GetOutgoingChannel()).Return(_channel);
+			_connection.Stub(c => c.Dispatcher).Return(_operationDispatcher);
+			_operationDispatcher.Stub(o => o.MessageDispatcher).Return(_messageDispatcher);
 		}
 
 		private ITestInterface GetInvocationHelper()
 		{
-			var subject = new TestableTwoWayRemoteCallInterceptor(_dispatcher, _channelProvider, _responseHandler, _interfaceName);
+			var subject = new TestableTwoWayRemoteCallInterceptor(_connection, _responseHandler, _interfaceName);
 			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
 		}
 
@@ -65,14 +71,14 @@ namespace RemoteExecution.Core.UT.Remoting
 		{
 			using (_repository.Ordered())
 			{
-				Expect.Call(() => _dispatcher.Register(_responseHandler));
+				Expect.Call(() => _messageDispatcher.Register(_responseHandler));
 
-				Expect.Call(_channelProvider.GetOutgoingChannel()).Return(_channel);
+				Expect.Call(_connection.GetOutgoingChannel()).Return(_channel);
 				Expect.Call(() => _channel.Send(Arg<IMessage>.Is.Anything));
 				Expect.Call(() => _responseHandler.WaitForResponse());
 
 				Expect.Call(_responseHandler.HandledMessageType).Return(_handlerId);
-				Expect.Call(() => _dispatcher.Unregister(_handlerId));
+				Expect.Call(() => _messageDispatcher.Unregister(_handlerId));
 				Expect.Call(_responseHandler.GetValue());
 			}
 			_repository.ReplayAll();
@@ -87,7 +93,7 @@ namespace RemoteExecution.Core.UT.Remoting
 			GetInvocationHelper().Notify("text");
 
 			_channel.AssertWasCalled(ch => ch.Send(Arg<RequestMessage>.Matches(r => r.IsResponseExpected)));
-			_dispatcher.AssertWasCalled(d => d.Register(_responseHandler));
+			_messageDispatcher.AssertWasCalled(d => d.Register(_responseHandler));
 			_responseHandler.AssertWasCalled(h => h.WaitForResponse());
 		}
 

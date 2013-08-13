@@ -12,6 +12,8 @@ Version 1.0.8:
 + reimplemented DefaultRequestHandler
 + reimplemented ResponseHandler
 + reimplemented remoting interceptors
++ introduced IRemoteConnection
++ reimplemented RemoteExecutor
 
 Version 1.0.7:
 ---------------------

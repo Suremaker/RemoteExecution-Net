@@ -1,6 +1,5 @@
 using AopAlliance.Intercept;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Dispatchers;
+using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers.Handlers;
 using RemoteExecution.Core.Dispatchers.Messages;
 
@@ -8,14 +7,12 @@ namespace RemoteExecution.Core.Remoting
 {
 	internal class TwoWayRemoteCallInterceptor : IMethodInterceptor
 	{
-		private readonly IChannelProvider _channelProvider;
+		private readonly IRemoteConnection _connection;
 		private readonly string _interfaceName;
-		private readonly IMessageDispatcher _messageDispatcher;
 
-		public TwoWayRemoteCallInterceptor(IMessageDispatcher messageDispatcher, IChannelProvider channelProvider, string interfaceName)
+		public TwoWayRemoteCallInterceptor(IRemoteConnection connection, string interfaceName)
 		{
-			_messageDispatcher = messageDispatcher;
-			_channelProvider = channelProvider;
+			_connection = connection;
 			_interfaceName = interfaceName;
 		}
 
@@ -24,17 +21,17 @@ namespace RemoteExecution.Core.Remoting
 		public object Invoke(IMethodInvocation invocation)
 		{
 			var handler = CreateResponseHandler();
+			var messageDispatcher = _connection.Dispatcher.MessageDispatcher;
 
-			_messageDispatcher.Register(handler);
+			messageDispatcher.Register(handler);
 			try
 			{
-				var outgoingMessageChannel = _channelProvider.GetOutgoingChannel();
-				outgoingMessageChannel.Send(new RequestMessage(handler.HandledMessageType, _interfaceName, invocation.Method.Name, invocation.Arguments, true));
+				_connection.GetOutgoingChannel().Send(new RequestMessage(handler.HandledMessageType, _interfaceName, invocation.Method.Name, invocation.Arguments, true));
 				handler.WaitForResponse();
 			}
 			finally
 			{
-				_messageDispatcher.Unregister(handler.HandledMessageType);
+				messageDispatcher.Unregister(handler.HandledMessageType);
 			}
 			return handler.GetValue();
 		}
@@ -43,7 +40,7 @@ namespace RemoteExecution.Core.Remoting
 
 		protected virtual IResponseHandler CreateResponseHandler()
 		{
-			return new ResponseHandler(_channelProvider.Id);
+			return new ResponseHandler(_connection.Id);
 		}
 	}
 }
