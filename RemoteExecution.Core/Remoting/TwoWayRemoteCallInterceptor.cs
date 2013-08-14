@@ -1,5 +1,7 @@
 using AopAlliance.Intercept;
+using RemoteExecution.Core.Channels;
 using RemoteExecution.Core.Connections;
+using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Dispatchers.Handlers;
 using RemoteExecution.Core.Dispatchers.Messages;
 
@@ -7,12 +9,14 @@ namespace RemoteExecution.Core.Remoting
 {
 	internal class TwoWayRemoteCallInterceptor : IMethodInterceptor
 	{
-		private readonly IRemoteConnection _connection;
+		private readonly IOutputChannel _channel;
+		private readonly IMessageDispatcher _messageDispatcher;
 		private readonly string _interfaceName;
 
-		public TwoWayRemoteCallInterceptor(IRemoteConnection connection, string interfaceName)
+		public TwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher messageDispatcher, string interfaceName)
 		{
-			_connection = connection;
+			_channel = channel;
+			_messageDispatcher = messageDispatcher;
 			_interfaceName = interfaceName;
 		}
 
@@ -21,17 +25,16 @@ namespace RemoteExecution.Core.Remoting
 		public object Invoke(IMethodInvocation invocation)
 		{
 			var handler = CreateResponseHandler();
-			var messageDispatcher = _connection.Dispatcher.MessageDispatcher;
 
-			messageDispatcher.Register(handler);
+			_messageDispatcher.Register(handler);
 			try
 			{
-				_connection.GetOutgoingChannel().Send(new RequestMessage(handler.HandledMessageType, _interfaceName, invocation.Method.Name, invocation.Arguments, true));
+				_channel.Send(new RequestMessage(handler.HandledMessageType, _interfaceName, invocation.Method.Name, invocation.Arguments, true));
 				handler.WaitForResponse();
 			}
 			finally
 			{
-				messageDispatcher.Unregister(handler.HandledMessageType);
+				_messageDispatcher.Unregister(handler.HandledMessageType);
 			}
 			return handler.GetValue();
 		}
@@ -40,7 +43,7 @@ namespace RemoteExecution.Core.Remoting
 
 		protected virtual IResponseHandler CreateResponseHandler()
 		{
-			return new ResponseHandler(_connection.Id);
+			return new ResponseHandler(_channel.Id);
 		}
 	}
 }

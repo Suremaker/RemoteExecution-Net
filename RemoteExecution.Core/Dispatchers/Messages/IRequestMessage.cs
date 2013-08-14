@@ -7,6 +7,6 @@ namespace RemoteExecution.Core.Dispatchers.Messages
 		object[] Args { get; }
 		string MethodName { get; }
 		bool IsResponseExpected { get; }
-		IChannelProvider ChannelProvider { get; set; }
+		IOutputChannel Channel { get; set; }
 	}
 }

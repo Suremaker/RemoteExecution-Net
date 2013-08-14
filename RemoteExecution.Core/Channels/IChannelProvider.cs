@@ -1,8 +1,0 @@
-﻿namespace RemoteExecution.Core.Channels
-{
-	public interface IChannelProvider
-	{
-		IOutgoingMessageChannel GetOutgoingChannel();
-		IIncomingMessageChannel GetIncomingChannel();
-	}
-}

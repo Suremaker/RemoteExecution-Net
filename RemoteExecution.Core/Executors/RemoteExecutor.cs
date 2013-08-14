@@ -1,3 +1,4 @@
+using RemoteExecution.Core.Channels;
 using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Remoting;
@@ -7,11 +8,13 @@ namespace RemoteExecution.Core.Executors
 {
 	internal class RemoteExecutor : IRemoteExecutor
 	{
-		private readonly IRemoteConnection _connection;
+		private readonly IDuplexChannel _channel;
+		private readonly IMessageDispatcher _dispatcher;
 
-		public RemoteExecutor(IRemoteConnection connection)
+		public RemoteExecutor(IDuplexChannel channel, IMessageDispatcher dispatcher)
 		{
-			_connection = connection;
+			_channel = channel;
+			_dispatcher = dispatcher;
 		}
 
 		#region IRemoteExecutor Members
@@ -24,8 +27,8 @@ namespace RemoteExecution.Core.Executors
 		public T Create<T>(NoResultMethodExecution noResultMethodExcecution)
 		{
 			var remoteCallInterceptor = new RemoteCallInterceptor(
-				new OneWayRemoteCallInterceptor(_connection, typeof(T).Name),
-				new TwoWayRemoteCallInterceptor(_connection, typeof(T).Name),
+				new OneWayRemoteCallInterceptor(_channel, typeof(T).Name),
+				new TwoWayRemoteCallInterceptor(_channel, _dispatcher, typeof(T).Name),
 				noResultMethodExcecution);
 
 			var factory = new ProxyFactory(typeof(T), remoteCallInterceptor);

@@ -3,9 +3,8 @@ using RemoteExecution.Core.Dispatchers;
 
 namespace RemoteExecution.Core.Channels
 {
-	public interface IIncomingMessageChannel
+	public interface IInputChannel : IChannel
 	{
 		event Action<IMessage> Received;
-		bool IsOpen { get; }
 	}
 }

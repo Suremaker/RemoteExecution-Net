@@ -17,23 +17,20 @@ namespace RemoteExecution.Core.UT.Remoting
 			void Notify(string text);
 		}
 
-		private IChannelProvider _channelProvider;
 		private MockRepository _repository;
-		private IOutgoingMessageChannel _channel;
+		private IOutputChannel _channel;
 		private const string _interfaceName = "testInterface";
 
 		[SetUp]
 		public void SetUp()
 		{
 			_repository = new MockRepository();
-			_channelProvider = _repository.DynamicMock<IChannelProvider>();
-			_channel = _repository.DynamicMock<IOutgoingMessageChannel>();
-			_channelProvider.Stub(p => p.GetOutgoingChannel()).Return(_channel);
+			_channel = _repository.DynamicMock<IOutputChannel>();
 		}
 
 		private ITestInterface GetInvocationHelper()
 		{
-			var subject = new OneWayRemoteCallInterceptor(_channelProvider, _interfaceName);
+			var subject = new OneWayRemoteCallInterceptor(_channel, _interfaceName);
 			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
 		}
 

@@ -7,12 +7,12 @@ namespace RemoteExecution.Core.Remoting
 {
 	internal class OneWayRemoteCallInterceptor : IMethodInterceptor
 	{
-		private readonly IChannelProvider _channelProvider;
+		private readonly IOutputChannel _channel;
 		private readonly string _interfaceName;
 
-		public OneWayRemoteCallInterceptor(IChannelProvider channelProvider, string interfaceName)
+		public OneWayRemoteCallInterceptor(IOutputChannel channel, string interfaceName)
 		{
-			_channelProvider = channelProvider;
+			_channel = channel;
 			_interfaceName = interfaceName;
 		}
 
@@ -20,7 +20,7 @@ namespace RemoteExecution.Core.Remoting
 
 		public object Invoke(IMethodInvocation invocation)
 		{
-			_channelProvider.GetOutgoingChannel().Send(new RequestMessage(Guid.NewGuid().ToString(), _interfaceName, invocation.Method.Name, invocation.Arguments, false));
+			_channel.Send(new RequestMessage(Guid.NewGuid().ToString(), _interfaceName, invocation.Method.Name, invocation.Arguments, false));
 			return null;
 		}
 

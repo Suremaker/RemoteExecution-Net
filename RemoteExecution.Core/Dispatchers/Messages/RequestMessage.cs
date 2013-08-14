@@ -8,7 +8,7 @@ namespace RemoteExecution.Core.Dispatchers.Messages
 	{
 		private static readonly object[] EMPTY = new object[0];
 		[NonSerialized]
-		private IChannelProvider _channelProvider;
+		private IOutputChannel _channel;
 
 		public RequestMessage()
 		{
@@ -33,10 +33,10 @@ namespace RemoteExecution.Core.Dispatchers.Messages
 		public string CorrelationId { get; set; }
 		public string MessageType { get; set; }
 
-		public IChannelProvider ChannelProvider
+		public IOutputChannel Channel
 		{
-			get { return _channelProvider; }
-			set { _channelProvider = value; }
+			get { return _channel; }
+			set { _channel = value; }
 		}
 
 		#endregion

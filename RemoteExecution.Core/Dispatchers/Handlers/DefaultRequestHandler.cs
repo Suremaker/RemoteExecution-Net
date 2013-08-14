@@ -15,7 +15,7 @@ namespace RemoteExecution.Core.Dispatchers.Handlers
 				return;
 
 			string errorMessage = string.Format("No handler is defined for {0} type.", request.MessageType);
-			request.ChannelProvider.GetOutgoingChannel().Send(new ExceptionResponseMessage(request.CorrelationId, typeof(InvalidOperationException), errorMessage));
+			request.Channel.Send(new ExceptionResponseMessage(request.CorrelationId, typeof(InvalidOperationException), errorMessage));
 		}
 	}
 }

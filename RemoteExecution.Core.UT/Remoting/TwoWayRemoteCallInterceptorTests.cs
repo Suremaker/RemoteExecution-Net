@@ -18,8 +18,8 @@ namespace RemoteExecution.Core.UT.Remoting
 		{
 			private readonly IResponseHandler _responseHandler;
 
-			public TestableTwoWayRemoteCallInterceptor(IRemoteConnection connection, IResponseHandler responseHandler, string interfaceName)
-				: base(connection, interfaceName)
+			public TestableTwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher dispatcher, IResponseHandler responseHandler, string interfaceName)
+				: base(channel, dispatcher, interfaceName)
 			{
 				_responseHandler = responseHandler;
 			}
@@ -37,11 +37,9 @@ namespace RemoteExecution.Core.UT.Remoting
 		}
 
 		private IMessageDispatcher _messageDispatcher;
-		private IOutgoingMessageChannel _channel;
+		private IOutputChannel _channel;
 		private IResponseHandler _responseHandler;
 		private MockRepository _repository;
-		private IRemoteConnection _connection;
-		private IOperationDispatcher _operationDispatcher;
 		private const string _handlerId = "handlerID";
 		private const string _interfaceName = "testInterface";
 
@@ -50,19 +48,13 @@ namespace RemoteExecution.Core.UT.Remoting
 		{
 			_repository = new MockRepository();
 			_messageDispatcher = _repository.DynamicMock<IMessageDispatcher>();
-			_channel = _repository.DynamicMock<IOutgoingMessageChannel>();
+			_channel = _repository.DynamicMock<IOutputChannel>();
 			_responseHandler = _repository.DynamicMock<IResponseHandler>();
-			_connection = _repository.DynamicMock<IRemoteConnection>();
-			_operationDispatcher = _repository.DynamicMock<IOperationDispatcher>();
-
-			_connection.Stub(p => p.GetOutgoingChannel()).Return(_channel);
-			_connection.Stub(c => c.Dispatcher).Return(_operationDispatcher);
-			_operationDispatcher.Stub(o => o.MessageDispatcher).Return(_messageDispatcher);
 		}
 
 		private ITestInterface GetInvocationHelper()
 		{
-			var subject = new TestableTwoWayRemoteCallInterceptor(_connection, _responseHandler, _interfaceName);
+			var subject = new TestableTwoWayRemoteCallInterceptor(_channel, _messageDispatcher, _responseHandler, _interfaceName);
 			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
 		}
 
@@ -73,7 +65,6 @@ namespace RemoteExecution.Core.UT.Remoting
 			{
 				Expect.Call(() => _messageDispatcher.Register(_responseHandler));
 
-				Expect.Call(_connection.GetOutgoingChannel()).Return(_channel);
 				Expect.Call(() => _channel.Send(Arg<IMessage>.Is.Anything));
 				Expect.Call(() => _responseHandler.WaitForResponse());
 

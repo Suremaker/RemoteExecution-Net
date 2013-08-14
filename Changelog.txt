@@ -14,6 +14,7 @@ Version 1.0.8:
 + reimplemented remoting interceptors
 + introduced IRemoteConnection
 + reimplemented RemoteExecutor
++ reorganized channel and connection interfaces hierarchy
 
 Version 1.0.7:
 ---------------------

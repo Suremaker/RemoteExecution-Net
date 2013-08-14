@@ -53,11 +53,11 @@ namespace RemoteExecution.Core.Dispatchers.Handlers
 		{
 			try
 			{
-				msg.ChannelProvider.GetOutgoingChannel().Send(new ResponseMessage(msg.CorrelationId, Execute(msg)));
+				msg.Channel.Send(new ResponseMessage(msg.CorrelationId, Execute(msg)));
 			}
 			catch (Exception e)
 			{
-				msg.ChannelProvider.GetOutgoingChannel().Send(new ExceptionResponseMessage(msg.CorrelationId, e.GetType(), e.Message));
+				msg.Channel.Send(new ExceptionResponseMessage(msg.CorrelationId, e.GetType(), e.Message));
 			}
 		}
 

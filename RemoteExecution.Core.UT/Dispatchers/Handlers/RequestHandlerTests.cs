@@ -13,8 +13,7 @@ namespace RemoteExecution.Core.UT.Dispatchers.Handlers
 	{
 		private RequestHandler _subject;
 		private IMock _handler;
-		private IChannelProvider _channelProvider;
-		private IOutgoingMessageChannel _outgoingChannel;
+		private IOutputChannel _channel;
 
 		public interface IMock
 		{
@@ -25,9 +24,7 @@ namespace RemoteExecution.Core.UT.Dispatchers.Handlers
 		public void SetUp()
 		{
 			_handler = MockRepository.GenerateMock<IMock>();
-			_channelProvider = MockRepository.GenerateMock<IChannelProvider>();
-			_outgoingChannel = MockRepository.GenerateMock<IOutgoingMessageChannel>();
-			_channelProvider.Stub(p => p.GetOutgoingChannel()).Return(_outgoingChannel);
+			_channel = MockRepository.GenerateMock<IOutputChannel>();
 			_subject = new RequestHandler(typeof(IMock), _handler);
 		}
 
@@ -36,7 +33,7 @@ namespace RemoteExecution.Core.UT.Dispatchers.Handlers
 		[TestCase(false)]
 		public void Should_call_handler(bool isResponseExpected)
 		{
-			var reqest = new RequestMessage(Guid.NewGuid().ToString(), "group", "Foo", new object[0], isResponseExpected) { ChannelProvider = _channelProvider };
+			var reqest = new RequestMessage(Guid.NewGuid().ToString(), "group", "Foo", new object[0], isResponseExpected) { Channel = _channel };
 			_subject.Handle(reqest);
 			_handler.AssertWasCalled(h => h.Foo());
 		}
@@ -45,9 +42,9 @@ namespace RemoteExecution.Core.UT.Dispatchers.Handlers
 		public void Should_send_response_if_is_expected()
 		{
 			var correlationId = Guid.NewGuid().ToString();
-			var reqest = new RequestMessage(correlationId, "group", "Foo", new object[0], true) { ChannelProvider = _channelProvider };
+			var reqest = new RequestMessage(correlationId, "group", "Foo", new object[0], true) { Channel = _channel };
 			_subject.Handle(reqest);
-			_outgoingChannel.AssertWasCalled(ch => ch.Send(Arg<ResponseMessage>.Matches(r => r.CorrelationId == correlationId)));
+			_channel.AssertWasCalled(ch => ch.Send(Arg<ResponseMessage>.Matches(r => r.CorrelationId == correlationId)));
 		}
 
 		[Test]
@@ -56,35 +53,35 @@ namespace RemoteExecution.Core.UT.Dispatchers.Handlers
 			_handler.Stub(h => h.Foo()).Throw(new Exception());
 
 			var correlationId = Guid.NewGuid().ToString();
-			var reqest = new RequestMessage(correlationId, "group", "Foo", new object[0], true) { ChannelProvider = _channelProvider };
+			var reqest = new RequestMessage(correlationId, "group", "Foo", new object[0], true) { Channel = _channel };
 			_subject.Handle(reqest);
-			_outgoingChannel.AssertWasCalled(ch => ch.Send(Arg<ExceptionResponseMessage>.Matches(r => r.CorrelationId == correlationId)));
+			_channel.AssertWasCalled(ch => ch.Send(Arg<ExceptionResponseMessage>.Matches(r => r.CorrelationId == correlationId)));
 		}
 
 		[Test]
 		public void Should_not_send_response_if_is_not_expected()
 		{
-			var reqest = new RequestMessage(Guid.NewGuid().ToString(), "group", "Foo", new object[0], false) { ChannelProvider = _channelProvider };
+			var reqest = new RequestMessage(Guid.NewGuid().ToString(), "group", "Foo", new object[0], false) { Channel = _channel };
 			_subject.Handle(reqest);
-			_outgoingChannel.AssertWasNotCalled(ch => ch.Send(Arg<IMessage>.Is.Anything));
+			_channel.AssertWasNotCalled(ch => ch.Send(Arg<IMessage>.Is.Anything));
 		}
 
 		[Test]
 		public void Should_not_send_response_for_exception_if_is_not_expected()
 		{
 			_handler.Stub(h => h.Foo()).Throw(new Exception());
-			var reqest = new RequestMessage(Guid.NewGuid().ToString(), "group", "Foo", new object[0], false) { ChannelProvider = _channelProvider };
+			var reqest = new RequestMessage(Guid.NewGuid().ToString(), "group", "Foo", new object[0], false) { Channel = _channel };
 			_subject.Handle(reqest);
-			_outgoingChannel.AssertWasNotCalled(ch => ch.Send(Arg<IMessage>.Is.Anything));
+			_channel.AssertWasNotCalled(ch => ch.Send(Arg<IMessage>.Is.Anything));
 		}
 
 		[Test]
 		[Ignore("Not implemented yet")]
 		public void Should_handle_channel_failure()
 		{
-			_outgoingChannel.Stub(ch => ch.Send(Arg<IMessage>.Is.Anything)).Throw(new InvalidOperationException());
+			_channel.Stub(ch => ch.Send(Arg<IMessage>.Is.Anything)).Throw(new InvalidOperationException());
 
-			var reqest = new RequestMessage(Guid.NewGuid().ToString(), "group", "Foo", new object[0], true) { ChannelProvider = _channelProvider };
+			var reqest = new RequestMessage(Guid.NewGuid().ToString(), "group", "Foo", new object[0], true) { Channel = _channel };
 			Assert.DoesNotThrow(() => _subject.Handle(reqest));
 		}
 	}
