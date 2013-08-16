@@ -7,21 +7,21 @@ namespace RemoteExecution.Core.Connections
 {
 	public class RemoteConnection : IRemoteConnection
 	{
-		private readonly IDuplexChannel _channel;
+		protected readonly IDuplexChannel Channel;
 
 		public RemoteConnection(IDuplexChannel channel, IRemoteExecutorFactory remoteExecutorFactory, IOperationDispatcher dispatcher)
 		{
 			Dispatcher = dispatcher;
-			_channel = channel;
+			Channel = channel;
 			Executor = remoteExecutorFactory.CreateRemoteExecutor(channel, dispatcher.MessageDispatcher);
 
-			_channel.Received += OnMessageReceived;
-			_channel.ChannelClosed += OnChannelClose;
+			Channel.Received += OnMessageReceived;
+			Channel.ChannelClosed += OnChannelClose;
 		}
 
 		private void OnChannelClose()
 		{
-			Dispatcher.MessageDispatcher.GroupDispatch(_channel.Id, new ExceptionResponseMessage(string.Empty, typeof(OperationAbortedException), "Connection has been closed."));
+			Dispatcher.MessageDispatcher.GroupDispatch(Channel.Id, new ExceptionResponseMessage(string.Empty, typeof(OperationAbortedException), "Connection has been closed."));
 		}
 
 		private void OnMessageReceived(IMessage msg)
@@ -33,12 +33,12 @@ namespace RemoteExecution.Core.Connections
 
 		public void Dispose()
 		{
-			_channel.Dispose();
+			Channel.Dispose();
 		}
 
 		public IRemoteExecutor Executor { get; private set; }
 		public IOperationDispatcher Dispatcher { get; private set; }
-		public bool IsOpen { get { return _channel.IsOpen; } }
+		public bool IsOpen { get { return Channel.IsOpen; } }
 
 		#endregion
 	}

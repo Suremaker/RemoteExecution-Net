@@ -56,6 +56,7 @@
     <Compile Include="Channels\IDuplexChannel.cs" />
     <Compile Include="Channels\IInputChannel.cs" />
     <Compile Include="Channels\IOutputChannel.cs" />
+    <Compile Include="Connections\ClientConnection.cs" />
     <Compile Include="Connections\IClientConnection.cs" />
     <Compile Include="Connections\IRemoteConnection.cs" />
     <Compile Include="Dispatchers\OperationAbortedException.cs" />

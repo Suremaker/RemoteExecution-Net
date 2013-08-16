@@ -17,6 +17,7 @@ Version 1.0.8:
 + reorganized channel and connection interfaces hierarchy
 + implemented RemoteConnection
 + introduced RemoteExecutorFactory
++ introduced ClientConnection
 
 Version 1.0.7:
 ---------------------
