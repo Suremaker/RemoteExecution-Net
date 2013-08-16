@@ -52,7 +52,7 @@ namespace RemoteExecution.Core.UT.Dispatchers
 				h.InterfaceType == typeof(IFoo) &&
 				h.Handler == foo &&
 				h.HandledMessageType == typeof(IFoo).Name &&
-				h.HandlerGroupId == typeof(IFoo).Name)));
+				h.HandlerGroupId == typeof(IFoo).GUID)));
 		}
 
 		[Test]
@@ -65,7 +65,7 @@ namespace RemoteExecution.Core.UT.Dispatchers
 				h.InterfaceType == typeof(IFoo) &&
 				h.Handler == foo &&
 				h.HandledMessageType == typeof(IFoo).Name &&
-				h.HandlerGroupId == typeof(IFoo).Name)));
+				h.HandlerGroupId == typeof(IFoo).GUID)));
 		}
 
 		[Test]

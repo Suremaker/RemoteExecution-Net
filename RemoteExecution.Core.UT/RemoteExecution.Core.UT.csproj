@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Connections\RemoteConnectionTests.cs" />
     <Compile Include="Dispatchers\Handlers\DefaultRequestHandlerTests.cs" />
     <Compile Include="Dispatchers\Handlers\RequestHandlerTests.cs" />
     <Compile Include="Dispatchers\Handlers\ResponseHandlerTests.cs" />

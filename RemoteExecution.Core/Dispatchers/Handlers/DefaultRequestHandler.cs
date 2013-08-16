@@ -6,7 +6,7 @@ namespace RemoteExecution.Core.Dispatchers.Handlers
 	internal class DefaultRequestHandler : IMessageHandler
 	{
 		public string HandledMessageType { get { return string.Empty; } }
-		public string HandlerGroupId { get { return string.Empty; } }
+		public Guid HandlerGroupId { get { return Guid.Empty; } }
 
 		public void Handle(IMessage message)
 		{

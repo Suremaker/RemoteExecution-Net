@@ -1,4 +1,6 @@
-﻿namespace RemoteExecution.Core.Dispatchers
+﻿using System;
+
+namespace RemoteExecution.Core.Dispatchers
 {
 	/// <summary>
 	/// Interface for message handler.
@@ -13,7 +15,7 @@
 		/// <summary>
 		/// Identifier of handler group.
 		/// </summary>
-		string HandlerGroupId { get; }
+		Guid HandlerGroupId { get; }
 
 		/// <summary>
 		/// Handles given message.

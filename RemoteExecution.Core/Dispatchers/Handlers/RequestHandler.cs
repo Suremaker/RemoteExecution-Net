@@ -14,11 +14,12 @@ namespace RemoteExecution.Core.Dispatchers.Handlers
 		{
 			InterfaceType = interfaceType;
 			Handler = handler;
-			HandledMessageType = HandlerGroupId = interfaceType.Name;
+			HandledMessageType = interfaceType.Name;
+			HandlerGroupId = interfaceType.GUID;
 		}
 
 		public string HandledMessageType { get; private set; }
-		public string HandlerGroupId { get; private set; }
+		public Guid HandlerGroupId { get; private set; }
 		public void Handle(IMessage message)
 		{
 			var request = (RequestMessage)message;

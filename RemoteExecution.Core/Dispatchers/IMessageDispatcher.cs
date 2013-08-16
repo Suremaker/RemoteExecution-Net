@@ -1,4 +1,6 @@
-﻿namespace RemoteExecution.Core.Dispatchers
+﻿using System;
+
+namespace RemoteExecution.Core.Dispatchers
 {
 	/// <summary>
 	/// Message dispatcher interface allowing to register message handlers and dispatch messages.
@@ -28,7 +30,7 @@
 		/// </summary>
 		/// <param name="handlerGroupId">Handler group id.</param>
 		/// <param name="message">Message to dispatch.</param>
-		void GroupDispatch(string handlerGroupId, IMessage message);
+		void GroupDispatch(Guid handlerGroupId, IMessage message);
 
 		/// <summary>
 		/// Default message handler which is used if there is no registered handler for dispatched message.

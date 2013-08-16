@@ -56,7 +56,10 @@
     <Compile Include="Channels\IDuplexChannel.cs" />
     <Compile Include="Channels\IInputChannel.cs" />
     <Compile Include="Channels\IOutputChannel.cs" />
+    <Compile Include="Connections\IClientConnection.cs" />
     <Compile Include="Connections\IRemoteConnection.cs" />
+    <Compile Include="Dispatchers\OperationAbortedException.cs" />
+    <Compile Include="Connections\RemoteConnection.cs" />
     <Compile Include="Dispatchers\Handlers\DefaultRequestHandler.cs" />
     <Compile Include="Dispatchers\Handlers\IResponseHandler.cs" />
     <Compile Include="Dispatchers\Handlers\RequestHandler.cs" />
@@ -73,6 +76,7 @@
     <Compile Include="Dispatchers\Messages\ResponseMessage.cs" />
     <Compile Include="Dispatchers\OperationDispatcher.cs" />
     <Compile Include="Executors\IRemoteExecutor.cs" />
+    <Compile Include="Executors\IRemoteExecutorFactory.cs" />
     <Compile Include="Executors\NoResultMethodExecution.cs" />
     <Compile Include="Executors\RemoteExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

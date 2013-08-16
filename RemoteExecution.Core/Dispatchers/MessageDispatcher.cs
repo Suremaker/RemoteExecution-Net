@@ -7,7 +7,7 @@ namespace RemoteExecution.Core.Dispatchers
 {
 	public class MessageDispatcher : IMessageDispatcher
 	{
-		private readonly ConcurrentDictionary<string, ConcurrentDictionary<IMessageHandler, IMessageHandler>> _handlerGroups = new ConcurrentDictionary<string, ConcurrentDictionary<IMessageHandler, IMessageHandler>>();
+		private readonly ConcurrentDictionary<Guid, ConcurrentDictionary<IMessageHandler, IMessageHandler>> _handlerGroups = new ConcurrentDictionary<Guid, ConcurrentDictionary<IMessageHandler, IMessageHandler>>();
 		private readonly ConcurrentDictionary<string, IMessageHandler> _messageTypeHandlers = new ConcurrentDictionary<string, IMessageHandler>();
 
 		#region IMessageDispatcher Members
@@ -16,7 +16,7 @@ namespace RemoteExecution.Core.Dispatchers
 		{
 			if (handler.HandledMessageType == null)
 				throw new ArgumentException("Handler does not have HandledMessageType specified.", "handler");
-			if (handler.HandlerGroupId == null)
+			if (handler.HandlerGroupId == Guid.Empty)
 				throw new ArgumentException("Handler does not have HandlerGroupId specified.", "handler");
 
 			if (!_messageTypeHandlers.TryAdd(handler.HandledMessageType, handler))
@@ -45,7 +45,7 @@ namespace RemoteExecution.Core.Dispatchers
 			handler.Handle(message);
 		}
 
-		public void GroupDispatch(string handlerGroupId, IMessage message)
+		public void GroupDispatch(Guid handlerGroupId, IMessage message)
 		{
 			// ReSharper disable PossibleMultipleEnumeration
 			ConcurrentDictionary<IMessageHandler, IMessageHandler> handlerGroup;

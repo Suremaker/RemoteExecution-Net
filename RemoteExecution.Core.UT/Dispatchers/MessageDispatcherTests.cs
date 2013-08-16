@@ -87,7 +87,7 @@ namespace RemoteExecution.Core.UT.Dispatchers
 		[Test]
 		public void Should_register_throw_if_handler_does_not_have_handler_group_id_specified()
 		{
-			var ex = Assert.Throws<ArgumentException>(() => _subject.Register(CreateHandler("type", null)));
+			var ex = Assert.Throws<ArgumentException>(() => _subject.Register(CreateHandler("type", Guid.Empty)));
 			Assert.That(ex.Message, Is.StringStarting("Handler does not have HandlerGroupId specified."));
 		}
 
@@ -121,10 +121,10 @@ namespace RemoteExecution.Core.UT.Dispatchers
 		[Test]
 		public void Should_group_dispatch()
 		{
-			const string group = "handler group";
+			var group = Guid.NewGuid();
 			var handler1 = CreateHandler("type1", group);
 			var handler2 = CreateHandler("type2", group);
-			var handler3 = CreateHandler("type3", "other handler group");
+			var handler3 = CreateHandler("type3", Guid.NewGuid());
 
 			_subject.Register(handler1);
 			_subject.Register(handler2);
@@ -143,11 +143,14 @@ namespace RemoteExecution.Core.UT.Dispatchers
 		[Test]
 		public void Should_group_dispatch_use_default_handler_if_group_is_not_defined()
 		{
-			var handler = CreateHandler("type", "some group");
+			var someGroup = Guid.NewGuid();
+			var otherGroup = Guid.NewGuid();
+
+			var handler = CreateHandler("type", someGroup);
 			_subject.Register(handler);
 
 			var message = CreateMessage(null);
-			_subject.GroupDispatch("other group", message);
+			_subject.GroupDispatch(otherGroup, message);
 
 			handler.AssertWasNotCalled(h => h.Handle(message));
 			_defaultHandler.AssertWasCalled(h => h.Handle(message));
@@ -156,7 +159,7 @@ namespace RemoteExecution.Core.UT.Dispatchers
 		[Test]
 		public void Should_group_dispatch_use_default_handler_if_group_is_empty()
 		{
-			const string handlerGroupId = "some group";
+			var handlerGroupId = Guid.NewGuid();
 
 			var handler = CreateHandler("type", handlerGroupId);
 			_subject.Register(handler);
@@ -173,7 +176,7 @@ namespace RemoteExecution.Core.UT.Dispatchers
 		public void Should_group_dispatch_throw_if_no_default_handler_is_specified_and_message_cannot_be_handled_by_any_handler()
 		{
 			_subject.DefaultHandler = null;
-			const string handlerGroupId = "some group";
+			var handlerGroupId = Guid.NewGuid();
 
 			var expectedMessage = string.Format("Unable to dispatch message to group '{0}': no suitable handlers were found.", handlerGroupId);
 
@@ -184,7 +187,7 @@ namespace RemoteExecution.Core.UT.Dispatchers
 		[Test]
 		public void Should_unregister_from_handler_group()
 		{
-			const string group = "handler group";
+			var group = Guid.NewGuid();
 			var handler1 = CreateHandler("type1", group);
 			var handler2 = CreateHandler("type2", group);
 
@@ -199,7 +202,12 @@ namespace RemoteExecution.Core.UT.Dispatchers
 			handler2.AssertWasNotCalled(h => h.Handle(message));
 		}
 
-		private static IMessageHandler CreateHandler(string messageType, string handlerGroupId = "group")
+		private static IMessageHandler CreateHandler(string messageType)
+		{
+			return CreateHandler(messageType, Guid.NewGuid());
+		}
+
+		private static IMessageHandler CreateHandler(string messageType, Guid handlerGroupId)
 		{
 			var messageHandler = MockRepository.GenerateMock<IMessageHandler>();
 			messageHandler.Stub(h => h.HandledMessageType).Return(messageType);

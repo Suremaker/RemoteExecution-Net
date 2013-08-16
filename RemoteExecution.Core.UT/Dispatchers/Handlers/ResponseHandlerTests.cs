@@ -21,7 +21,7 @@ namespace RemoteExecution.Core.UT.Dispatchers.Handlers
 		[Test]
 		public void Should_set_handler_group_id()
 		{
-			Assert.That(_subject.HandlerGroupId, Is.EqualTo(_groupId.ToString()));
+			Assert.That(_subject.HandlerGroupId, Is.EqualTo(_groupId));
 		}
 
 		[Test]

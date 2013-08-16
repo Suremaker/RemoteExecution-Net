@@ -11,12 +11,12 @@ namespace RemoteExecution.Core.Dispatchers.Handlers
 
 		public ResponseHandler(Guid handlerGroupId)
 		{
-			HandlerGroupId = handlerGroupId.ToString();
+			HandlerGroupId = handlerGroupId;
 			HandledMessageType = Guid.NewGuid().ToString();
 		}
 
 		public string HandledMessageType { get; private set; }
-		public string HandlerGroupId { get; private set; }
+		public Guid HandlerGroupId { get; private set; }
 
 		public void Handle(IMessage msg)
 		{
