@@ -80,6 +80,7 @@
     <Compile Include="Executors\IRemoteExecutorFactory.cs" />
     <Compile Include="Executors\NoResultMethodExecution.cs" />
     <Compile Include="Executors\RemoteExecutor.cs" />
+    <Compile Include="Executors\RemoteExecutorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remoting\OneWayRemoteCallInterceptor.cs" />
     <Compile Include="Remoting\RemoteCallInterceptor.cs" />

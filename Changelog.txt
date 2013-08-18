@@ -18,6 +18,8 @@ Version 1.0.8:
 + implemented RemoteConnection
 + introduced RemoteExecutorFactory
 + introduced ClientConnection
++ added integration tests for RemoteExecutor
++ added RemoteExecutorFactory
 
 Version 1.0.7:
 ---------------------

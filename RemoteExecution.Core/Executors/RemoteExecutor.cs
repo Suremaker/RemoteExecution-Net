@@ -1,5 +1,4 @@
 using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Remoting;
 using Spring.Aop.Framework;
