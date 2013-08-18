@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Dispatchers.Handlers;
 using RemoteExecution.Core.Dispatchers.Messages;

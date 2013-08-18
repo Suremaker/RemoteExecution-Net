@@ -33,6 +33,9 @@
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.1.2.0\lib\1.0\Common.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="ObjectSerialization">
+      <HintPath>..\packages\ObjectSerialization-Net.1.0.26\lib\net40\ObjectSerialization.dll</HintPath>
+    </Reference>
     <Reference Include="Spring.Aop">
       <HintPath>..\packages\Spring.Aop.1.3.2\lib\net40\Spring.Aop.dll</HintPath>
     </Reference>
@@ -51,11 +54,13 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Channels\DuplexChannel.cs" />
     <Compile Include="Channels\IChannel.cs" />
     <Compile Include="Channels\IClientChannel.cs" />
     <Compile Include="Channels\IDuplexChannel.cs" />
     <Compile Include="Channels\IInputChannel.cs" />
     <Compile Include="Channels\IOutputChannel.cs" />
+    <Compile Include="Channels\OutputChannel.cs" />
     <Compile Include="Connections\ClientConnection.cs" />
     <Compile Include="Connections\IClientConnection.cs" />
     <Compile Include="Connections\IRemoteConnection.cs" />
@@ -85,6 +90,8 @@
     <Compile Include="Remoting\OneWayRemoteCallInterceptor.cs" />
     <Compile Include="Remoting\RemoteCallInterceptor.cs" />
     <Compile Include="Remoting\TwoWayRemoteCallInterceptor.cs" />
+    <Compile Include="Serializers\BinaryMessageSerializer.cs" />
+    <Compile Include="Serializers\IMessageSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

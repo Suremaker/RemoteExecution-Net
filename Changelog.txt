@@ -19,7 +19,8 @@ Version 1.0.8:
 + introduced RemoteExecutorFactory
 + introduced ClientConnection
 + added integration tests for RemoteExecutor
-+ added RemoteExecutorFactory
++ reimplemented MessageSerializer
++ added OutputChannel and DuplexChannel
 
 Version 1.0.7:
 ---------------------
