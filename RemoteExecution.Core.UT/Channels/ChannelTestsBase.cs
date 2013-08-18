@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using RemoteExecution.Core.Channels;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Dispatchers.Messages;
 using RemoteExecution.Core.Serializers;
@@ -15,7 +16,7 @@ namespace RemoteExecution.Core.UT.Channels
 		[SetUp]
 		public void SetUp()
 		{
-			MessageSerializer = MockRepository.GenerateMock<IMessageSerializer>();			
+			MessageSerializer = MockRepository.GenerateMock<IMessageSerializer>();
 			Subject = CreateSubject();
 		}
 
@@ -26,6 +27,14 @@ namespace RemoteExecution.Core.UT.Channels
 		{
 			Subject.Dispose();
 			Assert.That(Subject.IsOpen, Is.False);
+		}
+
+		[Test]
+		public void Should_throw_not_connected_exception_on_send_if_connection_is_closed()
+		{
+			Subject.Dispose();
+			var ex = Assert.Throws<NotConnectedException>(() => Subject.Send(new ResponseMessage()));
+			Assert.That(ex.Message, Is.EqualTo("Channel is closed."));
 		}
 
 		[Test]

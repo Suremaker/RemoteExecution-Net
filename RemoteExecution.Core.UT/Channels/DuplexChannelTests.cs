@@ -9,7 +9,7 @@ namespace RemoteExecution.Core.UT.Channels
 {
 	public class TestableDuplexChannel : DuplexChannel, ITestableOutputChannel
 	{
-		private bool _isOpen;
+		private bool _isOpen = true;
 
 		public TestableDuplexChannel(IMessageSerializer serializer)
 			: base(serializer)

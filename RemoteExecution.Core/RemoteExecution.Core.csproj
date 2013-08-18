@@ -60,6 +60,7 @@
     <Compile Include="Channels\IDuplexChannel.cs" />
     <Compile Include="Channels\IInputChannel.cs" />
     <Compile Include="Channels\IOutputChannel.cs" />
+    <Compile Include="Channels\NotConnectedException.cs" />
     <Compile Include="Channels\OutputChannel.cs" />
     <Compile Include="Connections\ClientConnection.cs" />
     <Compile Include="Connections\IClientConnection.cs" />

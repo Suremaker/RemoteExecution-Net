@@ -26,6 +26,9 @@ namespace RemoteExecution.Core.Channels
 
 		public void Send(IMessage message)
 		{
+			if (!IsOpen)
+				throw new NotConnectedException("Channel is closed.");
+
 			SendData(Serializer.Serialize(message));
 		}
 

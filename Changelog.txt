@@ -21,6 +21,7 @@ Version 1.0.8:
 + added integration tests for RemoteExecutor
 + reimplemented MessageSerializer
 + added OutputChannel and DuplexChannel
++ added NotConnectedException
 
 Version 1.0.7:
 ---------------------
