@@ -71,6 +71,7 @@
     <Compile Include="Remoting\OneWayRemoteCallInterceptorTests.cs" />
     <Compile Include="Remoting\RemoteCallInterceptorTests.cs" />
     <Compile Include="Remoting\TwoWayRemoteCallInterceptorTests.cs" />
+    <Compile Include="Schedulers\AsyncTaskSchedulerTests.cs" />
     <Compile Include="Serializers\BinaryMessageSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>

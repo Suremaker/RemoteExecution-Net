@@ -91,6 +91,8 @@
     <Compile Include="Remoting\OneWayRemoteCallInterceptor.cs" />
     <Compile Include="Remoting\RemoteCallInterceptor.cs" />
     <Compile Include="Remoting\TwoWayRemoteCallInterceptor.cs" />
+    <Compile Include="Schedulers\AsyncTaskScheduler.cs" />
+    <Compile Include="Schedulers\ITaskScheduler.cs" />
     <Compile Include="Serializers\BinaryMessageSerializer.cs" />
     <Compile Include="Serializers\IMessageSerializer.cs" />
   </ItemGroup>
