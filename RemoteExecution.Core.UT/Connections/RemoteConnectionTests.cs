@@ -9,7 +9,7 @@ namespace RemoteExecution.Core.UT.Connections
 	{
 		protected override IRemoteConnection CreateSubject()
 		{
-			return new RemoteConnection(Channel, RemoteExecutorFactory, OperationDispatcher);
+			return new RemoteConnection(Channel, RemoteExecutorFactory, OperationDispatcher, Scheduler);
 		}
 	}
 }

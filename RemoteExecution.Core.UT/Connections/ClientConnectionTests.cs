@@ -17,7 +17,7 @@ namespace RemoteExecution.Core.UT.Connections
 
 		protected override IClientConnection CreateSubject()
 		{
-			return new ClientConnection(Channel, RemoteExecutorFactory, OperationDispatcher);
+			return new ClientConnection(Channel, RemoteExecutorFactory, OperationDispatcher, Scheduler);
 		}
 	}
 }

@@ -5,6 +5,7 @@ using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Dispatchers.Messages;
 using RemoteExecution.Core.Executors;
+using RemoteExecution.Core.Schedulers;
 using Rhino.Mocks;
 
 namespace RemoteExecution.Core.UT.Connections
@@ -19,6 +20,7 @@ namespace RemoteExecution.Core.UT.Connections
 		protected IMessageDispatcher MessageDispatcher;
 		protected IRemoteExecutor RemoteExecutor;
 		protected TConnection Subject;
+		protected ITaskScheduler Scheduler;
 
 		[SetUp]
 		public void BaseSetUp()
@@ -28,6 +30,9 @@ namespace RemoteExecution.Core.UT.Connections
 			RemoteExecutorFactory = MockRepository.GenerateMock<IRemoteExecutorFactory>();
 			Channel = MockRepository.GenerateMock<TChannel>();
 			RemoteExecutor = MockRepository.GenerateMock<IRemoteExecutor>();
+			Scheduler = MockRepository.GenerateMock<ITaskScheduler>();
+
+			Scheduler.Stub(s => s.Execute(Arg<Action>.Is.Anything)).WhenCalled(a => ((Action)a.Arguments[0]).Invoke());
 			OperationDispatcher.Stub(d => d.MessageDispatcher).Return(MessageDispatcher);
 			RemoteExecutorFactory.Stub(f => f.CreateRemoteExecutor(Arg<IDuplexChannel>.Is.Anything, Arg<IMessageDispatcher>.Is.Anything)).Return(RemoteExecutor);
 			Subject = CreateSubject();
@@ -73,6 +78,14 @@ namespace RemoteExecution.Core.UT.Connections
 			var message = MockRepository.GenerateMock<IMessage>();
 			Channel.Raise(c => c.Received += null, message);
 			MessageDispatcher.AssertWasCalled(d => d.Dispatch(message));
+		}
+
+		[Test]
+		public void Should_use_scheduler_for_incoming_messages()
+		{
+			var message = MockRepository.GenerateMock<IMessage>();
+			Channel.Raise(c => c.Received += null, message);
+			Scheduler.AssertWasCalled(s => s.Execute(Arg<Action>.Is.Anything));
 		}
 
 		[Test]

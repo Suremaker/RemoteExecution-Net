@@ -2,17 +2,20 @@
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Dispatchers.Messages;
 using RemoteExecution.Core.Executors;
+using RemoteExecution.Core.Schedulers;
 
 namespace RemoteExecution.Core.Connections
 {
 	public class RemoteConnection : IRemoteConnection
 	{
 		protected readonly IDuplexChannel Channel;
+		private readonly ITaskScheduler _scheduler;
 
-		public RemoteConnection(IDuplexChannel channel, IRemoteExecutorFactory remoteExecutorFactory, IOperationDispatcher dispatcher)
+		public RemoteConnection(IDuplexChannel channel, IRemoteExecutorFactory remoteExecutorFactory, IOperationDispatcher dispatcher, ITaskScheduler scheduler)
 		{
 			Dispatcher = dispatcher;
 			Channel = channel;
+			_scheduler = scheduler;
 			Executor = remoteExecutorFactory.CreateRemoteExecutor(channel, dispatcher.MessageDispatcher);
 
 			Channel.Received += OnMessageReceived;
@@ -26,7 +29,7 @@ namespace RemoteExecution.Core.Connections
 
 		private void OnMessageReceived(IMessage msg)
 		{
-			Dispatcher.MessageDispatcher.Dispatch(msg);
+			_scheduler.Execute(() => Dispatcher.MessageDispatcher.Dispatch(msg));
 		}
 
 		#region IRemoteConnection Members
