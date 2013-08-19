@@ -82,6 +82,11 @@
     <Compile Include="Dispatchers\Messages\RequestMessage.cs" />
     <Compile Include="Dispatchers\Messages\ResponseMessage.cs" />
     <Compile Include="Dispatchers\OperationDispatcher.cs" />
+    <Compile Include="Endpoints\IServerEndpoint.cs" />
+    <Compile Include="Endpoints\IServerEndpointConfig.cs" />
+    <Compile Include="Endpoints\Listeners\IServerListener.cs" />
+    <Compile Include="Endpoints\ServerEndpoint.cs" />
+    <Compile Include="Endpoints\ServerEndpointConfig.cs" />
     <Compile Include="Executors\IRemoteExecutor.cs" />
     <Compile Include="Executors\IRemoteExecutorFactory.cs" />
     <Compile Include="Executors\NoResultMethodExecution.cs" />

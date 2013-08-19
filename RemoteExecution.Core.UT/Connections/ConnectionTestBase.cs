@@ -89,8 +89,10 @@ namespace RemoteExecution.Core.UT.Connections
 		}
 
 		[Test]
-		public void Should_abort_all_pending_operations_on_channel_close()
+		public void Should_abort_all_pending_operations_on_channel_close_and_raise_connection_closed_event()
 		{
+			bool wasCloseEventRaised = false;
+			Subject.Closed += () => wasCloseEventRaised = true;
 			Channel.Stub(c => c.Id).Return(Guid.NewGuid());
 			Channel.Raise(c => c.ChannelClosed += null);
 
@@ -100,6 +102,8 @@ namespace RemoteExecution.Core.UT.Connections
 					m.ExceptionType == typeof(OperationAbortedException).AssemblyQualifiedName &&
 					m.Message == "Connection has been closed." &&
 					m.CorrelationId == string.Empty)));
+
+			Assert.That(wasCloseEventRaised, Is.True);
 		}
 	}
 }

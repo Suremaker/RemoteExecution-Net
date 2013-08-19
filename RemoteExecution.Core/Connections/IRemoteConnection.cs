@@ -9,5 +9,7 @@ namespace RemoteExecution.Core.Connections
 		IRemoteExecutor Executor { get; }
 		IOperationDispatcher Dispatcher { get; }
 		bool IsOpen { get; }
+
+		event Action Closed;
 	}
 }

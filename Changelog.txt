@@ -23,6 +23,9 @@ Version 1.0.8:
 + added OutputChannel and DuplexChannel
 + added NotConnectedException
 + introduced AsyncTaskScheduler
++ reimplemented ServerEndpoint
++ added Closed event to IRemoteConnection
+
 
 Version 1.0.7:
 ---------------------

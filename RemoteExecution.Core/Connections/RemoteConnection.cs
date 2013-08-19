@@ -1,4 +1,5 @@
-﻿using RemoteExecution.Core.Channels;
+﻿using System;
+using RemoteExecution.Core.Channels;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Dispatchers.Messages;
 using RemoteExecution.Core.Executors;
@@ -25,6 +26,8 @@ namespace RemoteExecution.Core.Connections
 		private void OnChannelClose()
 		{
 			Dispatcher.MessageDispatcher.GroupDispatch(Channel.Id, new ExceptionResponseMessage(string.Empty, typeof(OperationAbortedException), "Connection has been closed."));
+			if (Closed != null)
+				Closed();
 		}
 
 		private void OnMessageReceived(IMessage msg)
@@ -42,6 +45,7 @@ namespace RemoteExecution.Core.Connections
 		public IRemoteExecutor Executor { get; private set; }
 		public IOperationDispatcher Dispatcher { get; private set; }
 		public bool IsOpen { get { return Channel.IsOpen; } }
+		public event Action Closed;
 
 		#endregion
 	}
