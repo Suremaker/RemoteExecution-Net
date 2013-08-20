@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Endpoints;
 using RemoteExecution.Core.Endpoints.Listeners;
@@ -16,28 +15,6 @@ namespace RemoteExecution.Core.UT.Endpoints
 	[TestFixture]
 	public class ServerEndpointTests
 	{
-		class TestableServerEndpoint : ServerEndpoint
-		{
-			private readonly IOperationDispatcher _operationDispatcher;
-			public event Action<IRemoteConnection> ConnectionInitialize;
-
-			public TestableServerEndpoint(IServerListener listener, IServerEndpointConfig config, IOperationDispatcher operationDispatcher)
-				: base(listener, config)
-			{
-				_operationDispatcher = operationDispatcher;
-				OnConnectionInitialize += c =>
-				{
-					if (ConnectionInitialize != null)
-						ConnectionInitialize(c);
-				};
-			}
-
-			protected override IOperationDispatcher GetOperationDispatcher()
-			{
-				return _operationDispatcher;
-			}
-		}
-
 		private IServerEndpoint _subject;
 		private IServerListener _listener;
 		private IServerEndpointConfig _config;
@@ -57,7 +34,7 @@ namespace RemoteExecution.Core.UT.Endpoints
 			_config.Stub(c => c.TaskScheduler).Return(_taskScheduler);
 			_operationDispatcher = MockRepository.GenerateMock<IOperationDispatcher>();
 			_operationDispatcher.Stub(d => d.MessageDispatcher).Return(MockRepository.GenerateMock<IMessageDispatcher>());
-			_subject = new TestableServerEndpoint(_listener, _config, _operationDispatcher);
+			_subject = new GenericServerEndpoint(_listener, _config, () => _operationDispatcher);
 		}
 
 		[Test]
@@ -114,7 +91,7 @@ namespace RemoteExecution.Core.UT.Endpoints
 		public void Should_configure_opened_connection()
 		{
 			var wasConfigured = false;
-			((TestableServerEndpoint)_subject).ConnectionInitialize += c => wasConfigured = true;
+			_subject = new GenericServerEndpoint(_listener, _config, () => _operationDispatcher, c => wasConfigured = true);
 			OpenChannel();
 
 			Assert.That(wasConfigured, Is.True);
