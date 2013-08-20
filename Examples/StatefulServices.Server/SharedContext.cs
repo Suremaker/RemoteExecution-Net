@@ -13,14 +13,14 @@ namespace StatefulServices.Server
 			_clients.Add(connection, clientContext);
 		}
 
-		public void RemoveClient(INetworkConnection connection)
-		{
-			_clients.Remove(connection);
-		}
-
 		public IEnumerable<string> GetRegisteredClients()
 		{
 			return _clients.Values.Where(v => v.IsRegistered).Select(v => v.Name).ToArray();
+		}
+
+		public void RemoveClient(INetworkConnection connection)
+		{
+			_clients.Remove(connection);
 		}
 	}
 }

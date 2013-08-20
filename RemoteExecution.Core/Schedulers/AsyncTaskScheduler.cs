@@ -8,6 +8,8 @@ namespace RemoteExecution.Core.Schedulers
 	/// </summary>
 	public class AsyncTaskScheduler : ITaskScheduler
 	{
+		#region ITaskScheduler Members
+
 		/// <summary>
 		/// Schedules task asynchronous execution in background threads.
 		/// </summary>
@@ -16,5 +18,7 @@ namespace RemoteExecution.Core.Schedulers
 		{
 			Task.Factory.StartNew(task);
 		}
+
+		#endregion
 	}
 }

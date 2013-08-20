@@ -6,8 +6,8 @@ namespace StatefulServices.Server
 {
 	internal class UserInfoService : IUserInfoService
 	{
-		private readonly SharedContext _sharedContext;
 		private readonly ClientContext _clientContext;
+		private readonly SharedContext _sharedContext;
 
 		public UserInfoService(SharedContext sharedContext, ClientContext clientContext)
 		{
@@ -15,11 +15,15 @@ namespace StatefulServices.Server
 			_clientContext = clientContext;
 		}
 
+		#region IUserInfoService Members
+
 		public IEnumerable<string> GetRegisteredUsers()
 		{
 			if(!_clientContext.IsRegistered)
 				throw new UnauthorizedAccessException("User is not registered");
 			return _sharedContext.GetRegisteredClients();
 		}
+
+		#endregion
 	}
 }

@@ -17,6 +17,20 @@ namespace RemoteExecution.UT.Endpoints
 		private IOperationDispatcher _operationDispatcher;
 		private Action<INetworkConnection> _newConnectionHandler;
 
+		private void SetConnectionHandler(MethodInvocation mi)
+		{
+			_newConnectionHandler = (Action<INetworkConnection>)mi.Arguments[0];
+		}
+
+		private INetworkConnection StubConnectToReturnActiveConnection()
+		{
+			var connection = MockRepository.GenerateMock<INetworkConnection>();
+			_endpointAdapter.Stub(a => a.ConnectTo(Arg<string>.Is.Anything, Arg<ushort>.Is.Anything)).WhenCalled(inv => _newConnectionHandler(connection));
+			return connection;
+		}
+
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -29,10 +43,7 @@ namespace RemoteExecution.UT.Endpoints
 			_subject = new ClientEndpoint(_endpointAdapter, _operationDispatcher);
 		}
 
-		private void SetConnectionHandler(MethodInvocation mi)
-		{
-			_newConnectionHandler = (Action<INetworkConnection>)mi.Arguments[0];
-		}
+		#endregion
 
 		[Test]
 		public void Should_connect_to_using_adapter()
@@ -63,13 +74,6 @@ namespace RemoteExecution.UT.Endpoints
 
 			_subject.ConnectTo("localhost", 5555);
 			Assert.That(_subject.RemoteExecutor, Is.SameAs(remoteExecutor));
-		}
-
-		private INetworkConnection StubConnectToReturnActiveConnection()
-		{
-			var connection = MockRepository.GenerateMock<INetworkConnection>();
-			_endpointAdapter.Stub(a => a.ConnectTo(Arg<string>.Is.Anything, Arg<ushort>.Is.Anything)).WhenCalled(inv => _newConnectionHandler(connection));
-			return connection;
 		}
 	}
 }

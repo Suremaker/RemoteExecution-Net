@@ -6,6 +6,12 @@ namespace StatelessServices.Client
 {
 	class Program
 	{
+		private static void GreetSomePeople(IGreeter greeter)
+		{
+			Console.WriteLine(greeter.Greet(new Person("John", "Smith")));
+			Console.WriteLine(greeter.Greet(new Person("Kitty", "Johnson")));
+		}
+
 		static void Main(string[] args)
 		{
 			using (var client = new ClientEndpoint(Protocol.Id))
@@ -18,12 +24,6 @@ namespace StatelessServices.Client
 				Console.WriteLine("Done. Press enter to exit.");
 				Console.ReadLine();
 			}
-		}
-
-		private static void GreetSomePeople(IGreeter greeter)
-		{
-			Console.WriteLine(greeter.Greet(new Person("John", "Smith")));
-			Console.WriteLine(greeter.Greet(new Person("Kitty", "Johnson")));
 		}
 
 		private static void PerformSomeCalculations(ICalculator calculator)

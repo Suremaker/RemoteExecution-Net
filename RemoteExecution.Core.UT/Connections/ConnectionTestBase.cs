@@ -14,13 +14,13 @@ namespace RemoteExecution.Core.UT.Connections
 		where TConnection : IRemoteConnection
 		where TChannel : class, IDuplexChannel
 	{
-		protected IOperationDispatcher OperationDispatcher;
-		protected IRemoteExecutorFactory RemoteExecutorFactory;
 		protected TChannel Channel;
 		protected IMessageDispatcher MessageDispatcher;
+		protected IOperationDispatcher OperationDispatcher;
 		protected IRemoteExecutor RemoteExecutor;
-		protected TConnection Subject;
+		protected IRemoteExecutorFactory RemoteExecutorFactory;
 		protected ITaskScheduler Scheduler;
+		protected TConnection Subject;
 
 		[SetUp]
 		public void BaseSetUp()
@@ -38,24 +38,36 @@ namespace RemoteExecution.Core.UT.Connections
 			Subject = CreateSubject();
 		}
 
-		protected abstract TConnection CreateSubject();
+		[Test]
+		public void Should_abort_all_pending_operations_on_channel_close_and_raise_connection_closed_event()
+		{
+			bool wasCloseEventRaised = false;
+			Subject.Closed += () => wasCloseEventRaised = true;
+			Channel.Stub(c => c.Id).Return(Guid.NewGuid());
+			Channel.Raise(c => c.ChannelClosed += null);
+
+			MessageDispatcher.AssertWasCalled(d => d.GroupDispatch(
+				Arg<Guid>.Is.Equal(Channel.Id),
+				Arg<ExceptionResponseMessage>.Matches(m =>
+				                                      m.ExceptionType == typeof(OperationAbortedException).AssemblyQualifiedName &&
+				                                      m.Message == "Connection has been closed." &&
+				                                      m.CorrelationId == string.Empty)));
+
+			Assert.That(wasCloseEventRaised, Is.True);
+		}
+
+		[Test]
+		public void Should_bind_input_channel_to_dispatcher()
+		{
+			var message = MockRepository.GenerateMock<IMessage>();
+			Channel.Raise(c => c.Received += null, message);
+			MessageDispatcher.AssertWasCalled(d => d.Dispatch(message));
+		}
 
 		[Test]
 		public void Should_create_remote_executor()
 		{
 			RemoteExecutorFactory.AssertWasCalled(f => f.CreateRemoteExecutor(Channel, MessageDispatcher));
-		}
-
-		[Test]
-		public void Should_initialize_remote_executor()
-		{
-			Assert.That(Subject.Executor, Is.SameAs(RemoteExecutor));
-		}
-
-		[Test]
-		public void Should_initialize_operation_dispatcher()
-		{
-			Assert.That(Subject.Dispatcher, Is.SameAs(OperationDispatcher));
 		}
 
 		[Test]
@@ -73,11 +85,15 @@ namespace RemoteExecution.Core.UT.Connections
 		}
 
 		[Test]
-		public void Should_bind_input_channel_to_dispatcher()
+		public void Should_initialize_operation_dispatcher()
 		{
-			var message = MockRepository.GenerateMock<IMessage>();
-			Channel.Raise(c => c.Received += null, message);
-			MessageDispatcher.AssertWasCalled(d => d.Dispatch(message));
+			Assert.That(Subject.Dispatcher, Is.SameAs(OperationDispatcher));
+		}
+
+		[Test]
+		public void Should_initialize_remote_executor()
+		{
+			Assert.That(Subject.Executor, Is.SameAs(RemoteExecutor));
 		}
 
 		[Test]
@@ -88,22 +104,6 @@ namespace RemoteExecution.Core.UT.Connections
 			Scheduler.AssertWasCalled(s => s.Execute(Arg<Action>.Is.Anything));
 		}
 
-		[Test]
-		public void Should_abort_all_pending_operations_on_channel_close_and_raise_connection_closed_event()
-		{
-			bool wasCloseEventRaised = false;
-			Subject.Closed += () => wasCloseEventRaised = true;
-			Channel.Stub(c => c.Id).Return(Guid.NewGuid());
-			Channel.Raise(c => c.ChannelClosed += null);
-
-			MessageDispatcher.AssertWasCalled(d => d.GroupDispatch(
-				Arg<Guid>.Is.Equal(Channel.Id),
-				Arg<ExceptionResponseMessage>.Matches(m =>
-					m.ExceptionType == typeof(OperationAbortedException).AssemblyQualifiedName &&
-					m.Message == "Connection has been closed." &&
-					m.CorrelationId == string.Empty)));
-
-			Assert.That(wasCloseEventRaised, Is.True);
-		}
+		protected abstract TConnection CreateSubject();
 	}
 }

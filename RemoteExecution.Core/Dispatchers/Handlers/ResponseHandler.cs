@@ -15,6 +15,8 @@ namespace RemoteExecution.Core.Dispatchers.Handlers
 			HandledMessageType = Guid.NewGuid().ToString();
 		}
 
+		#region IResponseHandler Members
+
 		public string HandledMessageType { get; private set; }
 		public Guid HandlerGroupId { get; private set; }
 
@@ -33,5 +35,7 @@ namespace RemoteExecution.Core.Dispatchers.Handlers
 		{
 			_resetEvent.Wait();
 		}
+
+		#endregion
 	}
 }

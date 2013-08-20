@@ -12,6 +12,8 @@ namespace RemoteExecution.IT.Services
 			_value = value;
 		}
 
+		#region IClientService Members
+
 		public int GetClientValue()
 		{
 			return _value;
@@ -21,5 +23,7 @@ namespace RemoteExecution.IT.Services
 		{
 			TimeSpan = timeSpan;
 		}
+
+		#endregion
 	}
 }

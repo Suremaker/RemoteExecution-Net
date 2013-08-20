@@ -13,6 +13,8 @@ namespace CallbackServices.Server
 			_clientCallback = clientCallback;
 		}
 
+		#region ILongRunningOperation Members
+
 		public void Perform(int steps)
 		{
 			for (int i = 1; i <= steps; ++i)
@@ -21,5 +23,7 @@ namespace CallbackServices.Server
 				Thread.Sleep(TimeSpan.FromSeconds(1));
 			}
 		}
+
+		#endregion
 	}
 }

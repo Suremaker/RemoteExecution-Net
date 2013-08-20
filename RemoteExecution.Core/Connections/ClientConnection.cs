@@ -12,9 +12,13 @@ namespace RemoteExecution.Core.Connections
 		{
 		}
 
+		#region IClientConnection Members
+
 		public void Open()
 		{
 			((IClientChannel)Channel).Open();
 		}
+
+		#endregion
 	}
 }

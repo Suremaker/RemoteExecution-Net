@@ -15,6 +15,8 @@ namespace RemoteExecution.Core.IT.Executors
 		private MockDuplexChannel _channel;
 		private ICalculator _calculator;
 
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -23,6 +25,8 @@ namespace RemoteExecution.Core.IT.Executors
 			_subject = new RemoteExecutor(_channel, _messageDispatcher);
 			_calculator = _subject.Create<ICalculator>();
 		}
+
+		#endregion
 
 		[Test]
 		public void Should_generate_proxy()

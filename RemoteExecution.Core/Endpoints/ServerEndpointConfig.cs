@@ -12,8 +12,12 @@ namespace RemoteExecution.Core.Endpoints
 			TaskScheduler = new AsyncTaskScheduler();
 		}
 
+		#region IServerEndpointConfig Members
+
 		public IRemoteExecutorFactory RemoteExecutorFactory { get; set; }
 		public ITaskScheduler TaskScheduler { get; set; }
 		public int MaxConnections { get; set; }
+
+		#endregion
 	}
 }

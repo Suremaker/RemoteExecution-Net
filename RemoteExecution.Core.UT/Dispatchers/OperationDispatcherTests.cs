@@ -23,12 +23,16 @@ namespace RemoteExecution.Core.UT.Dispatchers
 		private IOperationDispatcher _subject;
 		private IMessageDispatcher _messageDispatcher;
 
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
 			_messageDispatcher = MockRepository.GenerateMock<IMessageDispatcher>();
 			_subject = new TestableOperationDispatcher(_messageDispatcher);
 		}
+
+		#endregion
 
 		[Test]
 		public void Should_instantiate_message_dispatcher()
@@ -69,26 +73,6 @@ namespace RemoteExecution.Core.UT.Dispatchers
 		}
 
 		[Test]
-		public void Should_unregister_handler_with_generic_method()
-		{
-			_subject.UnregisterHandler<IFoo>();
-			_messageDispatcher.AssertWasCalled(m => m.Unregister(typeof(IFoo).Name));
-		}
-
-		[Test]
-		public void Should_unregister_handler()
-		{
-			_subject.UnregisterHandler(typeof(IFoo));
-			_messageDispatcher.AssertWasCalled(m => m.Unregister(typeof(IFoo).Name));
-		}
-
-		[Test]
-		public void Should_register_throw_if_handler_is_null()
-		{
-			Assert.Throws<ArgumentNullException>(() => _subject.RegisterHandler(typeof(IFoo), null));
-		}
-
-		[Test]
 		public void Should_register_throw_if_handler_does_not_implement_specified_interface()
 		{
 			var ex = Assert.Throws<ArgumentException>(() => _subject.RegisterHandler(typeof(IFoo), new object()));
@@ -100,6 +84,26 @@ namespace RemoteExecution.Core.UT.Dispatchers
 		{
 			var ex = Assert.Throws<ArgumentException>(() => _subject.RegisterHandler(typeof(Foo), new Foo()));
 			Assert.That(ex.Message, Is.StringStarting("Unable to register handler: 'Foo' type is not an interface."));
+		}
+
+		[Test]
+		public void Should_register_throw_if_handler_is_null()
+		{
+			Assert.Throws<ArgumentNullException>(() => _subject.RegisterHandler(typeof(IFoo), null));
+		}
+
+		[Test]
+		public void Should_unregister_handler()
+		{
+			_subject.UnregisterHandler(typeof(IFoo));
+			_messageDispatcher.AssertWasCalled(m => m.Unregister(typeof(IFoo).Name));
+		}
+
+		[Test]
+		public void Should_unregister_handler_with_generic_method()
+		{
+			_subject.UnregisterHandler<IFoo>();
+			_messageDispatcher.AssertWasCalled(m => m.Unregister(typeof(IFoo).Name));
 		}
 	}
 }

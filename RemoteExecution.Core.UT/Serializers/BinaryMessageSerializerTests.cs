@@ -24,10 +24,23 @@ namespace RemoteExecution.Core.UT.Serializers
 	{
 		private IMessageSerializer _subject;
 
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
 			_subject = new BinaryMessageSerializer();
+		}
+
+		#endregion
+
+		[Test]
+		public void ShouldRegisterSerializableTypesFromAssembly()
+		{
+			BinaryMessageSerializer.RegsterSerializableFrom(GetType().Assembly);
+			var bytes1 = _subject.Serialize(new ResponseMessage("1", new Greeting1 { Hello = "hello" }));
+			var bytes2 = _subject.Serialize(new ResponseMessage("1", new Greeting2 { Hello = "hello" }));
+			Assert.That(bytes1.Length, Is.LessThan(bytes2.Length));
 		}
 
 		[Test]
@@ -58,15 +71,6 @@ namespace RemoteExecution.Core.UT.Serializers
 
 			var actualResponse = (ResponseMessage)actual;
 			Assert.That(actualResponse.Value, Is.EqualTo(expected.Value));
-		}
-
-		[Test]
-		public void ShouldRegisterSerializableTypesFromAssembly()
-		{
-			BinaryMessageSerializer.RegsterSerializableFrom(GetType().Assembly);
-			var bytes1 = _subject.Serialize(new ResponseMessage("1", new Greeting1 { Hello = "hello" }));
-			var bytes2 = _subject.Serialize(new ResponseMessage("1", new Greeting2 { Hello = "hello" }));
-			Assert.That(bytes1.Length, Is.LessThan(bytes2.Length));
 		}
 	}
 }

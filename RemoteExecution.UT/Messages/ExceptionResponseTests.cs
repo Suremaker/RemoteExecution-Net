@@ -8,13 +8,6 @@ namespace RemoteExecution.UT.Messages
 	public class ExceptionResponseTests
 	{
 		[Test]
-		public void Should_set_assembly_qualified_name_as_exception_identifier()
-		{
-			var subject = new ExceptionResponse("id", typeof(InvalidOperationException), "test");
-			Assert.That(subject.ExceptionType, Is.EqualTo(typeof(InvalidOperationException).AssemblyQualifiedName));
-		}
-
-		[Test]
 		[TestCase(typeof(InvalidOperationException))]
 		[TestCase(typeof(Exception))]
 		[TestCase(typeof(ArgumentException))]
@@ -35,6 +28,13 @@ namespace RemoteExecution.UT.Messages
 				Assert.That(ex, Is.InstanceOf(exceptionType));
 				Assert.That(ex.Message, Is.StringContaining(subject.Message));
 			}
+		}
+
+		[Test]
+		public void Should_set_assembly_qualified_name_as_exception_identifier()
+		{
+			var subject = new ExceptionResponse("id", typeof(InvalidOperationException), "test");
+			Assert.That(subject.ExceptionType, Is.EqualTo(typeof(InvalidOperationException).AssemblyQualifiedName));
 		}
 	}
 }

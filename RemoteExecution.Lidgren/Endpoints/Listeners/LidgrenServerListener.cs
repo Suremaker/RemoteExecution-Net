@@ -11,10 +11,11 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 {
 	public class LidgrenServerListener : IServerListener
 	{
-		private readonly NetServer _netServer;
 		private static readonly TimeSpan _synchronizationTimeSpan = TimeSpan.FromMilliseconds(25);
-		private MessageLoop _messageLoop;
+		private readonly NetServer _netServer;
 		private readonly IMessageSerializer _serializer;
+		private MessageLoop _messageLoop;
+		public event Action<IDuplexChannel> OnChannelOpen;
 
 		public LidgrenServerListener(string applicationId, ushort port, IMessageSerializer serializer)
 		{
@@ -26,6 +27,8 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 			_serializer = serializer;
 			_netServer = new NetServer(netConfig);
 		}
+
+		#region IServerListener Members
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Dispose()
@@ -49,47 +52,9 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 			_netServer.Start();
 		}
 
-		private void HandleMessage(NetIncomingMessage msg)
-		{
-			switch (msg.MessageType)
-			{
-				case NetIncomingMessageType.Data:
-					HandleData(msg);
-					break;
-				case NetIncomingMessageType.StatusChanged:
-					HandleStatusChange(msg);
-					break;
-			}
-		}
+		public bool IsListening { get { return _netServer.Status == NetPeerStatus.Running; } }
 
-		private void HandleData(NetIncomingMessage message)
-		{
-			ExtractChannelWithWait(message.SenderConnection).HandleIncomingMessage(message);
-		}
-
-		private void HandleStatusChange(NetIncomingMessage msg)
-		{
-			switch ((NetConnectionStatus)msg.ReadByte())
-			{
-				case NetConnectionStatus.Connected:
-					HandleNewConnection(msg.SenderConnection);
-					break;
-				case NetConnectionStatus.Disconnected:
-					HandleClosedConnection(msg.SenderConnection);
-					break;
-			}
-		}
-
-		private void HandleNewConnection(NetConnection netConnection)
-		{
-			lock (netConnection)
-			{
-				var channel = new LidgrenDuplexChannel(netConnection, _serializer);
-				if (OnChannelOpen != null)
-					OnChannelOpen(channel);
-				netConnection.Tag = channel;
-			}
-		}
+		#endregion
 
 		private LidgrenDuplexChannel ExtractChannel(NetConnection netConnection)
 		{
@@ -113,7 +78,46 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 			channel.Dispose();
 		}
 
-		public event Action<IDuplexChannel> OnChannelOpen;
-		public bool IsListening { get { return _netServer.Status == NetPeerStatus.Running; } }
+		private void HandleData(NetIncomingMessage message)
+		{
+			ExtractChannelWithWait(message.SenderConnection).HandleIncomingMessage(message);
+		}
+
+		private void HandleMessage(NetIncomingMessage msg)
+		{
+			switch (msg.MessageType)
+			{
+				case NetIncomingMessageType.Data:
+					HandleData(msg);
+					break;
+				case NetIncomingMessageType.StatusChanged:
+					HandleStatusChange(msg);
+					break;
+			}
+		}
+
+		private void HandleNewConnection(NetConnection netConnection)
+		{
+			lock (netConnection)
+			{
+				var channel = new LidgrenDuplexChannel(netConnection, _serializer);
+				if (OnChannelOpen != null)
+					OnChannelOpen(channel);
+				netConnection.Tag = channel;
+			}
+		}
+
+		private void HandleStatusChange(NetIncomingMessage msg)
+		{
+			switch ((NetConnectionStatus)msg.ReadByte())
+			{
+				case NetConnectionStatus.Connected:
+					HandleNewConnection(msg.SenderConnection);
+					break;
+				case NetConnectionStatus.Disconnected:
+					HandleClosedConnection(msg.SenderConnection);
+					break;
+			}
+		}
 	}
 }

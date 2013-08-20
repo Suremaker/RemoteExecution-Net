@@ -4,7 +4,7 @@ namespace RemoteExecution.IT.Services
 {
 	public interface IClientService
 	{
-		int GetClientValue();
 		void Callback(TimeSpan timeSpan);
+		int GetClientValue();
 	}
 }

@@ -42,6 +42,14 @@ namespace RemoteExecution.UT.Remoting
 		private const string _handlerId = "handlerID";
 		private const string _interfaceName = "testInterface";
 
+		private ITestInterface GetInvocationHelper()
+		{
+			var subject = new TestableTwoWayRemoteCallInterceptor(_dispatcher, _channel, _responseHandler, _interfaceName);
+			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
+		}
+
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -51,11 +59,7 @@ namespace RemoteExecution.UT.Remoting
 			_responseHandler = _repository.DynamicMock<IResponseHandler>();
 		}
 
-		private ITestInterface GetInvocationHelper()
-		{
-			var subject = new TestableTwoWayRemoteCallInterceptor(_dispatcher, _channel, _responseHandler, _interfaceName);
-			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
-		}
+		#endregion
 
 		[Test]
 		public void Should_execute_operations_in_order()
@@ -71,17 +75,6 @@ namespace RemoteExecution.UT.Remoting
 			_repository.ReplayAll();
 			GetInvocationHelper().Hello(5);
 			_repository.VerifyAll();
-		}
-
-		[Test]
-		public void Should_wait_for_response_even_if_method_returns_void()
-		{
-			_repository.ReplayAll();
-			GetInvocationHelper().Notify("text");
-
-			_channel.AssertWasCalled(ch => ch.Send(Arg<Request>.Matches(r => r.IsResponseExpected)));
-			_dispatcher.AssertWasCalled(d => d.RegisterResponseHandler(_responseHandler));
-			_responseHandler.AssertWasCalled(h => h.WaitForResponse());
 		}
 
 		[Test]
@@ -106,6 +99,17 @@ namespace RemoteExecution.UT.Remoting
 				m.Args.SequenceEqual(new object[] { methodArg }) &&
 				m.OperationName == "Hello" &&
 				m.GroupId == _interfaceName)));
+		}
+
+		[Test]
+		public void Should_wait_for_response_even_if_method_returns_void()
+		{
+			_repository.ReplayAll();
+			GetInvocationHelper().Notify("text");
+
+			_channel.AssertWasCalled(ch => ch.Send(Arg<Request>.Matches(r => r.IsResponseExpected)));
+			_dispatcher.AssertWasCalled(d => d.RegisterResponseHandler(_responseHandler));
+			_responseHandler.AssertWasCalled(h => h.WaitForResponse());
 		}
 	}
 }

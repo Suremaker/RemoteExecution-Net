@@ -4,6 +4,8 @@ namespace StatelessServices.Server
 {
 	internal class CalculatorService : ICalculator
 	{
+		#region ICalculator Members
+
 		public int Add(int x, int y)
 		{
 			return x + y;
@@ -23,5 +25,7 @@ namespace StatelessServices.Server
 		{
 			return x / y;
 		}
+
+		#endregion
 	}
 }

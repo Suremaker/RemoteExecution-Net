@@ -2,7 +2,7 @@
 {
 	public interface IBroadcastService
 	{
-		void UserRegistered(string name);
 		void UserLeft(string name);
+		void UserRegistered(string name);
 	}
 }

@@ -41,6 +41,11 @@ namespace RemoteExecution.Lidgren.IT
 			_server.Dispose();
 		}
 
+		private ClientConnection CreateClientConnection()
+		{
+			return new ClientConnection(new LidgrenClientChannel(_applicationId, _host, _port, new BinaryMessageSerializer()), new RemoteExecutorFactory(), new OperationDispatcher(), new AsyncTaskScheduler());
+		}
+
 		[Test]
 		public void Should_execute_remote_operations()
 		{
@@ -50,11 +55,6 @@ namespace RemoteExecution.Lidgren.IT
 				Assert.That(client.Executor.Create<ICalculator>().Add(3, 2), Is.EqualTo(5));
 				Assert.That(client.Executor.Create<IGreeter>().Hello("Josh"), Is.EqualTo("Hello Josh!"));
 			}
-		}
-
-		private ClientConnection CreateClientConnection()
-		{
-			return new ClientConnection(new LidgrenClientChannel(_applicationId, _host, _port, new BinaryMessageSerializer()), new RemoteExecutorFactory(), new OperationDispatcher(), new AsyncTaskScheduler());
 		}
 	}
 }

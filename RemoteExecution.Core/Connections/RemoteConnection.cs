@@ -11,6 +11,7 @@ namespace RemoteExecution.Core.Connections
 	{
 		protected readonly IDuplexChannel Channel;
 		private readonly ITaskScheduler _scheduler;
+		public event Action Closed;
 
 		public RemoteConnection(IDuplexChannel channel, IRemoteExecutorFactory remoteExecutorFactory, IOperationDispatcher dispatcher, ITaskScheduler scheduler)
 		{
@@ -23,6 +24,19 @@ namespace RemoteExecution.Core.Connections
 			Channel.ChannelClosed += OnChannelClose;
 		}
 
+		#region IRemoteConnection Members
+
+		public void Dispose()
+		{
+			Channel.Dispose();
+		}
+
+		public IRemoteExecutor Executor { get; private set; }
+		public IOperationDispatcher Dispatcher { get; private set; }
+		public bool IsOpen { get { return Channel.IsOpen; } }
+
+		#endregion
+
 		private void OnChannelClose()
 		{
 			Dispatcher.MessageDispatcher.GroupDispatch(Channel.Id, new ExceptionResponseMessage(string.Empty, typeof(OperationAbortedException), "Connection has been closed."));
@@ -34,19 +48,5 @@ namespace RemoteExecution.Core.Connections
 		{
 			_scheduler.Execute(() => Dispatcher.MessageDispatcher.Dispatch(msg));
 		}
-
-		#region IRemoteConnection Members
-
-		public void Dispose()
-		{
-			Channel.Dispose();
-		}
-
-		public IRemoteExecutor Executor { get; private set; }
-		public IOperationDispatcher Dispatcher { get; private set; }
-		public bool IsOpen { get { return Channel.IsOpen; } }
-		public event Action Closed;
-
-		#endregion
 	}
 }

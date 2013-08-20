@@ -9,9 +9,9 @@ namespace RemoteExecution.Core.UT.Channels
 {
 	public abstract class ChannelTestsBase<TChannel> where TChannel : ITestableOutputChannel
 	{
-		protected TChannel Subject;
-		protected IMessageSerializer MessageSerializer;
 		protected readonly byte[] SerializedData = new byte[] { 1, 2, 3 };
+		protected IMessageSerializer MessageSerializer;
+		protected TChannel Subject;
 
 		[SetUp]
 		public void SetUp()
@@ -20,21 +20,11 @@ namespace RemoteExecution.Core.UT.Channels
 			Subject = CreateSubject();
 		}
 
-		protected abstract TChannel CreateSubject();
-
 		[Test]
 		public void Should_dispose_close_channel()
 		{
 			Subject.Dispose();
 			Assert.That(Subject.IsOpen, Is.False);
-		}
-
-		[Test]
-		public void Should_throw_not_connected_exception_on_send_if_connection_is_closed()
-		{
-			Subject.Dispose();
-			var ex = Assert.Throws<NotConnectedException>(() => Subject.Send(new ResponseMessage()));
-			Assert.That(ex.Message, Is.EqualTo("Channel is closed."));
 		}
 
 		[Test]
@@ -46,5 +36,15 @@ namespace RemoteExecution.Core.UT.Channels
 			MessageSerializer.AssertWasCalled(s => s.Serialize(requestMessage));
 			Assert.That(Subject.SentData, Is.EqualTo(SerializedData));
 		}
+
+		[Test]
+		public void Should_throw_not_connected_exception_on_send_if_connection_is_closed()
+		{
+			Subject.Dispose();
+			var ex = Assert.Throws<NotConnectedException>(() => Subject.Send(new ResponseMessage()));
+			Assert.That(ex.Message, Is.EqualTo("Channel is closed."));
+		}
+
+		protected abstract TChannel CreateSubject();
 	}
 }

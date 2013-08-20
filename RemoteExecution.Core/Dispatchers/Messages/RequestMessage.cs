@@ -24,7 +24,7 @@ namespace RemoteExecution.Core.Dispatchers.Messages
 			IsResponseExpected = isResponseExpected;
 		}
 
-		#region IRequest Members
+		#region IRequestMessage Members
 
 		public object[] Args { get; set; }
 		public string MethodName { get; set; }

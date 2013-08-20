@@ -15,6 +15,8 @@ namespace RemoteExecution.Core.Dispatchers
 			MessageDispatcher.DefaultHandler = new DefaultRequestHandler();
 		}
 
+		#region IOperationDispatcher Members
+
 		public void RegisterHandler<TInterface>(TInterface handler)
 		{
 			RegisterHandler(typeof(TInterface), handler);
@@ -49,5 +51,7 @@ namespace RemoteExecution.Core.Dispatchers
 		}
 
 		public IMessageDispatcher MessageDispatcher { get; private set; }
+
+		#endregion
 	}
 }

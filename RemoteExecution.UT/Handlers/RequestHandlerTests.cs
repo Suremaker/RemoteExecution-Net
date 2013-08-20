@@ -19,6 +19,8 @@ namespace RemoteExecution.UT.Handlers
 			void Foo();
 		}
 
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -26,6 +28,8 @@ namespace RemoteExecution.UT.Handlers
 			_messageChannel = MockRepository.GenerateMock<IMessageChannel>();
 			_subject = new RequestHandler(typeof(IMock), _handler);
 		}
+
+		#endregion
 
 		[Test]
 		[TestCase(true)]
@@ -38,12 +42,20 @@ namespace RemoteExecution.UT.Handlers
 		}
 
 		[Test]
-		public void Should_send_response_if_is_expected()
+		public void Should_not_send_response_for_exception_if_is_not_expected()
 		{
-			var correlationId = Guid.NewGuid().ToString();
-			var reqest = new Request(correlationId, "group", "Foo", new object[0], true);
+			_handler.Stub(h => h.Foo()).Throw(new Exception());
+			var reqest = new Request(Guid.NewGuid().ToString(), "group", "Foo", new object[0], false);
 			_subject.Handle(reqest, _messageChannel);
-			_messageChannel.AssertWasCalled(ch => ch.Send(Arg<Response>.Matches(r => r.CorrelationId == correlationId)));
+			_messageChannel.AssertWasNotCalled(ch => ch.Send(Arg<IResponse>.Is.Anything));
+		}
+
+		[Test]
+		public void Should_not_send_response_if_is_not_expected()
+		{
+			var reqest = new Request(Guid.NewGuid().ToString(), "group", "Foo", new object[0], false);
+			_subject.Handle(reqest, _messageChannel);
+			_messageChannel.AssertWasNotCalled(ch => ch.Send(Arg<IResponse>.Is.Anything));
 		}
 
 		[Test]
@@ -58,20 +70,12 @@ namespace RemoteExecution.UT.Handlers
 		}
 
 		[Test]
-		public void Should_not_send_response_if_is_not_expected()
+		public void Should_send_response_if_is_expected()
 		{
-			var reqest = new Request(Guid.NewGuid().ToString(), "group", "Foo", new object[0], false);
+			var correlationId = Guid.NewGuid().ToString();
+			var reqest = new Request(correlationId, "group", "Foo", new object[0], true);
 			_subject.Handle(reqest, _messageChannel);
-			_messageChannel.AssertWasNotCalled(ch => ch.Send(Arg<IResponse>.Is.Anything));
-		}
-
-		[Test]
-		public void Should_not_send_response_for_exception_if_is_not_expected()
-		{
-			_handler.Stub(h => h.Foo()).Throw(new Exception());
-			var reqest = new Request(Guid.NewGuid().ToString(), "group", "Foo", new object[0], false);
-			_subject.Handle(reqest, _messageChannel);
-			_messageChannel.AssertWasNotCalled(ch => ch.Send(Arg<IResponse>.Is.Anything));
+			_messageChannel.AssertWasCalled(ch => ch.Send(Arg<Response>.Matches(r => r.CorrelationId == correlationId)));
 		}
 	}
 }

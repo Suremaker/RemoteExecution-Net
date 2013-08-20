@@ -11,6 +11,8 @@ namespace StatefulServices.Server
 			_clientContext = clientContext;
 		}
 
+		#region IRegistrationService Members
+
 		public void Register(string name)
 		{
 			_clientContext.Name = name;
@@ -20,5 +22,7 @@ namespace StatefulServices.Server
 		{
 			return _clientContext.Name;
 		}
+
+		#endregion
 	}
 }

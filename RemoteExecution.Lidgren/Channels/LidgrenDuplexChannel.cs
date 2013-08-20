@@ -9,6 +9,12 @@ namespace RemoteExecution.Lidgren.Channels
 	public class LidgrenDuplexChannel : DuplexChannel
 	{
 		private static readonly IEnumerable<NetConnectionStatus> _validConnectionStatus = new[] { NetConnectionStatus.Connected, NetConnectionStatus.RespondedConnect };
+
+		public override bool IsOpen
+		{
+			get { return Connection != null && _validConnectionStatus.Contains(Connection.Status); }
+		}
+
 		protected NetConnection Connection { get; set; }
 
 		protected LidgrenDuplexChannel(IMessageSerializer serializer)
@@ -22,15 +28,15 @@ namespace RemoteExecution.Lidgren.Channels
 			Connection = connection;
 		}
 
+		public void HandleIncomingMessage(NetIncomingMessage message)
+		{
+			OnReceive(message.ReadBytes(message.LengthBytes));
+		}
+
 		protected override void Close()
 		{
 			if (Connection != null)
 				Connection.Disconnect("Channel closed");
-		}
-
-		public override bool IsOpen
-		{
-			get { return Connection != null && _validConnectionStatus.Contains(Connection.Status); }
 		}
 
 		protected override void SendData(byte[] data)
@@ -45,11 +51,6 @@ namespace RemoteExecution.Lidgren.Channels
 			var msg = Connection.Peer.CreateMessage(data.Length);
 			msg.Write(data);
 			return msg;
-		}
-
-		public void HandleIncomingMessage(NetIncomingMessage message)
-		{
-			OnReceive(message.ReadBytes(message.LengthBytes));
 		}
 	}
 }

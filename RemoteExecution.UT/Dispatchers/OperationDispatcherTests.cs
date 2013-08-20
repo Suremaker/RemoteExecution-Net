@@ -13,6 +13,24 @@ namespace RemoteExecution.UT.Dispatchers
 	[TestFixture]
 	public class OperationDispatcherTests
 	{
+		private OperationDispatcher _subject;
+		private MockMessageChannel _channel;
+
+		private T GetResult<T>(string id)
+		{
+			return _channel.SentMessages.OfType<IResponse>().Where(r => r.CorrelationId == id).Select(r => r.Value).OfType<T>().SingleOrDefault();
+		}
+
+		private IResponseHandler RegisterResponseHandlerFor(IMessageChannel channel)
+		{
+			var handler = MockRepository.GenerateMock<IResponseHandler>();
+			handler.Stub(x => x.Id).Return(Guid.NewGuid().ToString());
+			handler.Stub(x => x.TargetChannel).Return(channel);
+
+			_subject.RegisterResponseHandler(handler);
+			return handler;
+		}
+
 		#region Setup/Teardown
 
 		[SetUp]
@@ -23,14 +41,6 @@ namespace RemoteExecution.UT.Dispatchers
 		}
 
 		#endregion
-
-		private OperationDispatcher _subject;
-		private MockMessageChannel _channel;
-
-		private T GetResult<T>(string id)
-		{
-			return _channel.SentMessages.OfType<IResponse>().Where(r => r.CorrelationId == id).Select(r => r.Value).OfType<T>().SingleOrDefault();
-		}
 
 		[Test]
 		public void ShouldDispatchOperations()
@@ -45,10 +55,32 @@ namespace RemoteExecution.UT.Dispatchers
 		}
 
 		[Test]
+		public void ShouldDispatchResponses()
+		{
+			const string id = "some id";
+
+			var handler = MockRepository.GenerateMock<IResponseHandler>();
+			handler.Stub(x => x.Id).Return(id);
+			_subject.RegisterResponseHandler(handler);
+
+			var response = new Response(id, "text");
+			_subject.Dispatch(response, _channel);
+
+			handler.AssertWasCalled(h => h.Handle(response, _channel));
+		}
+
+		[Test]
 		public void ShouldNotAllowToRegisterHandlerIfItDoesNotImplementSpecifiedInterface()
 		{
 			var ex = Assert.Throws<ArgumentException>(() => _subject.RegisterRequestHandler(typeof(ICalculator), new Greeter()));
 			Assert.That(ex.Message, Is.StringStarting("Unable to register Greeter handler: it does not implement ICalculator interface."));
+		}
+
+		[Test]
+		public void ShouldNotAllowToRegisterHandlerIfTheSpecifiedHandlerObjectIsNotOfInterfaceType()
+		{
+			var ex = Assert.Throws<ArgumentException>(() => _subject.RegisterRequestHandler(new Calculator()));
+			Assert.That(ex.Message, Is.StringStarting("Unable to register handler: Calculator type is not an interface."));
 		}
 
 		[Test]
@@ -59,10 +91,11 @@ namespace RemoteExecution.UT.Dispatchers
 		}
 
 		[Test]
-		public void ShouldNotAllowToRegisterHandlerIfTheSpecifiedHandlerObjectIsNotOfInterfaceType()
+		public void ShouldNotSendErrorResponseIfThereIsNoRegisteredResponseHandlerForGivenResponseMessage()
 		{
-			var ex = Assert.Throws<ArgumentException>(() => _subject.RegisterRequestHandler(new Calculator()));
-			Assert.That(ex.Message, Is.StringStarting("Unable to register handler: Calculator type is not an interface."));
+			const string id = "test";
+			_subject.Dispatch(new Response(id, "text"), _channel);
+			Assert.That(GetResult<IResponse>(id), Is.Null);
 		}
 
 		[Test]
@@ -94,41 +127,13 @@ namespace RemoteExecution.UT.Dispatchers
 		}
 
 		[Test]
-		public void ShouldDispatchResponses()
+		public void ShouldSendAbortResponse()
 		{
-			const string id = "some id";
+			var responseHandler = RegisterResponseHandlerFor(_channel);
+			const string message = "some text";
+			_subject.DispatchAbortResponsesFor(_channel, message);
 
-			var handler = MockRepository.GenerateMock<IResponseHandler>();
-			handler.Stub(x => x.Id).Return(id);
-			_subject.RegisterResponseHandler(handler);
-
-			var response = new Response(id, "text");
-			_subject.Dispatch(response, _channel);
-
-			handler.AssertWasCalled(h => h.Handle(response, _channel));
-		}
-
-		[Test]
-		public void ShouldUnregisterResponseHandler()
-		{
-			const string id = "some id";
-			var handler = MockRepository.GenerateMock<IResponseHandler>();
-			handler.Stub(x => x.Id).Return(id);
-			_subject.RegisterResponseHandler(handler);
-
-			_subject.UnregisterResponseHandler(handler);
-
-			_subject.Dispatch(new Response(id, "text"), _channel);
-
-			handler.AssertWasNotCalled(h => h.Handle(Arg<IMessage>.Is.Anything, Arg<IMessageChannel>.Is.Anything));
-		}
-
-		[Test]
-		public void ShouldNotSendErrorResponseIfThereIsNoRegisteredResponseHandlerForGivenResponseMessage()
-		{
-			const string id = "test";
-			_subject.Dispatch(new Response(id, "text"), _channel);
-			Assert.That(GetResult<IResponse>(id), Is.Null);
+			responseHandler.AssertWasCalled(h => h.Handle(Arg<ExceptionResponse>.Matches(m => m.Message == message && m.ExceptionType == typeof(OperationAbortedException).AssemblyQualifiedName), Arg.Is(_channel)));
 		}
 
 		[Test]
@@ -148,23 +153,18 @@ namespace RemoteExecution.UT.Dispatchers
 		}
 
 		[Test]
-		public void ShouldSendAbortResponse()
+		public void ShouldUnregisterResponseHandler()
 		{
-			var responseHandler = RegisterResponseHandlerFor(_channel);
-			const string message = "some text";
-			_subject.DispatchAbortResponsesFor(_channel, message);
-
-			responseHandler.AssertWasCalled(h => h.Handle(Arg<ExceptionResponse>.Matches(m => m.Message == message && m.ExceptionType == typeof(OperationAbortedException).AssemblyQualifiedName), Arg.Is(_channel)));
-		}
-
-		private IResponseHandler RegisterResponseHandlerFor(IMessageChannel channel)
-		{
+			const string id = "some id";
 			var handler = MockRepository.GenerateMock<IResponseHandler>();
-			handler.Stub(x => x.Id).Return(Guid.NewGuid().ToString());
-			handler.Stub(x => x.TargetChannel).Return(channel);
-
+			handler.Stub(x => x.Id).Return(id);
 			_subject.RegisterResponseHandler(handler);
-			return handler;
+
+			_subject.UnregisterResponseHandler(handler);
+
+			_subject.Dispatch(new Response(id, "text"), _channel);
+
+			handler.AssertWasNotCalled(h => h.Handle(Arg<IMessage>.Is.Anything, Arg<IMessageChannel>.Is.Anything));
 		}
 	}
 }

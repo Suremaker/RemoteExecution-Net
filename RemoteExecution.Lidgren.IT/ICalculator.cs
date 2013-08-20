@@ -8,6 +8,8 @@
 
 	class Calculator : ICalculator
 	{
+		#region ICalculator Members
+
 		public int Add(int x, int y)
 		{
 			return x + y;
@@ -17,5 +19,7 @@
 		{
 			return x / y;
 		}
+
+		#endregion
 	}
 }

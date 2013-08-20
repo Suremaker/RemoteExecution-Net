@@ -55,55 +55,10 @@ namespace RemoteExecution.IT
 			_server.StartListening();
 		}
 
-		[SetUp]
-		public void SetUp()
-		{
-			_clients = new ConcurrentBag<ClientEndpoint>();
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			Console.WriteLine("Closing {0} client connections", _clients.Count);
-			Parallel.ForEach(_clients, c => c.Dispose());
-			SyncHelper.WaitUntil(() => !_server.ActiveConnections.Any(), 250);
-		}
-
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
 			_server.Dispose();
-		}
-
-		[Test]
-		[TestCase(1, 100)]
-		[TestCase(10, 100)]
-		[TestCase(100, 100)]
-		[TestCase(200, 100)]
-		public void ShouldPerformAllOperationsWithOneConnection(int threadsCount, int times)
-		{
-			var client = CreateClientConnection();
-			var tasks = new List<TaskData>();
-			for (int i = 0; i < threadsCount; i++)
-				tasks.Add(new TaskData(() => client, times));
-
-			PerformTasks(tasks);
-			Assert.That(tasks.Count(t => t.CurrentResult == times), Is.EqualTo(threadsCount));
-		}
-
-		[Test]
-		[TestCase(1, 100)]
-		[TestCase(10, 100)]
-		[TestCase(30, 100)]
-		[TestCase(200, 100)]
-		public void ShouldPerformAllOperationsWithOwnConnection(int threadsCount, int times)
-		{
-			var tasks = new List<TaskData>();
-			for (int i = 0; i < threadsCount; i++)
-				tasks.Add(new TaskData(CreateClientConnection, times));
-
-			PerformTasks(tasks);
-			Assert.That(tasks.Count(t => t.CurrentResult == times), Is.EqualTo(threadsCount));
 		}
 
 		private ClientEndpoint CreateClientConnection()
@@ -134,6 +89,55 @@ namespace RemoteExecution.IT
 				thread.Start();
 
 			return threads;
+		}
+
+		#region Setup/Teardown
+
+		[SetUp]
+		public void SetUp()
+		{
+			_clients = new ConcurrentBag<ClientEndpoint>();
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			Console.WriteLine("Closing {0} client connections", _clients.Count);
+			Parallel.ForEach(_clients, c => c.Dispose());
+			SyncHelper.WaitUntil(() => !_server.ActiveConnections.Any(), 250);
+		}
+
+		#endregion
+
+		[Test]
+		[TestCase(1, 100)]
+		[TestCase(10, 100)]
+		[TestCase(100, 100)]
+		[TestCase(200, 100)]
+		public void ShouldPerformAllOperationsWithOneConnection(int threadsCount, int times)
+		{
+			var client = CreateClientConnection();
+			var tasks = new List<TaskData>();
+			for (int i = 0; i < threadsCount; i++)
+				tasks.Add(new TaskData(() => client, times));
+
+			PerformTasks(tasks);
+			Assert.That(tasks.Count(t => t.CurrentResult == times), Is.EqualTo(threadsCount));
+		}
+
+		[Test]
+		[TestCase(1, 100)]
+		[TestCase(10, 100)]
+		[TestCase(30, 100)]
+		[TestCase(200, 100)]
+		public void ShouldPerformAllOperationsWithOwnConnection(int threadsCount, int times)
+		{
+			var tasks = new List<TaskData>();
+			for (int i = 0; i < threadsCount; i++)
+				tasks.Add(new TaskData(CreateClientConnection, times));
+
+			PerformTasks(tasks);
+			Assert.That(tasks.Count(t => t.CurrentResult == times), Is.EqualTo(threadsCount));
 		}
 	}
 }

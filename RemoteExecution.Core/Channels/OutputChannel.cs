@@ -7,6 +7,7 @@ namespace RemoteExecution.Core.Channels
 	public abstract class OutputChannel : IOutputChannel
 	{
 		protected readonly IMessageSerializer Serializer;
+		public event Action ChannelClosed;
 
 		protected OutputChannel(IMessageSerializer serializer)
 		{
@@ -14,14 +15,14 @@ namespace RemoteExecution.Core.Channels
 			Id = Guid.NewGuid();
 		}
 
+		#region IOutputChannel Members
+
 		public void Dispose()
 		{
 			Close();
 		}
 
-		protected abstract void Close();
 		public abstract bool IsOpen { get; }
-		public event Action ChannelClosed;
 		public Guid Id { get; private set; }
 
 		public void Send(IMessage message)
@@ -32,12 +33,16 @@ namespace RemoteExecution.Core.Channels
 			SendData(Serializer.Serialize(message));
 		}
 
-		protected abstract void SendData(byte[] data);
+		#endregion
+
+		protected abstract void Close();
 
 		protected void FireChannelClosed()
 		{
 			if (ChannelClosed != null)
 				ChannelClosed();
 		}
+
+		protected abstract void SendData(byte[] data);
 	}
 }

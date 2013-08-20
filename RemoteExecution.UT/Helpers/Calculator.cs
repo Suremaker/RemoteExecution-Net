@@ -5,9 +5,9 @@ namespace RemoteExecution.UT.Helpers
 {
     public class Calculator : ICalculator
     {
-        #region ICalculator Members
+	    #region ICalculator Members
 
-        public string Add(int x, int y)
+	    public string Add(int x, int y)
         {
             return (x + y).ToString(CultureInfo.InvariantCulture);
         }
@@ -17,6 +17,6 @@ namespace RemoteExecution.UT.Helpers
             throw new ArgumentException("test");
         }
 
-        #endregion
+	    #endregion
     }
 }

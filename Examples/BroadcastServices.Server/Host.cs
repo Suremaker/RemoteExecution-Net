@@ -8,8 +8,8 @@ namespace BroadcastServices.Server
 {
 	class Host : StatefulServerEndpoint
 	{
-		readonly SharedContext _sharedContext = new SharedContext();
 		private readonly IBroadcastService _broadcastService;
+		readonly SharedContext _sharedContext = new SharedContext();
 
 		public Host(ServerEndpointConfig config)
 			: base(config)

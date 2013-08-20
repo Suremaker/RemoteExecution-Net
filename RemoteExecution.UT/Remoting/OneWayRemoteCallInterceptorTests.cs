@@ -21,6 +21,14 @@ namespace RemoteExecution.UT.Remoting
 		private MockRepository _repository;
 		private const string _interfaceName = "testInterface";
 
+		private ITestInterface GetInvocationHelper()
+		{
+			var subject = new OneWayRemoteCallInterceptor(_channel, _interfaceName);
+			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
+		}
+
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -28,20 +36,7 @@ namespace RemoteExecution.UT.Remoting
 			_channel = _repository.DynamicMock<IMessageChannel>();
 		}
 
-		private ITestInterface GetInvocationHelper()
-		{
-			var subject = new OneWayRemoteCallInterceptor(_channel, _interfaceName);
-			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
-		}
-
-		[Test]
-		public void Should_send_request_message_with_no_response_expected()
-		{
-			_repository.ReplayAll();
-			GetInvocationHelper().Notify("text");
-
-			_channel.AssertWasCalled(ch => ch.Send(Arg<Request>.Matches(r => !r.IsResponseExpected)));
-		}
+		#endregion
 
 		[Test]
 		public void Should_send_message_with_method_details()
@@ -55,6 +50,15 @@ namespace RemoteExecution.UT.Remoting
 				m.Args.SequenceEqual(new object[] { methodArg }) &&
 				m.OperationName == "Hello" &&
 				m.GroupId == _interfaceName)));
+		}
+
+		[Test]
+		public void Should_send_request_message_with_no_response_expected()
+		{
+			_repository.ReplayAll();
+			GetInvocationHelper().Notify("text");
+
+			_channel.AssertWasCalled(ch => ch.Send(Arg<Request>.Matches(r => !r.IsResponseExpected)));
 		}
 	}
 }

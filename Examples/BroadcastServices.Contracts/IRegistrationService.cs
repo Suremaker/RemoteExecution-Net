@@ -2,7 +2,7 @@
 {
 	public interface IRegistrationService
 	{
-		void Register(string name);
 		string GetUserName();
+		void Register(string name);
 	}
 }

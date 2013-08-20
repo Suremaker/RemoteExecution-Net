@@ -11,11 +11,15 @@ namespace RemoteExecution.Core.UT.Executors
 	{
 		private IRemoteExecutorFactory _subject;
 
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
 			_subject = new RemoteExecutorFactory();
 		}
+
+		#endregion
 
 		[Test]
 		public void Should_create_remote_executor()

@@ -4,14 +4,16 @@ namespace BroadcastServices.Server
 {
 	internal class RegistrationService : IRegistrationService
 	{
-		private readonly ClientContext _clientContext;
 		private readonly IBroadcastService _broadcastService;
+		private readonly ClientContext _clientContext;
 
 		public RegistrationService(ClientContext clientContext, IBroadcastService broadcastService)
 		{
 			_clientContext = clientContext;
 			_broadcastService = broadcastService;
 		}
+
+		#region IRegistrationService Members
 
 		public void Register(string name)
 		{
@@ -23,5 +25,7 @@ namespace BroadcastServices.Server
 		{
 			return _clientContext.Name;
 		}
+
+		#endregion
 	}
 }

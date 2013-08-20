@@ -12,6 +12,11 @@ namespace RemoteExecution.UT.Executors
 	[TestFixture]
 	public class RemoteExecutorConcurrentTests
 	{
+		private OperationDispatcher _operationDispatcher;
+		private MockMessageChannel _channel;
+		private ICalculator _subject;
+		private RemoteExecutor _remoteExecutor;
+
 		#region Setup/Teardown
 
 		[SetUp]
@@ -24,11 +29,6 @@ namespace RemoteExecution.UT.Executors
 		}
 
 		#endregion
-
-		private OperationDispatcher _operationDispatcher;
-		private MockMessageChannel _channel;
-		private ICalculator _subject;
-		private RemoteExecutor _remoteExecutor;
 
 		[Test]
 		public void ShouldSupportConcurrentOperations()

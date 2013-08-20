@@ -2,26 +2,26 @@
 {
 	public class Person
 	{
+		public string FirstName { get; private set; }
+		public string LastName { get; private set; }
+
 		public Person(string firstName, string lastName)
 		{
 			LastName = lastName;
 			FirstName = firstName;
 		}
-
-		public string FirstName { get; private set; }
-		public string LastName { get; private set; }
 	}
 
 	public class Message
 	{
+		public string Text { get; private set; }
+		public string Title { get; private set; }
+
 		public Message(string title, string text)
 		{
 			Text = text;
 			Title = title;
 		}
-
-		public string Text { get; private set; }
-		public string Title { get; private set; }
 
 		public override string ToString()
 		{

@@ -9,8 +9,8 @@ namespace RemoteExecution.Core.Remoting
 	internal class TwoWayRemoteCallInterceptor : IMethodInterceptor
 	{
 		private readonly IOutputChannel _channel;
-		private readonly IMessageDispatcher _messageDispatcher;
 		private readonly string _interfaceName;
+		private readonly IMessageDispatcher _messageDispatcher;
 
 		public TwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher messageDispatcher, string interfaceName)
 		{

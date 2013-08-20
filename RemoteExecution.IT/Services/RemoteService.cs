@@ -6,10 +6,10 @@ namespace RemoteExecution.IT.Services
 {
 	public class RemoteService : IRemoteService
 	{
-		private readonly int _connectionId;
-		private readonly IClientService _clientService;
 		private readonly IBroadcastService _broadcastService;
 		private readonly INetworkConnection _clientConnection;
+		private readonly IClientService _clientService;
+		private readonly int _connectionId;
 
 		public RemoteService(int connectionId, IClientService clientService, IBroadcastService broadcastService, INetworkConnection clientConnection)
 		{
@@ -18,6 +18,8 @@ namespace RemoteExecution.IT.Services
 			_broadcastService = broadcastService;
 			_clientConnection = clientConnection;
 		}
+
+		#region IRemoteService Members
 
 		public int GetConnectionId()
 		{
@@ -54,6 +56,8 @@ namespace RemoteExecution.IT.Services
 		{
 			_broadcastService.SetNumber(number);
 		}
+
+		#endregion
 	}
 
 	public class MyException : Exception

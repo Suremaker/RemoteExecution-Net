@@ -19,19 +19,19 @@ namespace StatefulServices.Server
 			return new OperationDispatcher();
 		}
 
+		protected override void OnConnectionClose(INetworkConnection connection)
+		{
+			_sharedContext.RemoveClient(connection);
+		}
+
 		protected override void OnNewConnection(INetworkConnection connection)
 		{
 			var clientContext = new ClientContext();
 			_sharedContext.AddClient(connection, clientContext);
 
 			connection.OperationDispatcher
-				.RegisterRequestHandler<IRegistrationService>(new RegistrationService(clientContext))
-				.RegisterRequestHandler<IUserInfoService>(new UserInfoService(_sharedContext, clientContext));
-		}
-
-		protected override void OnConnectionClose(INetworkConnection connection)
-		{
-			_sharedContext.RemoveClient(connection);
+			          .RegisterRequestHandler<IRegistrationService>(new RegistrationService(clientContext))
+			          .RegisterRequestHandler<IUserInfoService>(new UserInfoService(_sharedContext, clientContext));
 		}
 	}
 }

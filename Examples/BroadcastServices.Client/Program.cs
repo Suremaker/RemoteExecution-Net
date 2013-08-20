@@ -9,6 +9,19 @@ namespace BroadcastServices.Client
 {
 	class Program
 	{
+		private static void GetUsers(IUserInfoService userInfoService)
+		{
+			try
+			{
+				Console.WriteLine("Registered users:");
+				Console.WriteLine(string.Join("\n", userInfoService.GetRegisteredUsers().OrderBy(u => u)));
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("Unable to get users: {0}", e.Message);
+			}
+		}
+
 		static void Main(string[] args)
 		{
 			IOperationDispatcher callbackDispatcher = new OperationDispatcher();
@@ -36,19 +49,6 @@ namespace BroadcastServices.Client
 			Console.WriteLine("Type user name:");
 			registrationService.Register(Console.ReadLine());
 			Console.WriteLine("Registered as: {0}", registrationService.GetUserName());
-		}
-
-		private static void GetUsers(IUserInfoService userInfoService)
-		{
-			try
-			{
-				Console.WriteLine("Registered users:");
-				Console.WriteLine(string.Join("\n", userInfoService.GetRegisteredUsers().OrderBy(u => u)));
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Unable to get users: {0}", e.Message);
-			}
 		}
 	}
 }

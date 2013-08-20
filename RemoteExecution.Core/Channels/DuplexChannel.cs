@@ -7,12 +7,13 @@ namespace RemoteExecution.Core.Channels
 {
 	public abstract class DuplexChannel : OutputChannel, IDuplexChannel
 	{
+		public event Action<IMessage> Received;
+
 		protected DuplexChannel(IMessageSerializer serializer)
 			: base(serializer)
 		{
 		}
 
-		public event Action<IMessage> Received;
 		protected void OnReceive(byte[] data)
 		{
 			if (Received != null)

@@ -5,8 +5,8 @@ namespace RemoteExecution.Core.Endpoints
 {
 	public interface IServerEndpointConfig
 	{
+		int MaxConnections { get; }
 		IRemoteExecutorFactory RemoteExecutorFactory { get; }
 		ITaskScheduler TaskScheduler { get; }
-		int MaxConnections { get; }
 	}
 }

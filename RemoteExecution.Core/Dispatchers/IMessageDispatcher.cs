@@ -8,16 +8,9 @@ namespace RemoteExecution.Core.Dispatchers
 	public interface IMessageDispatcher
 	{
 		/// <summary>
-		/// Registers message handler.
+		/// Default message handler which is used if there is no registered handler for dispatched message.
 		/// </summary>
-		/// <param name="handler">Handler.</param>
-		void Register(IMessageHandler handler);
-
-		/// <summary>
-		/// Unregisters message handler for given message type.
-		/// </summary>
-		/// <param name="messageType">Message type.</param>
-		void Unregister(string messageType);
+		IMessageHandler DefaultHandler { get; set; }
 
 		/// <summary>
 		/// Dispatches given message to one of registered handlers.
@@ -33,8 +26,15 @@ namespace RemoteExecution.Core.Dispatchers
 		void GroupDispatch(Guid handlerGroupId, IMessage message);
 
 		/// <summary>
-		/// Default message handler which is used if there is no registered handler for dispatched message.
+		/// Registers message handler.
 		/// </summary>
-		IMessageHandler DefaultHandler { get; set; }
+		/// <param name="handler">Handler.</param>
+		void Register(IMessageHandler handler);
+
+		/// <summary>
+		/// Unregisters message handler for given message type.
+		/// </summary>
+		/// <param name="messageType">Message type.</param>
+		void Unregister(string messageType);
 	}
 }

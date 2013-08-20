@@ -8,7 +8,7 @@ namespace RemoteExecution.UT.Helpers
 {
 	class MockMessageChannel : IMessageChannel
 	{
-		public bool IsOpen { get { return true; } }
+		public event Action<IMessage> Received;
 		public Action<IMessage> OnMessageSend { get; set; }
 		public List<IMessage> SentMessages { get; private set; }
 
@@ -18,6 +18,10 @@ namespace RemoteExecution.UT.Helpers
 			OnMessageSend = m => { };
 		}
 
+		#region IMessageChannel Members
+
+		public bool IsOpen { get { return true; } }
+
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Send(IMessage message)
 		{
@@ -25,6 +29,6 @@ namespace RemoteExecution.UT.Helpers
 			OnMessageSend(message);
 		}
 
-		public event Action<IMessage> Received;
+		#endregion
 	}
 }

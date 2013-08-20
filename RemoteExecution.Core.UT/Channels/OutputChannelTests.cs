@@ -18,23 +18,27 @@ namespace RemoteExecution.Core.UT.Channels
 		{
 		}
 
-		protected override void Close()
-		{
-			_isOpen = false;
-			FireChannelClosed();
-		}
+		#region ITestableOutputChannel Members
 
 		public override bool IsOpen
 		{
 			get { return _isOpen; }
 		}
 
+		public byte[] SentData { get; private set; }
+
+		#endregion
+
+		protected override void Close()
+		{
+			_isOpen = false;
+			FireChannelClosed();
+		}
+
 		protected override void SendData(byte[] data)
 		{
 			SentData = data;
 		}
-
-		public byte[] SentData { get; private set; }
 	}
 
 	[TestFixture]

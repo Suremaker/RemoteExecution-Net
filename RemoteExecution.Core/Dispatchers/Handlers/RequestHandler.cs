@@ -7,8 +7,8 @@ namespace RemoteExecution.Core.Dispatchers.Handlers
 {
 	internal class RequestHandler : IMessageHandler
 	{
-		public Type InterfaceType { get; private set; }
 		public object Handler { get; private set; }
+		public Type InterfaceType { get; private set; }
 
 		public RequestHandler(Type interfaceType, object handler)
 		{
@@ -17,6 +17,8 @@ namespace RemoteExecution.Core.Dispatchers.Handlers
 			HandledMessageType = interfaceType.Name;
 			HandlerGroupId = interfaceType.GUID;
 		}
+
+		#region IMessageHandler Members
 
 		public string HandledMessageType { get; private set; }
 		public Guid HandlerGroupId { get; private set; }
@@ -29,6 +31,8 @@ namespace RemoteExecution.Core.Dispatchers.Handlers
 			else
 				ExecuteWithoutResponse(request);
 		}
+
+		#endregion
 
 		private object Execute(RequestMessage requestMessage)
 		{

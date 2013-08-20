@@ -5,9 +5,13 @@ namespace RemoteExecution.Core.Executors
 {
 	public class RemoteExecutorFactory : IRemoteExecutorFactory
 	{
+		#region IRemoteExecutorFactory Members
+
 		public IRemoteExecutor CreateRemoteExecutor(IDuplexChannel channel, IMessageDispatcher dispatcher)
 		{
 			return new RemoteExecutor(channel, dispatcher);
 		}
+
+		#endregion
 	}
 }

@@ -14,6 +14,8 @@ namespace RemoteExecution.UT.Handlers
 		private ResponseHandler _subject;
 		private IMessageChannel _channel;
 
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -21,16 +23,26 @@ namespace RemoteExecution.UT.Handlers
 			_subject = new ResponseHandler(_channel);
 		}
 
-		[Test]
-		public void Should_set_channel_as_target_channel()
-		{
-			Assert.That(_subject.TargetChannel, Is.SameAs(_channel));
-		}
+		#endregion
 
 		[Test]
 		public void Should_generate_handler_id()
 		{
 			Assert.That(_subject.Id, Is.Not.EqualTo(Guid.Empty));
+		}
+
+		[Test]
+		public void Should_return_value_andled_message()
+		{
+			const string expectedValue = "test";
+			_subject.Handle(new Response(null, expectedValue), null);
+			Assert.That(_subject.GetValue(), Is.EqualTo(expectedValue));
+		}
+
+		[Test]
+		public void Should_set_channel_as_target_channel()
+		{
+			Assert.That(_subject.TargetChannel, Is.SameAs(_channel));
 		}
 
 		[Test]
@@ -46,14 +58,6 @@ namespace RemoteExecution.UT.Handlers
 				waitingThread.Abort();
 				Assert.Fail("WaitForResponse did not finished");
 			}
-		}
-
-		[Test]
-		public void Should_return_value_andled_message()
-		{
-			const string expectedValue = "test";
-			_subject.Handle(new Response(null, expectedValue), null);
-			Assert.That(_subject.GetValue(), Is.EqualTo(expectedValue));
 		}
 	}
 }

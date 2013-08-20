@@ -14,20 +14,6 @@ namespace RemoteExecution.UT.Executors
 	[TestFixture]
 	public class RemoteExecutorTests
 	{
-		#region Setup/Teardown
-
-		[SetUp]
-		public void SetUp()
-		{
-			_operationDispatcher = MockRepository.GenerateMock<IOperationDispatcher>();
-			_channel = new MockMessageChannel();
-			_remoteExecutor = new RemoteExecutor(_operationDispatcher, _channel);
-			_subject = _remoteExecutor.Create<ICalculator>();
-			_currentHandler = null;
-		}
-
-		#endregion
-
 		private ICalculator _subject;
 		private IOperationDispatcher _operationDispatcher;
 		private MockMessageChannel _channel;
@@ -80,6 +66,20 @@ namespace RemoteExecution.UT.Executors
 		{
 			_currentHandler = (IResponseHandler)a.Arguments[0];
 		}
+
+		#region Setup/Teardown
+
+		[SetUp]
+		public void SetUp()
+		{
+			_operationDispatcher = MockRepository.GenerateMock<IOperationDispatcher>();
+			_channel = new MockMessageChannel();
+			_remoteExecutor = new RemoteExecutor(_operationDispatcher, _channel);
+			_subject = _remoteExecutor.Create<ICalculator>();
+			_currentHandler = null;
+		}
+
+		#endregion
 
 		[Test]
 		public void ShouldGenerateClient()

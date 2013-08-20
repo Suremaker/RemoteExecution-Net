@@ -13,11 +13,21 @@ namespace RemoteExecution.Core.UT.Schedulers
 	{
 		private ITaskScheduler _subject;
 
+		private static IEnumerable<Action> PrepareTasks(int taskCount, int sleepTime, SemaphoreSlim semaphore)
+		{
+			for (int i = 0; i < taskCount; ++i)
+				yield return () => { Thread.Sleep(sleepTime); semaphore.Release(); };
+		}
+
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
 			_subject = new AsyncTaskScheduler();
 		}
+
+		#endregion
 
 		[Test]
 		public void Should_execute_tasks_in_background()
@@ -44,12 +54,6 @@ namespace RemoteExecution.Core.UT.Schedulers
 			Console.WriteLine("Time for schedule: {0},\nTime spent: {1},\nTotal sleep Time: {2}", scheduleTime.TotalMilliseconds, watch.ElapsedMilliseconds, totalSleepTime);
 			Assert.That(scheduleTime.TotalMilliseconds, Is.LessThan(totalSleepTime));
 			Assert.That(watch.ElapsedMilliseconds, Is.LessThan(totalSleepTime));
-		}
-
-		private static IEnumerable<Action> PrepareTasks(int taskCount, int sleepTime, SemaphoreSlim semaphore)
-		{
-			for (int i = 0; i < taskCount; ++i)
-				yield return () => { Thread.Sleep(sleepTime); semaphore.Release(); };
 		}
 	}
 }

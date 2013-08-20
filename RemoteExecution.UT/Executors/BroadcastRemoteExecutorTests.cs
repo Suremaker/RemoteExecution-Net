@@ -19,6 +19,8 @@ namespace RemoteExecution.UT.Executors
 			void VoidMethod(string text);
 		}
 
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -26,12 +28,7 @@ namespace RemoteExecution.UT.Executors
 			_subject = new BroadcastRemoteExecutor(_broadcastChannel);
 		}
 
-		[Test]
-		public void Should_send_message_on_channel()
-		{
-			_subject.Create<INotifier>().Notify("test");
-			_broadcastChannel.AssertWasCalled(ch => ch.Send(Arg<IMessage>.Is.Anything));
-		}
+		#endregion
 
 		[Test]
 		public void Should_not_allow_to_generate_proxy_if_interface_have_two_way_methods()
@@ -45,6 +42,13 @@ namespace RemoteExecution.UT.Executors
 		{
 			var ex = Assert.Throws<InvalidOperationException>(() => _subject.Create<IMyInterface>());
 			Assert.That(ex.Message, Is.EqualTo("IMyInterface interface cannot be used for broadcasting because some of its methods returns result."));
+		}
+
+		[Test]
+		public void Should_send_message_on_channel()
+		{
+			_subject.Create<INotifier>().Notify("test");
+			_broadcastChannel.AssertWasCalled(ch => ch.Send(Arg<IMessage>.Is.Anything));
 		}
 	}
 }

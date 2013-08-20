@@ -5,8 +5,8 @@ namespace RemoteExecution.Core.Dispatchers.Messages
 	internal interface IRequestMessage : IMessage
 	{
 		object[] Args { get; }
-		string MethodName { get; }
-		bool IsResponseExpected { get; }
 		IOutputChannel Channel { get; set; }
+		bool IsResponseExpected { get; }
+		string MethodName { get; }
 	}
 }

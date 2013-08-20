@@ -23,6 +23,8 @@ namespace RemoteExecution.IT
 			_id = id;
 		}
 
+		#region IMethodInterceptor Members
+
 		public object Invoke(IMethodInvocation invocation)
 		{
 			var watch = new Stopwatch();
@@ -42,5 +44,7 @@ namespace RemoteExecution.IT
 				throw;
 			}
 		}
+
+		#endregion
 	}
 }

@@ -13,7 +13,7 @@ namespace RemoteExecution.Core.Dispatchers.Messages
 
 		public ResponseMessage() { }
 
-		#region IResponse Members
+		#region IResponseMessage Members
 
 		public object Value { get; set; }
 

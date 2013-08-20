@@ -9,6 +9,11 @@ namespace RemoteExecution.Core.Dispatchers
 	public interface IOperationDispatcher
 	{
 		/// <summary>
+		/// Message dispatcher used by this operation dispatcher
+		/// </summary>
+		IMessageDispatcher MessageDispatcher { get; }
+
+		/// <summary>
 		/// Registers handler for specified interface. All messages with messageType equal to given interface type name would be handled with this handler.
 		/// </summary>
 		/// <typeparam name="TInterface">Type of interface, translated to type of handled messages.</typeparam>
@@ -33,10 +38,5 @@ namespace RemoteExecution.Core.Dispatchers
 		/// </summary>
 		/// <param name="interfaceType">Type of handler to unregister.</param>
 		void UnregisterHandler(Type interfaceType);
-
-		/// <summary>
-		/// Message dispatcher used by this operation dispatcher
-		/// </summary>
-		IMessageDispatcher MessageDispatcher { get; }
 	}
 }

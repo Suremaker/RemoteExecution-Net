@@ -19,7 +19,7 @@ namespace RemoteExecution.Core.Dispatchers.Messages
 			CorrelationId = id;
 		}
 
-		#region IResponse Members
+		#region IResponseMessage Members
 
 		public object Value
 		{
@@ -28,6 +28,7 @@ namespace RemoteExecution.Core.Dispatchers.Messages
 
 		public string CorrelationId { get; set; }
 		public string MessageType { get { return CorrelationId; } }
+
 		#endregion
 	}
 }

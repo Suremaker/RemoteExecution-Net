@@ -11,19 +11,19 @@ namespace RemoteExecution.Endpoints.Adapters
 			BroadcastChannel = new LidgrenBroadcastChannel((NetServer)Peer);
 		}
 
-		private static NetPeerConfiguration ToNetPeerConfiguration(ServerEndpointConfig config)
-		{
-			return new NetPeerConfiguration(config.ApplicationId)
-			{
-				MaximumConnections = config.MaxConnections,
-				Port = config.Port
-			};
-		}
-
 		#region IServerEndpointAdapter Members
 
 		public IBroadcastChannel BroadcastChannel { get; private set; }
 
 		#endregion
+
+		private static NetPeerConfiguration ToNetPeerConfiguration(ServerEndpointConfig config)
+		{
+			return new NetPeerConfiguration(config.ApplicationId)
+				{
+					MaximumConnections = config.MaxConnections,
+					Port = config.Port
+				};
+		}
 	}
 }

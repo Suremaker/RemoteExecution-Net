@@ -13,9 +13,9 @@ namespace BroadcastServices.Server
 			_clients.Add(connection, clientContext);
 		}
 
-		public void RemoveClient(INetworkConnection connection)
+		public IEnumerable<string> GetRegisteredClients()
 		{
-			_clients.Remove(connection);
+			return _clients.Values.Where(v => v.IsRegistered).Select(v => v.Name).ToArray();
 		}
 
 		public ClientContext GetUser(INetworkConnection connection)
@@ -23,9 +23,9 @@ namespace BroadcastServices.Server
 			return _clients[connection];
 		}
 
-		public IEnumerable<string> GetRegisteredClients()
+		public void RemoveClient(INetworkConnection connection)
 		{
-			return _clients.Values.Where(v => v.IsRegistered).Select(v => v.Name).ToArray();
+			_clients.Remove(connection);
 		}
 	}
 }

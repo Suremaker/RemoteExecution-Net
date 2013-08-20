@@ -19,6 +19,14 @@ namespace RemoteExecution.UT.Remoting
 		private IMethodInterceptor _oneWayInterceptor;
 		private IMethodInterceptor _twoWayInterceptor;
 
+		private ITestInterface GetInvocationHelper(NoResultMethodExecution noResultMethodExecution = NoResultMethodExecution.TwoWay)
+		{
+			var subject = new RemoteCallInterceptor(_oneWayInterceptor, _twoWayInterceptor, noResultMethodExecution);
+			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
+		}
+
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -26,11 +34,7 @@ namespace RemoteExecution.UT.Remoting
 			_twoWayInterceptor = MockRepository.GenerateMock<IMethodInterceptor>();
 		}
 
-		private ITestInterface GetInvocationHelper(NoResultMethodExecution noResultMethodExecution = NoResultMethodExecution.TwoWay)
-		{
-			var subject = new RemoteCallInterceptor(_oneWayInterceptor, _twoWayInterceptor, noResultMethodExecution);
-			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
-		}
+		#endregion
 
 		[Test]
 		[TestCase(NoResultMethodExecution.OneWay)]

@@ -10,6 +10,18 @@ namespace RemoteExecution.Core.Endpoints
 	public interface IServerEndpoint : IDisposable
 	{
 		/// <summary>
+		/// Fires when connection has been closed and is no longer on active connections list.
+		/// Event is fired in non-blocking way.
+		/// </summary>
+		event Action<IRemoteConnection> ConnectionClosed;
+
+		/// <summary>
+		/// Fires when new connection is opened, it is fully configured and ready to use.
+		/// Event is fired in non-blocking way.
+		/// </summary>
+		event Action<IRemoteConnection> ConnectionOpened;
+
+		/// <summary>
 		/// List of fully configured, active connections.
 		/// </summary>
 		IEnumerable<IRemoteConnection> ActiveConnections { get; }
@@ -23,17 +35,5 @@ namespace RemoteExecution.Core.Endpoints
 		/// Starts accepting incoming connections.
 		/// </summary>
 		void Start();
-
-		/// <summary>
-		/// Fires when new connection is opened, it is fully configured and ready to use.
-		/// Event is fired in non-blocking way.
-		/// </summary>
-		event Action<IRemoteConnection> ConnectionOpened;
-
-		/// <summary>
-		/// Fires when connection has been closed and is no longer on active connections list.
-		/// Event is fired in non-blocking way.
-		/// </summary>
-		event Action<IRemoteConnection> ConnectionClosed;
 	}
 }

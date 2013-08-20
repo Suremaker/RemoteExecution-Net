@@ -4,12 +4,12 @@ namespace RemoteExecution.IT.Services
 {
 	public interface IRemoteService
 	{
-		int GetConnectionId();
-		int ExecuteChainedMethod();
-		string Hello();
-		void ThrowException();
-		void CloseConnectionOnServerSide();
-		void Sleep(TimeSpan timeSpan);
 		void Broadcast(int number);
+		void CloseConnectionOnServerSide();
+		int ExecuteChainedMethod();
+		int GetConnectionId();
+		string Hello();
+		void Sleep(TimeSpan timeSpan);
+		void ThrowException();
 	}
 }

@@ -14,6 +14,8 @@ namespace Examples.Utils
 			_color = color;
 		}
 
+		#region IMethodInterceptor Members
+
 		public object Invoke(IMethodInvocation invocation)
 		{
 			var methodName = string.Format("{0}({1})", invocation.Method.Name, string.Join(", ", invocation.Arguments ?? Enumerable.Empty<object>()));
@@ -35,5 +37,7 @@ namespace Examples.Utils
 				Console.ResetColor();
 			}
 		}
+
+		#endregion
 	}
 }
