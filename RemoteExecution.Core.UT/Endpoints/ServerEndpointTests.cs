@@ -62,16 +62,16 @@ namespace RemoteExecution.Core.UT.Endpoints
 		[Test]
 		[TestCase(true)]
 		[TestCase(false)]
-		public void Should_is_listening_reflect_listener_state(bool expected)
+		public void Should_is_running_reflect_listener_state(bool expected)
 		{
 			_listener.Stub(l => l.IsListening).Return(expected);
-			Assert.That(_subject.IsListening, Is.EqualTo(expected));
+			Assert.That(_subject.IsRunning, Is.EqualTo(expected));
 		}
 
 		[Test]
-		public void Should_start_listening()
+		public void Should_start_endpoint()
 		{
-			_subject.StartListening();
+			_subject.Start();
 			_listener.AssertWasCalled(l => l.StartListening());
 		}
 

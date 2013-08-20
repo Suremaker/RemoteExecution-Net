@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using RemoteExecution.Core.Channels;
 using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
@@ -24,6 +25,7 @@ namespace RemoteExecution.Core.Endpoints
 			_listener.OnChannelOpen += OnChannelOpen;
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		private void OnChannelOpen(IDuplexChannel channel)
 		{
 			var connection = new RemoteConnection(channel, _config.RemoteExecutorFactory, GetOperationDispatcher(), _config.TaskScheduler);
@@ -91,13 +93,15 @@ namespace RemoteExecution.Core.Endpoints
 		protected abstract IOperationDispatcher GetOperationDispatcher();
 
 		/// <summary>
-		/// Closes all active connections and disposes listener.
+		/// Closes listener and all active connections.
 		/// </summary>
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Dispose()
 		{
+			_listener.Dispose();
+
 			foreach (var connection in ActiveConnections)
 				connection.Dispose();
-			_listener.Dispose();
 		}
 
 		/// <summary>
@@ -105,15 +109,16 @@ namespace RemoteExecution.Core.Endpoints
 		/// </summary>
 		public IEnumerable<IRemoteConnection> ActiveConnections { get { return _connections.Values; } }
 
-		/// <summary>
-		/// Returns true if listener is actively listening for incoming connections.
-		/// </summary>
-		public bool IsListening { get { return _listener.IsListening; } }
 
 		/// <summary>
-		/// Starts listening for incoming connections.
+		/// Returns true if endpoint is accepting incoming connections.
 		/// </summary>
-		public void StartListening()
+		public bool IsRunning { get { return _listener.IsListening; } }
+
+		/// <summary>
+		/// Starts accepting incoming connections.
+		/// </summary>
+		public void Start()
 		{
 			_listener.StartListening();
 		}

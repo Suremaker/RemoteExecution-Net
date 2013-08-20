@@ -15,14 +15,14 @@ namespace RemoteExecution.Core.Endpoints
 		IEnumerable<IRemoteConnection> ActiveConnections { get; }
 
 		/// <summary>
-		/// Returns true if listener is actively listening for incoming connections.
+		/// Returns true if endpoint is accepting incoming connections.
 		/// </summary>
-		bool IsListening { get; }
+		bool IsRunning { get; }
 
 		/// <summary>
-		/// Starts listening for incoming connections.
+		/// Starts accepting incoming connections.
 		/// </summary>
-		void StartListening();
+		void Start();
 
 		/// <summary>
 		/// Fires when new connection is opened, it is fully configured and ready to use.
