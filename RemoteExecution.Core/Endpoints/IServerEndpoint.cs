@@ -4,6 +4,9 @@ using RemoteExecution.Core.Connections;
 
 namespace RemoteExecution.Core.Endpoints
 {
+	/// <summary>
+	/// Interface for server endpoint allowing to listen for incoming connections.
+	/// </summary>
 	public interface IServerEndpoint : IDisposable
 	{
 		/// <summary>
@@ -20,5 +23,17 @@ namespace RemoteExecution.Core.Endpoints
 		/// Starts listening for incoming connections.
 		/// </summary>
 		void StartListening();
+
+		/// <summary>
+		/// Fires when new connection is opened, it is fully configured and ready to use.
+		/// Event is fired in non-blocking way.
+		/// </summary>
+		event Action<IRemoteConnection> ConnectionOpened;
+
+		/// <summary>
+		/// Fires when connection has been closed and is no longer on active connections list.
+		/// Event is fired in non-blocking way.
+		/// </summary>
+		event Action<IRemoteConnection> ConnectionClosed;
 	}
 }

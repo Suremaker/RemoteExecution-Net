@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using RemoteExecution.Core.Channels;
+using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Endpoints;
 using RemoteExecution.Core.Endpoints.Listeners;
@@ -17,11 +18,17 @@ namespace RemoteExecution.Core.UT.Endpoints
 		class TestableServerEndpoint : ServerEndpoint
 		{
 			private readonly IOperationDispatcher _operationDispatcher;
+			public event Action<IRemoteConnection> ConnectionInitialize;
 
 			public TestableServerEndpoint(IServerListener listener, IServerEndpointConfig config, IOperationDispatcher operationDispatcher)
 				: base(listener, config)
 			{
 				_operationDispatcher = operationDispatcher;
+				OnConnectionInitialize += c =>
+				{
+					if (ConnectionInitialize != null)
+						ConnectionInitialize(c);
+				};
 			}
 
 			protected override IOperationDispatcher GetOperationDispatcher()
@@ -100,6 +107,49 @@ namespace RemoteExecution.Core.UT.Endpoints
 			Assert.That(connection, Is.Not.Null);
 			Assert.That(connection.Dispatcher, Is.EqualTo(_operationDispatcher));
 			Assert.That(connection.Executor, Is.EqualTo(remoteExecutor));
+		}
+
+		[Test]
+		public void Should_configure_opened_connection()
+		{
+			var wasConfigured = false;
+			((TestableServerEndpoint)_subject).ConnectionInitialize += c => wasConfigured = true;
+			OpenChannel();
+
+			Assert.That(wasConfigured, Is.True);
+		}
+
+		[Test]
+		public void Should_fire_connection_opened_in_nonblocking_way()
+		{
+			var wasEventFired = false;
+			_subject.ConnectionOpened += c => wasEventFired = true;
+
+			//opening channel will effect with calling task scheduler, but event will be not raised because mock scheduler is not stubbed
+			OpenChannel();
+			_taskScheduler.AssertWasCalled(s => s.Execute(Arg<Action>.Is.Anything));
+			Assert.That(wasEventFired, Is.False);
+
+			//after scheduler is stubbed, opening channel will effect with raising an event
+			_taskScheduler.Stub(s => s.Execute(Arg<Action>.Is.Anything)).WhenCalled(m => ((Action)m.Arguments[0]).Invoke());
+			OpenChannel();
+			Assert.That(wasEventFired, Is.True);
+		}
+
+		[Test]
+		public void Should_fire_connection_closed_in_nonblocking_way()
+		{
+			var wasEventFired = false;
+			_subject.ConnectionClosed += c => wasEventFired = true;
+
+			//closing channel will effect with no event raise, because mock scheduler is not stubbed
+			OpenChannel().Dispose();
+			Assert.That(wasEventFired, Is.False);
+
+			//after scheduler is stubbed, closing channel will effect with raising an event
+			_taskScheduler.Stub(s => s.Execute(Arg<Action>.Is.Anything)).WhenCalled(m => ((Action)m.Arguments[0]).Invoke());
+			OpenChannel().Dispose();
+			Assert.That(wasEventFired, Is.True);
 		}
 
 		[Test]
