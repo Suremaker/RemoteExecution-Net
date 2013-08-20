@@ -28,6 +28,7 @@ Version 1.0.8:
 + added ConnectionOpened / ConnectionClosed / OnConnectionInitialize events for ServerEndpoint
 + implemented MaxConnections for ServerEndpoint
 + reimplemented GenericServerEndpoint
++ added RemoteExecution.Lidgren and reimplemented LidgrenClientChannel / LidgrenDuplexChannel / LidgrenServerListener and MessageLoop
 
 Version 1.0.7:
 ---------------------
