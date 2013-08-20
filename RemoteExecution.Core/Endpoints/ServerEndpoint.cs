@@ -28,6 +28,12 @@ namespace RemoteExecution.Core.Endpoints
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		private void OnChannelOpen(IDuplexChannel channel)
 		{
+			if (_connections.Count >= _config.MaxConnections)
+			{
+				channel.Dispose();
+				return;
+			}
+
 			var connection = new RemoteConnection(channel, _config.RemoteExecutorFactory, GetOperationDispatcher(), _config.TaskScheduler);
 			var channelId = channel.Id;
 
@@ -108,7 +114,6 @@ namespace RemoteExecution.Core.Endpoints
 		/// List of fully configured, active connections.
 		/// </summary>
 		public IEnumerable<IRemoteConnection> ActiveConnections { get { return _connections.Values; } }
-
 
 		/// <summary>
 		/// Returns true if endpoint is accepting incoming connections.

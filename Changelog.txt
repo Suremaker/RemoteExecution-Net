@@ -26,6 +26,7 @@ Version 1.0.8:
 + reimplemented ServerEndpoint
 + added Closed event to IRemoteConnection
 + added ConnectionOpened / ConnectionClosed / OnConnectionInitialize events for ServerEndpoint
++ implemented MaxConnections for ServerEndpoint
 
 
 Version 1.0.7:

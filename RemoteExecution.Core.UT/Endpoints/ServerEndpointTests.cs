@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using RemoteExecution.Core.Channels;
@@ -171,6 +172,24 @@ namespace RemoteExecution.Core.UT.Endpoints
 
 			channel2.Raise(c => c.ChannelClosed += null);
 			Assert.That(_subject.ActiveConnections, Is.Empty);
+		}
+
+		[Test]
+		public void Should_reject_new_channels_by_disposing_them_if_max_connection_count_is_reached()
+		{
+			var openedChannels = new List<IDuplexChannel>();
+			for (int i = 0; i < _config.MaxConnections; ++i)
+				openedChannels.Add(OpenChannel());
+
+			var rejectedChannels = new List<IDuplexChannel>();
+			for (int i = 0; i < 5; ++i)
+				rejectedChannels.Add(OpenChannel());
+
+			foreach (var channel in openedChannels)
+				channel.AssertWasNotCalled(c => c.Dispose());
+
+			foreach (var channel in rejectedChannels)
+				channel.AssertWasCalled(c => c.Dispose());
 		}
 
 		private IDuplexChannel OpenChannel()
