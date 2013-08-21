@@ -43,6 +43,7 @@
     <Compile Include="Channels\LidgrenClientChannel.cs" />
     <Compile Include="Channels\LidgrenDuplexChannel.cs" />
     <Compile Include="Endpoints\Listeners\LidgrenServerListener.cs" />
+    <Compile Include="MessageRouter.cs" />
     <Compile Include="SynchronizationExtensions.cs" />
     <Compile Include="MessageLoop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

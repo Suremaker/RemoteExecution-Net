@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using Lidgren.Network;
 using RemoteExecution.Core.Channels;
 using RemoteExecution.Core.Endpoints.Listeners;
@@ -11,11 +10,10 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 {
 	public class LidgrenServerListener : IServerListener
 	{
-		private static readonly TimeSpan _synchronizationTimeSpan = TimeSpan.FromMilliseconds(25);
-
 		private readonly NetServer _netServer;
 		private readonly IMessageSerializer _serializer;
 		private MessageLoop _messageLoop;
+		private readonly MessageRouter _messageRouter;
 		public event Action<IDuplexChannel> OnChannelOpen;
 
 		public LidgrenServerListener(string applicationId, ushort port, IMessageSerializer serializer)
@@ -27,6 +25,11 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 			};
 			_serializer = serializer;
 			_netServer = new NetServer(netConfig);
+
+			_messageRouter = new MessageRouter();
+			_messageRouter.ConnectionClosed += HandleClosedConnection;
+			_messageRouter.ConnectionOpened += HandleNewConnection;
+			_messageRouter.DataReceived += HandleReceivedData;
 		}
 
 		#region IServerListener Members
@@ -35,7 +38,7 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 		public void Dispose()
 		{
 			_netServer.Shutdown("Endpoint disposed");
-			_netServer.WaitForClose();			
+			_netServer.WaitForClose();
 
 			if (_messageLoop != null)
 				_messageLoop.Dispose();
@@ -48,7 +51,7 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 		{
 			if (IsListening)
 				return;
-			_messageLoop = new MessageLoop(_netServer, HandleMessage);
+			_messageLoop = new MessageLoop(_netServer, _messageRouter.Route);
 			_netServer.Start();
 		}
 
@@ -75,25 +78,12 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 		{
 			var channel = ExtractChannelWithWait(netConnection);
 			netConnection.Tag = null;
-			channel.Dispose();
+			channel.OnConnectionClose();
 		}
 
-		private void HandleData(NetIncomingMessage message)
+		private void HandleReceivedData(NetIncomingMessage message)
 		{
 			ExtractChannelWithWait(message.SenderConnection).HandleIncomingMessage(message);
-		}
-
-		private void HandleMessage(NetIncomingMessage msg)
-		{
-			switch (msg.MessageType)
-			{
-				case NetIncomingMessageType.Data:
-					HandleData(msg);
-					break;
-				case NetIncomingMessageType.StatusChanged:
-					HandleStatusChange(msg);
-					break;
-			}
 		}
 
 		private void HandleNewConnection(NetConnection netConnection)
@@ -104,19 +94,6 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 				if (OnChannelOpen != null)
 					OnChannelOpen(channel);
 				netConnection.Tag = channel;
-			}
-		}
-
-		private void HandleStatusChange(NetIncomingMessage msg)
-		{
-			switch ((NetConnectionStatus)msg.ReadByte())
-			{
-				case NetConnectionStatus.Connected:
-					HandleNewConnection(msg.SenderConnection);
-					break;
-				case NetConnectionStatus.Disconnected:
-					HandleClosedConnection(msg.SenderConnection);
-					break;
 			}
 		}
 	}

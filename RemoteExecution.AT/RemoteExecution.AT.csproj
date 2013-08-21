@@ -51,11 +51,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Expectations\BehaviorExpectations.cs" />
+    <Compile Include="Expectations\ExceptionExpectations.cs" />
+    <Compile Include="Expectations\RemoteExecutionExpectations.cs" />
+    <Compile Include="Expectations\ConnectionExpectations.cs" />
+    <Compile Include="Providers\LidgrenProviderTests.cs" />
+    <Compile Include="TestContext.cs" />
     <Compile Include="Helpers\Contracts\ICalculator.cs" />
     <Compile Include="Helpers\Contracts\IGreeter.cs" />
     <Compile Include="Helpers\Services\Calculator.cs" />
     <Compile Include="Helpers\Services\Greeter.cs" />
+    <Compile Include="Helpers\SyncHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

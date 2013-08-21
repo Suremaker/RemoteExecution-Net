@@ -35,7 +35,7 @@ namespace RemoteExecution.Lidgren.Channels
 
 		protected override void Close()
 		{
-			if (Connection != null)
+			if (Connection != null && IsOpen)
 				Connection.Disconnect("Channel closed");
 		}
 
@@ -51,6 +51,11 @@ namespace RemoteExecution.Lidgren.Channels
 			var msg = Connection.Peer.CreateMessage(data.Length);
 			msg.Write(data);
 			return msg;
+		}
+
+		public void OnConnectionClose()
+		{
+			FireChannelClosed();
 		}
 	}
 }

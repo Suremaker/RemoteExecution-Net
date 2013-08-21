@@ -46,7 +46,7 @@ namespace RemoteExecution.Lidgren.IT
 			return new ClientConnection(new LidgrenClientChannel(_applicationId, _host, _port, new BinaryMessageSerializer()), new RemoteExecutorFactory(), new OperationDispatcher(), new AsyncTaskScheduler());
 		}
 
-		[Test,Ignore("WIP")]
+		[Test]
 		public void Should_execute_remote_operations()
 		{
 			using (var client = CreateClientConnection())
