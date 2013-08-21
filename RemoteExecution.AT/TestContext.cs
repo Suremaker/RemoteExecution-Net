@@ -17,6 +17,7 @@ namespace RemoteExecution.AT
 			IOperationDispatcher dispatcher = new OperationDispatcher();
 			dispatcher.RegisterHandler<ICalculator>(new Calculator());
 			dispatcher.RegisterHandler<IGreeter>(new Greeter());
+			dispatcher.RegisterHandler<IRemoteService>(new RemoteService());
 
 			var server = new GenericServerEndpoint(CreateServerListener(), new ServerEndpointConfig(), () => dispatcher);
 			server.Start();
