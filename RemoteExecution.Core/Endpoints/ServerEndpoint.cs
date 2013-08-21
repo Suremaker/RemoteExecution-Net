@@ -64,9 +64,19 @@ namespace RemoteExecution.Core.Endpoints
 		/// <summary>
 		/// Starts accepting incoming connections.
 		/// </summary>
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Start()
 		{
-			_listener.StartListening();
+			if (IsRunning)
+				throw new InvalidOperationException("Server already started.");
+			try
+			{
+				_listener.StartListening();
+			}
+			catch (Exception ex)
+			{
+				throw new ServerStartException("Unable to start server: " + ex.Message, ex);
+			}
 		}
 
 		#endregion

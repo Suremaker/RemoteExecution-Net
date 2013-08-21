@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using Lidgren.Network;
+using RemoteExecution.Core.Channels;
 
 namespace RemoteExecution.Lidgren
 {
@@ -14,7 +15,7 @@ namespace RemoteExecution.Lidgren
 			while (connection.Status != NetConnectionStatus.Connected)
 			{
 				if (connection.Status == NetConnectionStatus.Disconnected)
-					throw new IOException("Connection closed.");
+					throw new ConnectionException("Connection closed.");
 
 				Thread.Sleep(_synchronizationTimeSpan);
 			}

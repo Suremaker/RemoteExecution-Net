@@ -57,6 +57,7 @@
     <Compile Include="Channels\IOutputChannel.cs" />
     <Compile Include="Channels\NotConnectedException.cs" />
     <Compile Include="Channels\OutputChannel.cs" />
+    <Compile Include="Channels\ConnectionException.cs" />
     <Compile Include="Connections\ClientConnection.cs" />
     <Compile Include="Connections\IClientConnection.cs" />
     <Compile Include="Connections\IRemoteConnection.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Endpoints\Listeners\IServerListener.cs" />
     <Compile Include="Endpoints\ServerEndpoint.cs" />
     <Compile Include="Endpoints\ServerEndpointConfig.cs" />
+    <Compile Include="Endpoints\ServerStartException.cs" />
     <Compile Include="Executors\IRemoteExecutor.cs" />
     <Compile Include="Executors\IRemoteExecutorFactory.cs" />
     <Compile Include="Executors\NoResultMethodExecution.cs" />

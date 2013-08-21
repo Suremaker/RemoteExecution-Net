@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Expectations\ExceptionExpectations.cs" />
+    <Compile Include="Expectations\EdgeCaseExpectations.cs" />
     <Compile Include="Expectations\RemoteExecutionExpectations.cs" />
     <Compile Include="Expectations\ConnectionExpectations.cs" />
     <Compile Include="Providers\LidgrenProviderTests.cs" />
