@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 using Lidgren.Network;
 
 namespace RemoteExecution.Lidgren
@@ -42,7 +41,7 @@ namespace RemoteExecution.Lidgren
 		{
 			var msg = _peer.ReadMessage();
 			if (msg != null)
-				Task.Factory.StartNew(() => _handleMessage(msg));
+				_handleMessage(msg);
 		}
 
 		private void Run()

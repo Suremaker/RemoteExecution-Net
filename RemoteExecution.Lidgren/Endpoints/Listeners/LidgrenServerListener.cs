@@ -12,6 +12,7 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 	public class LidgrenServerListener : IServerListener
 	{
 		private static readonly TimeSpan _synchronizationTimeSpan = TimeSpan.FromMilliseconds(25);
+
 		private readonly NetServer _netServer;
 		private readonly IMessageSerializer _serializer;
 		private MessageLoop _messageLoop;
@@ -34,8 +35,7 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 		public void Dispose()
 		{
 			_netServer.Shutdown("Endpoint disposed");
-			while (_netServer.Status != NetPeerStatus.NotRunning)
-				Thread.Sleep(_synchronizationTimeSpan);
+			_netServer.WaitForClose();			
 
 			if (_messageLoop != null)
 				_messageLoop.Dispose();

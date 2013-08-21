@@ -26,6 +26,7 @@ namespace RemoteExecution.Lidgren.Channels
 			_messageLoop = new MessageLoop(_client, HandleMessage);
 			_client.Start();
 			Connection = _client.Connect(_host, _port);
+			Connection.WaitForConnectionToOpen();
 		}
 
 		#endregion
@@ -34,6 +35,8 @@ namespace RemoteExecution.Lidgren.Channels
 		{
 			base.Close();
 			_client.Disconnect("Client disposed");
+			_client.WaitForClose();
+
 			if (_messageLoop != null)
 				_messageLoop.Dispose();
 			_messageLoop = null;
