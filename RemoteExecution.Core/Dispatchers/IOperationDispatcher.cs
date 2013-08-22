@@ -18,25 +18,25 @@ namespace RemoteExecution.Core.Dispatchers
 		/// </summary>
 		/// <typeparam name="TInterface">Type of interface, translated to type of handled messages.</typeparam>
 		/// <param name="handler">Handler.</param>
-		void RegisterHandler<TInterface>(TInterface handler);
+		IOperationDispatcher RegisterHandler<TInterface>(TInterface handler);
 
 		/// <summary>
 		/// Registers handler for specified interface. All messages with messageType equal to given interface type name would be handled with this handler.
 		/// </summary>
 		/// <param name="interfaceType">Type of interface, translated to type of handled messages.</param>
 		/// <param name="handler">Handler. Please note that handler has to implement interface specified by <c>interfaceType</c>.</param>
-		void RegisterHandler(Type interfaceType, object handler);
+		IOperationDispatcher RegisterHandler(Type interfaceType, object handler);
 
 		/// <summary>
 		/// Unregisters handler for given interface.
 		/// </summary>
 		/// <typeparam name="TInterface">Type of handler to unregister.</typeparam>
-		void UnregisterHandler<TInterface>();
+		IOperationDispatcher UnregisterHandler<TInterface>();
 
 		/// <summary>
 		/// Unregisters handler for given interface.
 		/// </summary>
 		/// <param name="interfaceType">Type of handler to unregister.</param>
-		void UnregisterHandler(Type interfaceType);
+		IOperationDispatcher UnregisterHandler(Type interfaceType);
 	}
 }

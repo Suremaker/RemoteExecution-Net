@@ -14,14 +14,17 @@ namespace RemoteExecution.AT
 	{
 		protected IServerEndpoint StartServer()
 		{
-			IOperationDispatcher dispatcher = new OperationDispatcher();
-			dispatcher.RegisterHandler<ICalculator>(new Calculator());
-			dispatcher.RegisterHandler<IGreeter>(new Greeter());
-			dispatcher.RegisterHandler<IRemoteService>(new RemoteService());
-
-			var server = new GenericServerEndpoint(CreateServerListener(), new ServerEndpointConfig(), () => dispatcher);
+			var server = new GenericServerEndpoint(CreateServerListener(), new ServerEndpointConfig(), () => new OperationDispatcher(), ConfigureConnection);
 			server.Start();
 			return server;
+		}
+
+		private void ConfigureConnection(IRemoteConnection clientConnection)
+		{
+			clientConnection.Dispatcher
+				.RegisterHandler<ICalculator>(new Calculator())
+				.RegisterHandler<IGreeter>(new Greeter())
+				.RegisterHandler<IRemoteService>(new RemoteService(clientConnection));
 		}
 
 		protected IClientConnection CreateClientConnection()

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using NUnit.Framework;
 using RemoteExecution.AT.Helpers.Contracts;
+using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Executors;
 
 namespace RemoteExecution.AT.Expectations
@@ -69,6 +70,19 @@ namespace RemoteExecution.AT.Expectations
 				watch.Stop();
 
 				Assert.That(watch.Elapsed, Is.GreaterThanOrEqualTo(sleepTime));
+			}
+		}
+
+		[Test]
+		public void Should_throw_if_connection_is_closed_during_remote_operation_call()
+		{
+			using (StartServer())
+			using (var client = OpenClientConnection())
+			{
+				var remote = client.Executor.Create<IRemoteService>();
+
+				var ex = Assert.Throws<OperationAbortedException>(remote.CloseConnectionOnServerSide);
+				Assert.That(ex.Message, Is.EqualTo("Connection has been closed."));
 			}
 		}
 	}
