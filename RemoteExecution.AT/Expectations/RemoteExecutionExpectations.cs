@@ -85,5 +85,15 @@ namespace RemoteExecution.AT.Expectations
 				Assert.That(ex.Message, Is.EqualTo("Connection has been closed."));
 			}
 		}
+
+		[Test]
+		public void Should_server_return_value_retrieved_from_client_as_callback()
+		{
+			using (StartServer())
+			using (var client = OpenClientConnectionWithCallback())
+			{
+				Assert.That(client.Executor.Create<IRemoteService>().GetHexValueUsingCallback(255), Is.EqualTo("0xFF"));
+			}
+		}
 	}
 }

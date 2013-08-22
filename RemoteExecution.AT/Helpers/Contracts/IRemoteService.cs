@@ -6,5 +6,6 @@ namespace RemoteExecution.AT.Helpers.Contracts
 	{
 		void Sleep(TimeSpan time);
 		void CloseConnectionOnServerSide();
+		string GetHexValueUsingCallback(int value);
 	}
 }

@@ -55,7 +55,9 @@
     <Compile Include="Expectations\EventsExpectations.cs" />
     <Compile Include="Expectations\RemoteExecutionExpectations.cs" />
     <Compile Include="Expectations\ConnectionExpectations.cs" />
+    <Compile Include="Helpers\Contracts\IClientService.cs" />
     <Compile Include="Helpers\Contracts\IRemoteService.cs" />
+    <Compile Include="Helpers\Services\ClientService.cs" />
     <Compile Include="Helpers\Services\RemoteService.cs" />
     <Compile Include="Providers\LidgrenProviderTests.cs" />
     <Compile Include="TestContext.cs" />

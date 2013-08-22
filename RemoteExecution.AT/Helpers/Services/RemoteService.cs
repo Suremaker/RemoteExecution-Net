@@ -23,5 +23,10 @@ namespace RemoteExecution.AT.Helpers.Services
 		{
 			_connection.Dispose();
 		}
+
+		public string GetHexValueUsingCallback(int value)
+		{
+			return "0x" + _connection.Executor.Create<IClientService>().GetHexValue(value);
+		}
 	}
 }

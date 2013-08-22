@@ -39,6 +39,14 @@ namespace RemoteExecution.AT
 			return client;
 		}
 
+		protected IClientConnection OpenClientConnectionWithCallback()
+		{
+			var client = CreateClientConnection();
+			client.Dispatcher.RegisterHandler<IClientService>(new ClientService());
+			client.Open();
+			return client;
+		}
+
 		protected abstract IServerListener CreateServerListener();
 		protected abstract IClientChannel CreateClientChannel();
 	}
