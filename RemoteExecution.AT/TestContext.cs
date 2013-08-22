@@ -12,9 +12,9 @@ namespace RemoteExecution.AT
 {
 	public abstract class TestContext
 	{
-		protected IServerEndpoint StartServer()
+		protected IServerEndpoint StartServer(int maxConnections = 128)
 		{
-			var server = new GenericServerEndpoint(CreateServerListener(), new ServerEndpointConfig(), () => new OperationDispatcher(), ConfigureConnection);
+			var server = new GenericServerEndpoint(CreateServerListener(), new ServerEndpointConfig { MaxConnections = maxConnections }, () => new OperationDispatcher(), ConfigureConnection);
 			server.Start();
 			return server;
 		}
