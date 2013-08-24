@@ -27,7 +27,7 @@ namespace RemoteExecution.Lidgren.Channels
 		protected override void SendData(byte[] data)
 		{
 			if (!IsOpen)
-				throw new NotConnectedException("Network connection is not opened.");
+				throw new NotConnectedException("Connection is not opened.");
 
 			if (ReceiverCount > 0)
 				_netServer.SendToAll(CreateOutgoingMessage(data), NetDeliveryMethod.ReliableUnordered);

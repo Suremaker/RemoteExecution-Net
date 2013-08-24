@@ -1,7 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.AT.Helpers.Contracts;
+using RemoteExecution.AT.Helpers.Services;
+using RemoteExecution.Core.Connections;
+using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Executors;
 
 namespace RemoteExecution.AT.Expectations
@@ -73,33 +79,55 @@ namespace RemoteExecution.AT.Expectations
 		}
 
 		[Test]
-		public void Should_server_broadcast_message()
+		public void Should_server_broadcast_operation()
 		{
 			const int expectedNumber = 55;
+			const int connectionCount = 25;
 
-			using (var server = StartServer())
-			using(var client1 = OpenClientConnection())
-			using(var client2 = OpenClientConnection())
-			using(var client3 = OpenClientConnection())
-			{
-				client1.Executor.Create<IRemoteService>().NotifyAll(expectedNumber);
+			var clientServices = new List<BroadcastService>();
+			var connections = new List<IClientConnection>();
 
-			}
+			for (int i = 0; i < connectionCount; ++i)
+				clientServices.Add(new BroadcastService());
 
-			var clients = CreateClients(_maxConnections);
 			try
 			{
-				const int expectedNumber = 55;
+				using (StartServer(connectionCount))
+				{
+					connections.AddRange(clientServices.Select(OpenClientConnectionWithCallback<IBroadcastService>));
 
-				clients[0].Item1.Connection.RemoteExecutor.Create<IRemoteService>().Broadcast(expectedNumber);
-				Thread.Sleep(1000);
-				Assert.That(clients.Count(c => c.Item2.ReceivedNumber == expectedNumber), Is.EqualTo(clients.Count));
-
+					connections.First().Executor.Create<IRemoteService>().NotifyAll(expectedNumber);
+					Thread.Sleep(250);
+					Assert.That(clientServices.Count(s => s.ReceivedValue == expectedNumber), Is.EqualTo(connectionCount));
+				}
 			}
 			finally
 			{
-				foreach (var client in clients)
-					client.Item1.Dispose();
+				foreach (var connection in connections)
+					connection.Dispose();
+			}
+		}
+
+		[Test]
+		public void Should_throw_if_connection_is_closed_during_remote_operation_call()
+		{
+			using (StartServer())
+			using (var client = OpenClientConnection())
+			{
+				var remote = client.Executor.Create<IRemoteService>();
+
+				var ex = Assert.Throws<OperationAbortedException>(remote.CloseConnectionOnServerSide);
+				Assert.That(ex.Message, Is.EqualTo("Connection has been closed."));
+			}
+		}
+
+		[Test]
+		public void Should_server_return_value_retrieved_from_client_as_callback()
+		{
+			using (StartServer())
+			using (var client = OpenClientConnectionWithCallback<IClientService>(new ClientService()))
+			{
+				Assert.That(client.Executor.Create<IRemoteService>().GetHexValueUsingCallback(255), Is.EqualTo("0xFF"));
 			}
 		}
 	}

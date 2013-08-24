@@ -30,6 +30,9 @@ Version 1.0.8:
 + reimplemented GenericServerEndpoint
 + added RemoteExecution.Lidgren and reimplemented LidgrenClientChannel / LidgrenDuplexChannel / LidgrenServerListener and MessageLoop
 + added acceptance tests
++ made fluent interface for IOperationDispatcher
++ added BroadcastRemoteExecutor / BroadcastChannel
++ renamed IServerListener to IServerConnectionListener
 
 Version 1.0.7:
 ---------------------

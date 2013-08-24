@@ -12,16 +12,24 @@ namespace RemoteExecution.AT
 {
 	public abstract class TestContext
 	{
-		protected IServerEndpoint StartServer()
+		protected IServerEndpoint StartServer(int maxConnections = 128)
 		{
-			IOperationDispatcher dispatcher = new OperationDispatcher();
-			dispatcher.RegisterHandler<ICalculator>(new Calculator());
-			dispatcher.RegisterHandler<IGreeter>(new Greeter());
-			dispatcher.RegisterHandler<IRemoteService>(new RemoteService());
-
-			var server = new GenericServerEndpoint(CreateServerListener(), new ServerEndpointConfig(), () => dispatcher);
+			var server = CreateServer(maxConnections);
 			server.Start();
 			return server;
+		}
+
+		protected GenericServerEndpoint CreateServer(int maxConnections = 128)
+		{
+			return new GenericServerEndpoint(CreateServerListener(), new ServerEndpointConfig { MaxConnections = maxConnections }, () => new OperationDispatcher(), ConfigureConnection);
+		}
+
+		private void ConfigureConnection(IServerEndpoint endpoint, IRemoteConnection clientConnection)
+		{
+			clientConnection.Dispatcher
+				.RegisterHandler<ICalculator>(new Calculator())
+				.RegisterHandler<IGreeter>(new Greeter())
+				.RegisterHandler<IRemoteService>(new RemoteService(clientConnection, endpoint.BroadcastExecutor));
 		}
 
 		protected IClientConnection CreateClientConnection()
@@ -37,6 +45,14 @@ namespace RemoteExecution.AT
 		}
 
 		protected abstract IServerConnectionListener CreateServerListener();
+		protected IClientConnection OpenClientConnectionWithCallback<TInterface>(TInterface clientSerivce)
+		{
+			var client = CreateClientConnection();
+			client.Dispatcher.RegisterHandler(clientSerivce);
+			client.Open();
+			return client;
+		}
+
 		protected abstract IClientChannel CreateClientChannel();
 	}
 }

@@ -17,12 +17,13 @@ namespace RemoteExecution.Core.Dispatchers
 
 		#region IOperationDispatcher Members
 
-		public void RegisterHandler<TInterface>(TInterface handler)
+		public IOperationDispatcher RegisterHandler<TInterface>(TInterface handler)
 		{
 			RegisterHandler(typeof(TInterface), handler);
+			return this;
 		}
 
-		public void RegisterHandler(Type interfaceType, object handler)
+		public IOperationDispatcher RegisterHandler(Type interfaceType, object handler)
 		{
 			if (handler == null)
 				throw new ArgumentNullException("handler");
@@ -38,16 +39,19 @@ namespace RemoteExecution.Core.Dispatchers
 						interfaceType.Name));
 
 			MessageDispatcher.Register(new RequestHandler(interfaceType, handler));
+			return this;
 		}
 
-		public void UnregisterHandler<TInterface>()
+		public IOperationDispatcher UnregisterHandler<TInterface>()
 		{
 			MessageDispatcher.Unregister(typeof(TInterface).Name);
+			return this;
 		}
 
-		public void UnregisterHandler(Type interfaceType)
+		public IOperationDispatcher UnregisterHandler(Type interfaceType)
 		{
 			MessageDispatcher.Unregister(interfaceType.Name);
+			return this;
 		}
 
 		public IMessageDispatcher MessageDispatcher { get; private set; }

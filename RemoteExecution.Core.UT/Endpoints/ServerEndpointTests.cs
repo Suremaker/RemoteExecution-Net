@@ -86,7 +86,7 @@ namespace RemoteExecution.Core.UT.Endpoints
 		public void Should_configure_opened_connection()
 		{
 			var wasConfigured = false;
-			_subject = new GenericServerEndpoint(_connectionListener, _config, () => _operationDispatcher, c => wasConfigured = true);
+			_subject = new GenericServerEndpoint(_connectionListener, _config, () => _operationDispatcher, (e, c) => wasConfigured = true);
 			OpenChannel();
 
 			Assert.That(wasConfigured, Is.True);

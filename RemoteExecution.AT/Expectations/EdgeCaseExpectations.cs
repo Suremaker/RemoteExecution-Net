@@ -18,6 +18,15 @@ namespace RemoteExecution.AT.Expectations
 		}
 
 		[Test]
+		public void Should_broadcast_executor_throw_if_remote_operation_is_performed_on_closed_server()
+		{
+			using (var server = CreateServer())
+			{
+				Assert.Throws<NotConnectedException>(() => server.BroadcastExecutor.Create<IBroadcastService>().SetValue(32));
+			}
+		}
+
+		[Test]
 		public void Should_client_throw_if_unable_to_connect_to_server()
 		{
 			using (var client = CreateClientConnection())
