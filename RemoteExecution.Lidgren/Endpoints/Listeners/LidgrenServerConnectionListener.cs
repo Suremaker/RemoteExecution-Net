@@ -8,7 +8,7 @@ using RemoteExecution.Lidgren.Channels;
 
 namespace RemoteExecution.Lidgren.Endpoints.Listeners
 {
-	public class LidgrenServerListener : IServerListener
+	public class LidgrenServerConnectionListener : IServerConnectionListener
 	{
 		private readonly NetServer _netServer;
 		private readonly IMessageSerializer _serializer;
@@ -16,7 +16,7 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 		private readonly MessageRouter _messageRouter;
 		public event Action<IDuplexChannel> OnChannelOpen;
 
-		public LidgrenServerListener(string applicationId, ushort port, IMessageSerializer serializer)
+		public LidgrenServerConnectionListener(string applicationId, ushort port, IMessageSerializer serializer)
 		{
 			var netConfig = new NetPeerConfiguration(applicationId)
 			{
@@ -30,6 +30,8 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 			_messageRouter.ConnectionClosed += HandleClosedConnection;
 			_messageRouter.ConnectionOpened += HandleNewConnection;
 			_messageRouter.DataReceived += HandleReceivedData;
+
+			BroadcastChannel = new LidgrenBroadcastChannel(_netServer, serializer);
 		}
 
 		#region IServerListener Members
@@ -54,6 +56,8 @@ namespace RemoteExecution.Lidgren.Endpoints.Listeners
 			_messageLoop = new MessageLoop(_netServer, _messageRouter.Route);
 			_netServer.Start();
 		}
+
+		public IBroadcastChannel BroadcastChannel { get; private set; }
 
 		public bool IsListening { get { return _netServer.Status == NetPeerStatus.Running; } }
 

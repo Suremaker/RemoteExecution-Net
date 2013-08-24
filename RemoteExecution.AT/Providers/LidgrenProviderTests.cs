@@ -16,9 +16,9 @@ namespace RemoteExecution.AT.Providers
 		private const string _host = "localhost";
 		private const ushort _port = 3251;
 
-		protected override IServerListener CreateServerListener()
+		protected override IServerConnectionListener CreateServerListener()
 		{
-			return new LidgrenServerListener(_applicationId, _port, new BinaryMessageSerializer());
+			return new LidgrenServerConnectionListener(_applicationId, _port, new BinaryMessageSerializer());
 		}
 
 		protected override IClientChannel CreateClientChannel()

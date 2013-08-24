@@ -3,7 +3,7 @@ using RemoteExecution.Core.Channels;
 
 namespace RemoteExecution.Core.Endpoints.Listeners
 {
-	public interface IServerListener : IDisposable
+	public interface IServerConnectionListener : IDisposable
 	{
 		/// <summary>
 		/// Fires when channel for new connection is opened.
@@ -20,5 +20,10 @@ namespace RemoteExecution.Core.Endpoints.Listeners
 		/// Starts listening for incoming connections.
 		/// </summary>
 		void StartListening();
+
+		/// <summary>
+		/// Returns broadcast channel allowing to send messages to all clients at once.
+		/// </summary>
+		IBroadcastChannel BroadcastChannel { get; }
 	}
 }

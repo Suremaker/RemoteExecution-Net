@@ -12,6 +12,11 @@ namespace RemoteExecution.Core.Executors
 			return new RemoteExecutor(channel, dispatcher);
 		}
 
+		public IBroadcastRemoteExecutor CreateBroadcastRemoteExecutor(IBroadcastChannel channel)
+		{
+			return new BroadcastRemoteExecutor(channel);
+		}
+
 		#endregion
 	}
 }

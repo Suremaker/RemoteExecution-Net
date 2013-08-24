@@ -36,7 +36,7 @@ namespace RemoteExecution.AT
 			return client;
 		}
 
-		protected abstract IServerListener CreateServerListener();
+		protected abstract IServerConnectionListener CreateServerListener();
 		protected abstract IClientChannel CreateClientChannel();
 	}
 }

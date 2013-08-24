@@ -28,5 +28,12 @@ namespace RemoteExecution.Core.UT.Executors
 			var messageDispatcher = MockRepository.GenerateMock<IMessageDispatcher>();
 			Assert.That(_subject.CreateRemoteExecutor(duplexChannel, messageDispatcher), Is.InstanceOf<RemoteExecutor>());
 		}
+
+		[Test]
+		public void Should_create_broadcast_remote_executor()
+		{
+			var broadcastChannel = MockRepository.GenerateMock<IBroadcastChannel>();
+			Assert.That(_subject.CreateBroadcastRemoteExecutor(broadcastChannel), Is.InstanceOf<BroadcastRemoteExecutor>());
+		}
 	}
 }

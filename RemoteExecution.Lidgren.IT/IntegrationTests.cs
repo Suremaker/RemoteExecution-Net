@@ -15,7 +15,7 @@ namespace RemoteExecution.Lidgren.IT
 	[TestFixture]
 	public class IntegrationTests
 	{
-		private IServerListener _listener;
+		private IServerConnectionListener _connectionListener;
 		private readonly string _applicationId = Guid.NewGuid().ToString();
 		private IServerEndpoint _server;
 		private IOperationDispatcher _dispatcher;
@@ -25,13 +25,13 @@ namespace RemoteExecution.Lidgren.IT
 		[TestFixtureSetUp]
 		public void SetUp()
 		{
-			_listener = new LidgrenServerListener(_applicationId, _port, new BinaryMessageSerializer());
+			_connectionListener = new LidgrenServerConnectionListener(_applicationId, _port, new BinaryMessageSerializer());
 
 			_dispatcher = new OperationDispatcher();
 			_dispatcher.RegisterHandler<ICalculator>(new Calculator());
 			_dispatcher.RegisterHandler<IGreeter>(new Greeter());
 
-			_server = new GenericServerEndpoint(_listener, new ServerEndpointConfig(), () => _dispatcher);
+			_server = new GenericServerEndpoint(_connectionListener, new ServerEndpointConfig(), () => _dispatcher);
 			_server.Start();
 		}
 

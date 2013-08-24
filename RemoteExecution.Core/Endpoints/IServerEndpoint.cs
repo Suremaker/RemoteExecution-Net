@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using RemoteExecution.Core.Connections;
+using RemoteExecution.Core.Executors;
 
 namespace RemoteExecution.Core.Endpoints
 {
@@ -35,5 +36,10 @@ namespace RemoteExecution.Core.Endpoints
 		/// Starts accepting incoming connections.
 		/// </summary>
 		void Start();
+
+		/// <summary>
+		/// Returns broadcast executor.
+		/// </summary>
+		IBroadcastRemoteExecutor BroadcastExecutor { get; }
 	}
 }

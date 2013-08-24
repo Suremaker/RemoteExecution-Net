@@ -50,6 +50,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Channels\DuplexChannel.cs" />
+    <Compile Include="Channels\IBroadcastChannel.cs" />
     <Compile Include="Channels\IChannel.cs" />
     <Compile Include="Channels\IClientChannel.cs" />
     <Compile Include="Channels\IDuplexChannel.cs" />
@@ -81,10 +82,12 @@
     <Compile Include="Endpoints\GenericServerEndpoint.cs" />
     <Compile Include="Endpoints\IServerEndpoint.cs" />
     <Compile Include="Endpoints\IServerEndpointConfig.cs" />
-    <Compile Include="Endpoints\Listeners\IServerListener.cs" />
+    <Compile Include="Endpoints\Listeners\IServerConnectionListener.cs" />
     <Compile Include="Endpoints\ServerEndpoint.cs" />
     <Compile Include="Endpoints\ServerEndpointConfig.cs" />
     <Compile Include="Endpoints\ServerStartException.cs" />
+    <Compile Include="Executors\BroadcastRemoteExecutor.cs" />
+    <Compile Include="Executors\IBroadcastRemoteExecutor.cs" />
     <Compile Include="Executors\IRemoteExecutor.cs" />
     <Compile Include="Executors\IRemoteExecutorFactory.cs" />
     <Compile Include="Executors\NoResultMethodExecution.cs" />

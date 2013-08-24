@@ -9,7 +9,7 @@ namespace RemoteExecution.Core.Endpoints
 	{
 		private readonly Func<IOperationDispatcher> _operationDispatcherCreator;
 
-		public GenericServerEndpoint(IServerListener listener, IServerEndpointConfig config, Func<IOperationDispatcher> operationDispatcherCreator, Action<IRemoteConnection> connectionInitializer = null)
+		public GenericServerEndpoint(IServerConnectionListener listener, IServerEndpointConfig config, Func<IOperationDispatcher> operationDispatcherCreator, Action<IRemoteConnection> connectionInitializer = null)
 			: base(listener, config)
 		{
 			_operationDispatcherCreator = operationDispatcherCreator;

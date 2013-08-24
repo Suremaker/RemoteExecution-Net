@@ -6,6 +6,7 @@ using RemoteExecution.Core.Channels;
 using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Endpoints.Listeners;
+using RemoteExecution.Core.Executors;
 
 namespace RemoteExecution.Core.Endpoints
 {
@@ -16,7 +17,7 @@ namespace RemoteExecution.Core.Endpoints
 	{
 		private readonly IServerEndpointConfig _config;
 		private readonly ConcurrentDictionary<Guid, IRemoteConnection> _connections = new ConcurrentDictionary<Guid, IRemoteConnection>();
-		private readonly IServerListener _listener;
+		private readonly IServerConnectionListener _listener;
 
 		/// <summary>
 		/// Fires when connection has been closed and is no longer on active connections list.
@@ -30,11 +31,12 @@ namespace RemoteExecution.Core.Endpoints
 		/// </summary>
 		public event Action<IRemoteConnection> ConnectionOpened;
 
-		protected ServerEndpoint(IServerListener listener, IServerEndpointConfig config)
+		protected ServerEndpoint(IServerConnectionListener listener, IServerEndpointConfig config)
 		{
 			_listener = listener;
 			_config = config;
 			_listener.OnChannelOpen += OnChannelOpen;
+			BroadcastExecutor = config.RemoteExecutorFactory.CreateBroadcastRemoteExecutor(listener.BroadcastChannel);
 		}
 
 		#region IServerEndpoint Members
@@ -78,6 +80,8 @@ namespace RemoteExecution.Core.Endpoints
 				throw new ServerStartException("Unable to start server: " + ex.Message, ex);
 			}
 		}
+
+		public IBroadcastRemoteExecutor BroadcastExecutor { get; private set; }
 
 		#endregion
 

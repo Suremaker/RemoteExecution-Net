@@ -71,5 +71,36 @@ namespace RemoteExecution.AT.Expectations
 				Assert.That(watch.Elapsed, Is.GreaterThanOrEqualTo(sleepTime));
 			}
 		}
+
+		[Test]
+		public void Should_server_broadcast_message()
+		{
+			const int expectedNumber = 55;
+
+			using (var server = StartServer())
+			using(var client1 = OpenClientConnection())
+			using(var client2 = OpenClientConnection())
+			using(var client3 = OpenClientConnection())
+			{
+				client1.Executor.Create<IRemoteService>().NotifyAll(expectedNumber);
+
+			}
+
+			var clients = CreateClients(_maxConnections);
+			try
+			{
+				const int expectedNumber = 55;
+
+				clients[0].Item1.Connection.RemoteExecutor.Create<IRemoteService>().Broadcast(expectedNumber);
+				Thread.Sleep(1000);
+				Assert.That(clients.Count(c => c.Item2.ReceivedNumber == expectedNumber), Is.EqualTo(clients.Count));
+
+			}
+			finally
+			{
+				foreach (var client in clients)
+					client.Item1.Dispose();
+			}
+		}
 	}
 }

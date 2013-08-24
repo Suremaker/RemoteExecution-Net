@@ -16,16 +16,18 @@ namespace RemoteExecution.Core.UT.Endpoints
 	public class ServerEndpointTests
 	{
 		private IServerEndpoint _subject;
-		private IServerListener _listener;
+		private IServerConnectionListener _connectionListener;
 		private IServerEndpointConfig _config;
 		private IRemoteExecutorFactory _remoteExecutorFactory;
 		private ITaskScheduler _taskScheduler;
 		private IOperationDispatcher _operationDispatcher;
+		private IBroadcastChannel _broadcastChannel;
+		private IBroadcastRemoteExecutor _broadcastExecutor;
 
 		private IDuplexChannel OpenChannel()
 		{
 			var channel1 = GenerateChannel();
-			_listener.Raise(l => l.OnChannelOpen += null, channel1);
+			_connectionListener.Raise(l => l.OnChannelOpen += null, channel1);
 			return channel1;
 		}
 
@@ -42,7 +44,7 @@ namespace RemoteExecution.Core.UT.Endpoints
 		[SetUp]
 		public void SetUp()
 		{
-			_listener = MockRepository.GenerateMock<IServerListener>();
+			_connectionListener = MockRepository.GenerateMock<IServerConnectionListener>();
 			_remoteExecutorFactory = MockRepository.GenerateMock<IRemoteExecutorFactory>();
 			_taskScheduler = MockRepository.GenerateMock<ITaskScheduler>();
 			_config = MockRepository.GenerateMock<IServerEndpointConfig>();
@@ -51,7 +53,12 @@ namespace RemoteExecution.Core.UT.Endpoints
 			_config.Stub(c => c.TaskScheduler).Return(_taskScheduler);
 			_operationDispatcher = MockRepository.GenerateMock<IOperationDispatcher>();
 			_operationDispatcher.Stub(d => d.MessageDispatcher).Return(MockRepository.GenerateMock<IMessageDispatcher>());
-			_subject = new GenericServerEndpoint(_listener, _config, () => _operationDispatcher);
+			_broadcastChannel = MockRepository.GenerateMock<IBroadcastChannel>();
+			_connectionListener.Stub(l => l.BroadcastChannel).Return(_broadcastChannel);
+			_broadcastExecutor = MockRepository.GenerateMock<IBroadcastRemoteExecutor>();
+			_remoteExecutorFactory.Stub(f => f.CreateBroadcastRemoteExecutor(_broadcastChannel)).Return(_broadcastExecutor);
+
+			_subject = new GenericServerEndpoint(_connectionListener, _config, () => _operationDispatcher);
 		}
 
 		#endregion
@@ -72,14 +79,14 @@ namespace RemoteExecution.Core.UT.Endpoints
 		public void Dispose_should_dispose_listener()
 		{
 			_subject.Dispose();
-			_listener.AssertWasCalled(l => l.Dispose());
+			_connectionListener.AssertWasCalled(l => l.Dispose());
 		}
 
 		[Test]
 		public void Should_configure_opened_connection()
 		{
 			var wasConfigured = false;
-			_subject = new GenericServerEndpoint(_listener, _config, () => _operationDispatcher, c => wasConfigured = true);
+			_subject = new GenericServerEndpoint(_connectionListener, _config, () => _operationDispatcher, c => wasConfigured = true);
 			OpenChannel();
 
 			Assert.That(wasConfigured, Is.True);
@@ -92,12 +99,18 @@ namespace RemoteExecution.Core.UT.Endpoints
 			var remoteExecutor = MockRepository.GenerateMock<IRemoteExecutor>();
 			_remoteExecutorFactory.Stub(f => f.CreateRemoteExecutor(Arg<IDuplexChannel>.Is.Equal(channel), Arg<IMessageDispatcher>.Is.Anything)).Return(remoteExecutor);
 
-			_listener.Raise(l => l.OnChannelOpen += null, channel);
+			_connectionListener.Raise(l => l.OnChannelOpen += null, channel);
 
 			var connection = _subject.ActiveConnections.SingleOrDefault();
 			Assert.That(connection, Is.Not.Null);
 			Assert.That(connection.Dispatcher, Is.EqualTo(_operationDispatcher));
 			Assert.That(connection.Executor, Is.EqualTo(remoteExecutor));
+		}
+
+		[Test]
+		public void Should_create_broadcast_executor()
+		{
+			Assert.That(_subject.BroadcastExecutor, Is.EqualTo(_broadcastExecutor));
 		}
 
 		[Test]
@@ -138,7 +151,7 @@ namespace RemoteExecution.Core.UT.Endpoints
 		[TestCase(false)]
 		public void Should_is_running_reflect_listener_state(bool expected)
 		{
-			_listener.Stub(l => l.IsListening).Return(expected);
+			_connectionListener.Stub(l => l.IsListening).Return(expected);
 			Assert.That(_subject.IsRunning, Is.EqualTo(expected));
 		}
 
@@ -185,7 +198,7 @@ namespace RemoteExecution.Core.UT.Endpoints
 		public void Should_start_endpoint()
 		{
 			_subject.Start();
-			_listener.AssertWasCalled(l => l.StartListening());
+			_connectionListener.AssertWasCalled(l => l.StartListening());
 		}
 	}
 }
