@@ -7,7 +7,7 @@ using RemoteExecution.Core.Serializers;
 using RemoteExecution.Lidgren.Channels;
 using RemoteExecution.Lidgren.Endpoints.Listeners;
 
-namespace RemoteExecution.AT.Providers
+namespace RemoteExecution.AT.TransportLayer
 {
 	[TestFixture]
 	public class LidgrenProviderTests : BehaviorExpectations

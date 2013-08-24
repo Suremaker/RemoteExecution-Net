@@ -62,7 +62,7 @@
     <Compile Include="Helpers\Services\BroadcastService.cs" />
     <Compile Include="Helpers\Services\ClientService.cs" />
     <Compile Include="Helpers\Services\RemoteService.cs" />
-    <Compile Include="Providers\LidgrenProviderTests.cs" />
+    <Compile Include="TransportLayer\LidgrenProviderTests.cs" />
     <Compile Include="TestContext.cs" />
     <Compile Include="Helpers\Contracts\ICalculator.cs" />
     <Compile Include="Helpers\Contracts\IGreeter.cs" />
