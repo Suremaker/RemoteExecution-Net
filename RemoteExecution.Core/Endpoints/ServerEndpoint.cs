@@ -7,6 +7,7 @@ using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Endpoints.Listeners;
 using RemoteExecution.Core.Executors;
+using RemoteExecution.Core.TransportLayer;
 
 namespace RemoteExecution.Core.Endpoints
 {
@@ -30,6 +31,11 @@ namespace RemoteExecution.Core.Endpoints
 		/// Event is fired in non-blocking way.
 		/// </summary>
 		public event Action<IRemoteConnection> ConnectionOpened;
+
+		protected ServerEndpoint(string listenerUri, IServerEndpointConfig config) :
+			this(TransportLayerResolver.CreateConnectionListenerFor(new Uri(listenerUri)), config)
+		{
+		}
 
 		protected ServerEndpoint(IServerConnectionListener listener, IServerEndpointConfig config)
 		{

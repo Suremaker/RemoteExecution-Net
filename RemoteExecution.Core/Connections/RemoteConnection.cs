@@ -4,6 +4,7 @@ using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Dispatchers.Messages;
 using RemoteExecution.Core.Executors;
 using RemoteExecution.Core.Schedulers;
+using RemoteExecution.Core.TransportLayer;
 
 namespace RemoteExecution.Core.Connections
 {
@@ -22,6 +23,11 @@ namespace RemoteExecution.Core.Connections
 
 			Channel.Received += OnMessageReceived;
 			Channel.ChannelClosed += OnChannelClose;
+		}
+
+		public RemoteConnection(string connectionUri, IRemoteExecutorFactory remoteExecutorFactory, IOperationDispatcher dispatcher, ITaskScheduler scheduler)
+			: this(TransportLayerResolver.CreateClientChannelFor(new Uri(connectionUri)), remoteExecutorFactory, dispatcher, scheduler)
+		{
 		}
 
 		#region IRemoteConnection Members

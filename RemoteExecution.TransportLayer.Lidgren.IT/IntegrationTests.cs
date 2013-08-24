@@ -19,13 +19,14 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 		private readonly string _applicationId = Guid.NewGuid().ToString();
 		private IServerEndpoint _server;
 		private IOperationDispatcher _dispatcher;
+		private const string _listenAddress = "0.0.0.0";
 		private const string _host = "localhost";
 		private const ushort _port = 3231;
 
 		[TestFixtureSetUp]
 		public void SetUp()
 		{
-			_connectionListener = new LidgrenServerConnectionListener(_applicationId, "*", _port, new BinaryMessageSerializer());
+			_connectionListener = new LidgrenServerConnectionListener(_applicationId, _listenAddress, _port, new BinaryMessageSerializer());
 
 			_dispatcher = new OperationDispatcher();
 			_dispatcher.RegisterHandler<ICalculator>(new Calculator());

@@ -1,17 +1,24 @@
-﻿using RemoteExecution.AT.Helpers.Contracts;
+﻿using NUnit.Framework;
+using RemoteExecution.AT.Helpers.Contracts;
 using RemoteExecution.AT.Helpers.Services;
-using RemoteExecution.Core.Channels;
 using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Endpoints;
-using RemoteExecution.Core.Endpoints.Listeners;
 using RemoteExecution.Core.Executors;
 using RemoteExecution.Core.Schedulers;
+using RemoteExecution.Core.TransportLayer;
+using RemoteExecution.TransportLayer.Lidgren;
 
 namespace RemoteExecution.AT
 {
 	public abstract class TestContext
 	{
+		[TestFixtureSetUp]
+		public void FixtureSetUp()
+		{
+			TransportLayerResolver.Register(new LidgrenProvider());
+		}
+
 		protected IServerEndpoint StartServer(int maxConnections = 128)
 		{
 			var server = CreateServer(maxConnections);
@@ -21,7 +28,7 @@ namespace RemoteExecution.AT
 
 		protected GenericServerEndpoint CreateServer(int maxConnections = 128)
 		{
-			return new GenericServerEndpoint(CreateServerListener(), new ServerEndpointConfig { MaxConnections = maxConnections }, () => new OperationDispatcher(), ConfigureConnection);
+			return new GenericServerEndpoint(ServerConnectionListenerUri, new ServerEndpointConfig { MaxConnections = maxConnections }, () => new OperationDispatcher(), ConfigureConnection);
 		}
 
 		private void ConfigureConnection(IServerEndpoint endpoint, IRemoteConnection clientConnection)
@@ -34,7 +41,7 @@ namespace RemoteExecution.AT
 
 		protected IClientConnection CreateClientConnection()
 		{
-			return new ClientConnection(CreateClientChannel(), new RemoteExecutorFactory(), new OperationDispatcher(), new AsyncTaskScheduler());
+			return new ClientConnection(ClientChannelUri, new RemoteExecutorFactory(), new OperationDispatcher(), new AsyncTaskScheduler());
 		}
 
 		protected IClientConnection OpenClientConnection()
@@ -44,7 +51,6 @@ namespace RemoteExecution.AT
 			return client;
 		}
 
-		protected abstract IServerConnectionListener CreateServerListener();
 		protected IClientConnection OpenClientConnectionWithCallback<TInterface>(TInterface clientSerivce)
 		{
 			var client = CreateClientConnection();
@@ -53,6 +59,7 @@ namespace RemoteExecution.AT
 			return client;
 		}
 
-		protected abstract IClientChannel CreateClientChannel();
+		protected abstract string ServerConnectionListenerUri { get; }
+		protected abstract string ClientChannelUri { get; }
 	}
 }

@@ -34,6 +34,8 @@ Version 1.0.8:
 + added BroadcastRemoteExecutor / BroadcastChannel
 + renamed IServerListener to IServerConnectionListener
 + added TransportLayerResolver / ITransportLayerProvider
++ added LidgrenProvider
++ added ctor to ClientConnection / ServerEndpoint accepting URI to determine and configure transport layer
 
 Version 1.0.7:
 ---------------------
