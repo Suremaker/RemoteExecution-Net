@@ -49,6 +49,7 @@
     <Compile Include="ICalculator.cs" />
     <Compile Include="IGreeter.cs" />
     <Compile Include="IntegrationTests.cs" />
+    <Compile Include="LidgrenProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,7 @@ namespace RemoteExecution.AT.TransportLayer
 
 		protected override IServerConnectionListener CreateServerListener()
 		{
-			return new LidgrenServerConnectionListener(_applicationId, _port, new BinaryMessageSerializer());
+			return new LidgrenServerConnectionListener(_applicationId, "*", _port, new BinaryMessageSerializer());
 		}
 
 		protected override IClientChannel CreateClientChannel()

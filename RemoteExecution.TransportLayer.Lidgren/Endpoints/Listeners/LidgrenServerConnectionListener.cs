@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Runtime.CompilerServices;
 using Lidgren.Network;
 using RemoteExecution.Core.Channels;
@@ -16,12 +17,13 @@ namespace RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners
 		private readonly MessageRouter _messageRouter;
 		public event Action<IDuplexChannel> OnChannelOpen;
 
-		public LidgrenServerConnectionListener(string applicationId, ushort port, IMessageSerializer serializer)
+		public LidgrenServerConnectionListener(string applicationId, string listenAddress, ushort port, IMessageSerializer serializer)
 		{
 			var netConfig = new NetPeerConfiguration(applicationId)
 			{
 				MaximumConnections = int.MaxValue,
-				Port = port
+				Port = port,
+				LocalAddress = IPAddress.Parse(listenAddress)
 			};
 			_serializer = serializer;
 			_netServer = new NetServer(netConfig);

@@ -25,7 +25,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 		[TestFixtureSetUp]
 		public void SetUp()
 		{
-			_connectionListener = new LidgrenServerConnectionListener(_applicationId, _port, new BinaryMessageSerializer());
+			_connectionListener = new LidgrenServerConnectionListener(_applicationId, "*", _port, new BinaryMessageSerializer());
 
 			_dispatcher = new OperationDispatcher();
 			_dispatcher.RegisterHandler<ICalculator>(new Calculator());
