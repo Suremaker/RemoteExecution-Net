@@ -62,7 +62,6 @@
     <Compile Include="Dispatchers\Messages\ExceptionResponseMessageTests.cs" />
     <Compile Include="Dispatchers\OperationDispatcherTests.cs" />
     <Compile Include="Endpoints\ServerEndpointTests.cs" />
-    <Compile Include="Executors\BroadcastRemoteExecutorTests.cs" />
     <Compile Include="Executors\RemoteExecutorFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remoting\OneWayRemoteCallInterceptorTests.cs" />

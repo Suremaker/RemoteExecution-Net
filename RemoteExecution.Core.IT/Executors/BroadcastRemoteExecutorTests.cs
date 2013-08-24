@@ -1,17 +1,15 @@
 using System;
 using NUnit.Framework;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Executors;
-using Rhino.Mocks;
+using RemoteExecution.Core.IT.Helpers;
 
-namespace RemoteExecution.Core.UT.Executors
+namespace RemoteExecution.Core.IT.Executors
 {
 	[TestFixture]
 	public class BroadcastRemoteExecutorTests
 	{
 		private BroadcastRemoteExecutor _subject;
-		private IBroadcastChannel _broadcastChannel;
+		private MockBroadcastChannel _broadcastChannel;
 
 		public interface ICalculator
 		{
@@ -33,7 +31,7 @@ namespace RemoteExecution.Core.UT.Executors
 		[SetUp]
 		public void SetUp()
 		{
-			_broadcastChannel = MockRepository.GenerateMock<IBroadcastChannel>();
+			_broadcastChannel = new MockBroadcastChannel();
 			_subject = new BroadcastRemoteExecutor(_broadcastChannel);
 		}
 
@@ -56,8 +54,10 @@ namespace RemoteExecution.Core.UT.Executors
 		[Test]
 		public void Should_send_message_on_channel()
 		{
+			bool wasCalled = false;
+			_broadcastChannel.OnSend += m => wasCalled = true;
 			_subject.Create<INotifier>().Notify("test");
-			_broadcastChannel.AssertWasCalled(ch => ch.Send(Arg<IMessage>.Is.Anything));
+			Assert.That(wasCalled, Is.True);
 		}
 	}
 }

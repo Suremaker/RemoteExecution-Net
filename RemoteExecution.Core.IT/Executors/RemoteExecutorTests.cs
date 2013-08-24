@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Dispatchers.Messages;
@@ -51,6 +54,37 @@ namespace RemoteExecution.Core.IT.Executors
 
 			var ex = Assert.Throws<InvalidOperationException>(() => _calculator.Add(3, 2));
 			Assert.That(ex.Message, Is.EqualTo(message));
+		}
+
+		[Test]
+		public void Should_support_concurrent_operations()
+		{
+			var requests = new ConcurrentStack<RequestMessage>();
+			_channel.OnSend += r => requests.Push((RequestMessage)r);
+
+			int validResults = 0;
+
+			var tasks = new List<Thread>();
+			for (int i = 0; i < 10; ++i)
+			{
+				var thread = new Thread(o =>
+				{
+					int add = _calculator.Add((int)o, 0);
+					if (Equals(add, o))
+						Interlocked.Increment(ref validResults);
+				});
+				tasks.Add(thread);
+				thread.Start(i);
+			}
+
+			Thread.Sleep(500);
+			foreach (RequestMessage request in requests)
+				_messageDispatcher.Dispatch(new ResponseMessage(request.CorrelationId, request.Args[0]));
+
+			foreach (Thread thread in tasks)
+				thread.Join();
+
+			Assert.That(validResults, Is.EqualTo(tasks.Count));
 		}
 	}
 }

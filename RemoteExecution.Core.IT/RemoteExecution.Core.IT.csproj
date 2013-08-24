@@ -37,8 +37,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Executors\BroadcastRemoteExecutorTests.cs" />
     <Compile Include="Executors\RemoteExecutorTests.cs" />
     <Compile Include="Helpers\ICalculator.cs" />
+    <Compile Include="Helpers\MockBroadcastChannel.cs" />
     <Compile Include="Helpers\MockDuplexChannel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
