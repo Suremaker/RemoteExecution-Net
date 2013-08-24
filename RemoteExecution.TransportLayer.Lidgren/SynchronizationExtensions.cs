@@ -3,7 +3,7 @@ using System.Threading;
 using Lidgren.Network;
 using RemoteExecution.Core.Channels;
 
-namespace RemoteExecution.Lidgren
+namespace RemoteExecution.TransportLayer.Lidgren
 {
 	public static class SynchronizationExtensions
 	{

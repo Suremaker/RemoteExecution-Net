@@ -82,7 +82,7 @@ namespace RemoteExecution.AT.Expectations
 		public void Should_server_broadcast_operation()
 		{
 			const int expectedNumber = 55;
-			const int connectionCount = 25;
+			const int connectionCount = 10;
 
 			var clientServices = new List<BroadcastService>();
 			var connections = new List<IClientConnection>();

@@ -4,8 +4,8 @@ using RemoteExecution.AT.Expectations;
 using RemoteExecution.Core.Channels;
 using RemoteExecution.Core.Endpoints.Listeners;
 using RemoteExecution.Core.Serializers;
-using RemoteExecution.Lidgren.Channels;
-using RemoteExecution.Lidgren.Endpoints.Listeners;
+using RemoteExecution.TransportLayer.Lidgren.Channels;
+using RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners;
 
 namespace RemoteExecution.AT.TransportLayer
 {

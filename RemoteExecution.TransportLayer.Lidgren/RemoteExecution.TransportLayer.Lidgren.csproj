@@ -7,8 +7,8 @@
     <ProjectGuid>{85D95624-EC1F-461C-B923-E824C6B56955}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RemoteExecution.Lidgren</RootNamespace>
-    <AssemblyName>RemoteExecution.Lidgren</AssemblyName>
+    <RootNamespace>RemoteExecution.TransportLayer.Lidgren</RootNamespace>
+    <AssemblyName>RemoteExecution.TransportLayer.Lidgren</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

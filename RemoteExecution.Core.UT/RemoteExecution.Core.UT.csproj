@@ -69,6 +69,7 @@
     <Compile Include="Remoting\TwoWayRemoteCallInterceptorTests.cs" />
     <Compile Include="Schedulers\AsyncTaskSchedulerTests.cs" />
     <Compile Include="Serializers\BinaryMessageSerializerTests.cs" />
+    <Compile Include="TransportLayer\TransportLayerResolverTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

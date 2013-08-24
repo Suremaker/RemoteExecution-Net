@@ -1,4 +1,4 @@
-﻿namespace RemoteExecution.Lidgren.IT
+﻿namespace RemoteExecution.TransportLayer.Lidgren.IT
 {
 	public interface ICalculator
 	{

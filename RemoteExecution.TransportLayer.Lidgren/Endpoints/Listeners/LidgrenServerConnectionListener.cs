@@ -4,9 +4,9 @@ using Lidgren.Network;
 using RemoteExecution.Core.Channels;
 using RemoteExecution.Core.Endpoints.Listeners;
 using RemoteExecution.Core.Serializers;
-using RemoteExecution.Lidgren.Channels;
+using RemoteExecution.TransportLayer.Lidgren.Channels;
 
-namespace RemoteExecution.Lidgren.Endpoints.Listeners
+namespace RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners
 {
 	public class LidgrenServerConnectionListener : IServerConnectionListener
 	{

@@ -7,10 +7,10 @@ using RemoteExecution.Core.Endpoints.Listeners;
 using RemoteExecution.Core.Executors;
 using RemoteExecution.Core.Schedulers;
 using RemoteExecution.Core.Serializers;
-using RemoteExecution.Lidgren.Channels;
-using RemoteExecution.Lidgren.Endpoints.Listeners;
+using RemoteExecution.TransportLayer.Lidgren.Channels;
+using RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners;
 
-namespace RemoteExecution.Lidgren.IT
+namespace RemoteExecution.TransportLayer.Lidgren.IT
 {
 	[TestFixture]
 	public class IntegrationTests

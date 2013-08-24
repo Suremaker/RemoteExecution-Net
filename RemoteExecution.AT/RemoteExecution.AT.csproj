@@ -44,11 +44,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Expectations\EdgeCaseExpectations.cs" />
@@ -79,9 +74,9 @@
       <Project>{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}</Project>
       <Name>RemoteExecution.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RemoteExecution.Lidgren\RemoteExecution.Lidgren.csproj">
+    <ProjectReference Include="..\RemoteExecution.TransportLayer.Lidgren\RemoteExecution.TransportLayer.Lidgren.csproj">
       <Project>{85D95624-EC1F-461C-B923-E824C6B56955}</Project>
-      <Name>RemoteExecution.Lidgren</Name>
+      <Name>RemoteExecution.TransportLayer.Lidgren</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

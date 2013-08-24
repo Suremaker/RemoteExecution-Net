@@ -2,7 +2,7 @@
 using RemoteExecution.Core.Channels;
 using RemoteExecution.Core.Serializers;
 
-namespace RemoteExecution.Lidgren.Channels
+namespace RemoteExecution.TransportLayer.Lidgren.Channels
 {
 	public class LidgrenBroadcastChannel : OutputChannel, IBroadcastChannel
 	{

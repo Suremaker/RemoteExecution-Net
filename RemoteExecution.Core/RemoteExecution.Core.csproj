@@ -59,6 +59,8 @@
     <Compile Include="Channels\NotConnectedException.cs" />
     <Compile Include="Channels\OutputChannel.cs" />
     <Compile Include="Channels\ConnectionException.cs" />
+    <Compile Include="TransportLayer\ITransportLayerProvider.cs" />
+    <Compile Include="TransportLayer\TransportLayerResolver.cs" />
     <Compile Include="Connections\ClientConnection.cs" />
     <Compile Include="Connections\IClientConnection.cs" />
     <Compile Include="Connections\IRemoteConnection.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="Schedulers\ITaskScheduler.cs" />
     <Compile Include="Serializers\BinaryMessageSerializer.cs" />
     <Compile Include="Serializers\IMessageSerializer.cs" />
+    <Compile Include="TransportLayer\UnknownTransportLayerException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

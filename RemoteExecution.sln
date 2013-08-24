@@ -68,9 +68,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.Core.UT", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.Core.IT", "RemoteExecution.Core.IT\RemoteExecution.Core.IT.csproj", "{E48D8428-5FEA-4DA5-A3AF-648FAB9A5E05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.Lidgren", "RemoteExecution.Lidgren\RemoteExecution.Lidgren.csproj", "{85D95624-EC1F-461C-B923-E824C6B56955}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.TransportLayer.Lidgren", "RemoteExecution.TransportLayer.Lidgren\RemoteExecution.TransportLayer.Lidgren.csproj", "{85D95624-EC1F-461C-B923-E824C6B56955}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.Lidgren.IT", "RemoteExecution.Lidgren.IT\RemoteExecution.Lidgren.IT.csproj", "{C76E8C60-F51F-4227-B09B-93DD2D7838AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.TransportLayer.Lidgren.IT", "RemoteExecution.TransportLayer.Lidgren.IT\RemoteExecution.TransportLayer.Lidgren.IT.csproj", "{C76E8C60-F51F-4227-B09B-93DD2D7838AA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.AT", "RemoteExecution.AT\RemoteExecution.AT.csproj", "{C1732741-A498-4C75-B4BF-D52E176E8CF3}"
 EndProject

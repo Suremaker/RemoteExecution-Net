@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Lidgren.Network;
 
-namespace RemoteExecution.Lidgren
+namespace RemoteExecution.TransportLayer.Lidgren
 {
 	internal class MessageLoop
 	{

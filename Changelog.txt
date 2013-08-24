@@ -28,11 +28,12 @@ Version 1.0.8:
 + added ConnectionOpened / ConnectionClosed / OnConnectionInitialize events for ServerEndpoint
 + implemented MaxConnections for ServerEndpoint
 + reimplemented GenericServerEndpoint
-+ added RemoteExecution.Lidgren and reimplemented LidgrenClientChannel / LidgrenDuplexChannel / LidgrenServerListener and MessageLoop
++ added RemoteExecution.TransportLayer.Lidgren and reimplemented LidgrenClientChannel / LidgrenDuplexChannel / LidgrenServerListener and MessageLoop
 + added acceptance tests
 + made fluent interface for IOperationDispatcher
 + added BroadcastRemoteExecutor / BroadcastChannel
 + renamed IServerListener to IServerConnectionListener
++ added TransportLayerResolver / ITransportLayerProvider
 
 Version 1.0.7:
 ---------------------
