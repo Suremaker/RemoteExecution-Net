@@ -43,7 +43,7 @@ namespace RemoteExecution.AT.Expectations
 		{
 			using (var server = CreateServer())
 			{
-				Assert.Throws<NotConnectedException>(() => server.BroadcastExecutor.Create<IBroadcastService>().SetValue(32));
+				Assert.Throws<NotConnectedException>(() => server.BroadcastRemoteExecutor.Create<IBroadcastService>().SetValue(32));
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace RemoteExecution.AT.Expectations
 		{
 			using (var client = CreateClientConnection())
 			{
-				Assert.Throws<NotConnectedException>(() => client.Executor.Create<IGreeter>().Hello("John"));
+				Assert.Throws<NotConnectedException>(() => client.RemoteExecutor.Create<IGreeter>().Hello("John"));
 			}
 		}
 

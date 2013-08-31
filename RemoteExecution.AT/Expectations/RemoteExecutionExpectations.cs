@@ -22,7 +22,7 @@ namespace RemoteExecution.AT.Expectations
 			using (StartServer())
 			using (var client = OpenClientConnection())
 			{
-				var remote = client.Executor.Create<IRemoteService>(NoResultMethodExecution.OneWay);
+				var remote = client.RemoteExecutor.Create<IRemoteService>(NoResultMethodExecution.OneWay);
 
 				var watch = new Stopwatch();
 				watch.Start();
@@ -41,7 +41,7 @@ namespace RemoteExecution.AT.Expectations
 			using (StartServer())
 			using (var client = OpenClientConnection())
 			{
-				var remote = client.Executor.Create<IRemoteService>();
+				var remote = client.RemoteExecutor.Create<IRemoteService>();
 
 				var watch = new Stopwatch();
 				watch.Start();
@@ -58,7 +58,7 @@ namespace RemoteExecution.AT.Expectations
 			using (StartServer())
 			using (var client = OpenClientConnection())
 			{
-				var calculator = client.Executor.Create<ICalculator>();
+				var calculator = client.RemoteExecutor.Create<ICalculator>();
 
 				Assert.Throws<DivideByZeroException>(() => calculator.Divide(4, 0));
 			}
@@ -82,7 +82,7 @@ namespace RemoteExecution.AT.Expectations
 				{
 					connections.AddRange(clientServices.Select(OpenClientConnectionWithCallback<IBroadcastService>));
 
-					connections.First().Executor.Create<IRemoteService>().NotifyAll(expectedNumber);
+					connections.First().RemoteExecutor.Create<IRemoteService>().NotifyAll(expectedNumber);
 					Thread.Sleep(250);
 					Assert.That(clientServices.Count(s => s.ReceivedValue == expectedNumber), Is.EqualTo(connectionCount));
 				}
@@ -100,7 +100,7 @@ namespace RemoteExecution.AT.Expectations
 			using (StartServer())
 			using (var client = OpenClientConnectionWithCallback<IClientService>(new ClientService()))
 			{
-				Assert.That(client.Executor.Create<IRemoteService>().GetHexValueUsingCallback(255), Is.EqualTo("0xFF"));
+				Assert.That(client.RemoteExecutor.Create<IRemoteService>().GetHexValueUsingCallback(255), Is.EqualTo("0xFF"));
 			}
 		}
 
@@ -110,8 +110,8 @@ namespace RemoteExecution.AT.Expectations
 			using (StartServer())
 			using (var client = OpenClientConnection())
 			{
-				var calculator = client.Executor.Create<ICalculator>();
-				var greeter = client.Executor.Create<IGreeter>();
+				var calculator = client.RemoteExecutor.Create<ICalculator>();
+				var greeter = client.RemoteExecutor.Create<IGreeter>();
 
 				Assert.That(calculator.Add(3, 5), Is.EqualTo(8));
 				Assert.That(greeter.Hello("Josh"), Is.EqualTo("Hello Josh!"));
@@ -124,7 +124,7 @@ namespace RemoteExecution.AT.Expectations
 			using (StartServer())
 			using (var client = OpenClientConnection())
 			{
-				var remote = client.Executor.Create<IRemoteService>();
+				var remote = client.RemoteExecutor.Create<IRemoteService>();
 
 				var ex = Assert.Throws<OperationAbortedException>(remote.CloseConnectionOnServerSide);
 				Assert.That(ex.Message, Is.EqualTo("Connection has been closed."));

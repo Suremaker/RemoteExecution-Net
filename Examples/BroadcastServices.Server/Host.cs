@@ -1,8 +1,9 @@
 ﻿using System;
 using BroadcastServices.Contracts;
 using Examples.Utils;
-using RemoteExecution.Connections;
-using RemoteExecution.Endpoints;
+using RemoteExecution.Core.Config;
+using RemoteExecution.Core.Connections;
+using RemoteExecution.Core.Endpoints;
 
 namespace BroadcastServices.Server
 {
@@ -11,21 +12,14 @@ namespace BroadcastServices.Server
 		private readonly IBroadcastService _broadcastService;
 		readonly SharedContext _sharedContext = new SharedContext();
 
-		public Host(ServerEndpointConfig config)
-			: base(config)
+		public Host(string uri)
+			: base(uri, new ServerConfig())
 		{
 			_broadcastService = Aspects.WithTimeMeasure(BroadcastRemoteExecutor.Create<IBroadcastService>(), ConsoleColor.DarkCyan);
+			ConnectionClosed += OnConnectionClose;
 		}
 
-		protected override void OnConnectionClose(INetworkConnection connection)
-		{
-			var user = _sharedContext.GetUser(connection);
-			_sharedContext.RemoveClient(connection);
-			if (user.IsRegistered)
-				_broadcastService.UserLeft(user.Name);
-		}
-
-		protected override void RegisterServicesFor(INetworkConnection connection)
+		protected override void InitializeConnection(IRemoteConnection connection)
 		{
 			var userContext = new ClientContext();
 			_sharedContext.AddClient(connection, userContext);
@@ -34,8 +28,16 @@ namespace BroadcastServices.Server
 			var userInfoService = Aspects.WithTimeMeasure<IUserInfoService>(new UserInfoService(_sharedContext, userContext));
 
 			connection.OperationDispatcher
-				.RegisterRequestHandler(registrationService)
-				.RegisterRequestHandler(userInfoService);
+				.RegisterHandler(registrationService)
+				.RegisterHandler(userInfoService);
+		}
+
+		protected void OnConnectionClose(IRemoteConnection connection)
+		{
+			var user = _sharedContext.GetUser(connection);
+			_sharedContext.RemoveClient(connection);
+			if (user.IsRegistered)
+				_broadcastService.UserLeft(user.Name);
 		}
 	}
 }

@@ -30,7 +30,7 @@ namespace RemoteExecution.Core.Endpoints
 		/// <summary>
 		/// Returns broadcast executor.
 		/// </summary>
-		IBroadcastRemoteExecutor BroadcastExecutor { get; }
+		IBroadcastRemoteExecutor BroadcastRemoteExecutor { get; }
 
 		/// <summary>
 		/// Returns true if endpoint is accepting incoming connections.

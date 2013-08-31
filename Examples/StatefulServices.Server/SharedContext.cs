@@ -1,14 +1,14 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using RemoteExecution.Connections;
+using RemoteExecution.Core.Connections;
 
 namespace StatefulServices.Server
 {
 	internal class SharedContext
 	{
-		private readonly IDictionary<INetworkConnection, ClientContext> _clients = new ConcurrentDictionary<INetworkConnection, ClientContext>();
-		public void AddClient(INetworkConnection connection, ClientContext clientContext)
+		private readonly IDictionary<IRemoteConnection, ClientContext> _clients = new ConcurrentDictionary<IRemoteConnection, ClientContext>();
+		public void AddClient(IRemoteConnection connection, ClientContext clientContext)
 		{
 			_clients.Add(connection, clientContext);
 		}
@@ -18,7 +18,7 @@ namespace StatefulServices.Server
 			return _clients.Values.Where(v => v.IsRegistered).Select(v => v.Name).ToArray();
 		}
 
-		public void RemoveClient(INetworkConnection connection)
+		public void RemoveClient(IRemoteConnection connection)
 		{
 			_clients.Remove(connection);
 		}

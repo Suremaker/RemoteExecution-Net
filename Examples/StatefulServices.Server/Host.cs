@@ -1,37 +1,33 @@
-﻿using RemoteExecution.Connections;
-using RemoteExecution.Dispatchers;
-using RemoteExecution.Endpoints;
+﻿using RemoteExecution.Core.Config;
+using RemoteExecution.Core.Connections;
+using RemoteExecution.Core.Endpoints;
 using StatefulServices.Contracts;
 
 namespace StatefulServices.Server
 {
-	class Host : ServerEndpoint
+	class Host : StatefulServerEndpoint
 	{
 		readonly SharedContext _sharedContext = new SharedContext();
 
-		public Host(ServerEndpointConfig config)
-			: base(config)
+		public Host(string uri)
+			: base(uri, new ServerConfig())
 		{
+			ConnectionClosed += OnConnectionClose;
 		}
 
-		protected override IOperationDispatcher GetDispatcherForNewConnection()
-		{
-			return new OperationDispatcher();
-		}
-
-		protected override void OnConnectionClose(INetworkConnection connection)
-		{
-			_sharedContext.RemoveClient(connection);
-		}
-
-		protected override void OnNewConnection(INetworkConnection connection)
+		protected override void InitializeConnection(IRemoteConnection connection)
 		{
 			var clientContext = new ClientContext();
 			_sharedContext.AddClient(connection, clientContext);
 
 			connection.OperationDispatcher
-			          .RegisterRequestHandler<IRegistrationService>(new RegistrationService(clientContext))
-			          .RegisterRequestHandler<IUserInfoService>(new UserInfoService(_sharedContext, clientContext));
+					  .RegisterHandler<IRegistrationService>(new RegistrationService(clientContext))
+					  .RegisterHandler<IUserInfoService>(new UserInfoService(_sharedContext, clientContext));
+		}
+
+		private void OnConnectionClose(IRemoteConnection connection)
+		{
+			_sharedContext.RemoveClient(connection);
 		}
 	}
 }

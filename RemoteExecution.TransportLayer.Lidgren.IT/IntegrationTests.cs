@@ -52,8 +52,8 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 			using (var client = CreateClientConnection())
 			{
 				client.Open();
-				Assert.That(client.Executor.Create<ICalculator>().Add(3, 2), Is.EqualTo(5));
-				Assert.That(client.Executor.Create<IGreeter>().Hello("Josh"), Is.EqualTo("Hello Josh!"));
+				Assert.That(client.RemoteExecutor.Create<ICalculator>().Add(3, 2), Is.EqualTo(5));
+				Assert.That(client.RemoteExecutor.Create<IGreeter>().Hello("Josh"), Is.EqualTo("Hello Josh!"));
 			}
 		}
 	}

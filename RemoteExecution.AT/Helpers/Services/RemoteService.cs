@@ -15,7 +15,7 @@ namespace RemoteExecution.AT.Helpers.Services
 		public RemoteService(IRemoteConnection connection, IBroadcastRemoteExecutor broadcastRemoteExecutor)
 		{
 			_connection = connection;
-			_clientService = _connection.Executor.Create<IClientService>();
+			_clientService = _connection.RemoteExecutor.Create<IClientService>();
 			_broadcastService = broadcastRemoteExecutor.Create<IBroadcastService>();
 		}
 

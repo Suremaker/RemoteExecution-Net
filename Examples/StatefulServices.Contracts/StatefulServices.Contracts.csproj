@@ -36,7 +36,6 @@
   <ItemGroup>
     <Compile Include="IRegistrationService.cs" />
     <Compile Include="IUserInfoService.cs" />
-    <Compile Include="Protocol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

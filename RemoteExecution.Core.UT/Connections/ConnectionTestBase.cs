@@ -87,13 +87,13 @@ namespace RemoteExecution.Core.UT.Connections
 		[Test]
 		public void Should_initialize_operation_dispatcher()
 		{
-			Assert.That(Subject.Dispatcher, Is.SameAs(OperationDispatcher));
+			Assert.That(Subject.OperationDispatcher, Is.SameAs(OperationDispatcher));
 		}
 
 		[Test]
 		public void Should_initialize_remote_executor()
 		{
-			Assert.That(Subject.Executor, Is.SameAs(RemoteExecutor));
+			Assert.That(Subject.RemoteExecutor, Is.SameAs(RemoteExecutor));
 		}
 
 		[Test]

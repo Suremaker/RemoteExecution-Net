@@ -1,9 +1,10 @@
 ﻿using System;
 using Examples.Utils;
 using OneWayMethodServices.Contracts;
-using RemoteExecution.Dispatchers;
-using RemoteExecution.Endpoints;
-using RemoteExecution.Executors;
+using RemoteExecution;
+using RemoteExecution.Core.Connections;
+using RemoteExecution.Core.Dispatchers;
+using RemoteExecution.Core.Executors;
 
 namespace OneWayMethodServices.Client
 {
@@ -11,12 +12,13 @@ namespace OneWayMethodServices.Client
 	{
 		static void Main(string[] args)
 		{
+			Configurator.Configure();
 			IOperationDispatcher callbackDispatcher = new OperationDispatcher();
-			callbackDispatcher.RegisterRequestHandler(Aspects.WithTimeMeasure<IClientCallback>(new ClientCallback(), ConsoleColor.DarkCyan));
+			callbackDispatcher.RegisterHandler(Aspects.WithTimeMeasure<IClientCallback>(new ClientCallback(), ConsoleColor.DarkCyan));
 
-			using (var client = new ClientEndpoint(Protocol.Id, callbackDispatcher))
+			using (var client = new ClientConnection("net://localhost:3134/CallbackDispatcher", callbackDispatcher))
 			{
-				client.ConnectTo("localhost", 3134);
+				client.Open();
 
 				var longRunningOperation = Aspects.WithTimeMeasure(client.RemoteExecutor.Create<ILongRunningOperation>(NoResultMethodExecution.OneWay));
 

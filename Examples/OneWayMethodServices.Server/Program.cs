@@ -1,6 +1,5 @@
 ﻿using System;
-using OneWayMethodServices.Contracts;
-using RemoteExecution.Endpoints;
+using RemoteExecution;
 
 namespace OneWayMethodServices.Server
 {
@@ -8,9 +7,10 @@ namespace OneWayMethodServices.Server
 	{
 		static void Main(string[] args)
 		{
-			using (var host = new Host(new ServerEndpointConfig(Protocol.Id, 3134)))
+			Configurator.Configure();
+			using (var host = new Host("net://127.0.0.1:3134/CallbackDispatcher"))
 			{
-				host.StartListening();
+				host.Start();
 				Console.WriteLine("Server started...\nPress enter to stop");
 				Console.ReadLine();
 			}

@@ -26,7 +26,7 @@ namespace RemoteExecution.AT.Expectations
 		public void ExecuteTask()
 		{
 			Connection = _connectionCreator();
-			var calculator = Connection.Executor.Create<ICalculator>();
+			var calculator = Connection.RemoteExecutor.Create<ICalculator>();
 			try
 			{
 				for (int i = 0; i < _times; i++)

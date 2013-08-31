@@ -1,5 +1,6 @@
 ﻿using System;
-using RemoteExecution.Endpoints;
+using RemoteExecution;
+using RemoteExecution.Core.Connections;
 using StatelessServices.Contracts;
 
 namespace StatelessServices.Client
@@ -14,9 +15,11 @@ namespace StatelessServices.Client
 
 		static void Main(string[] args)
 		{
-			using (var client = new ClientEndpoint(Protocol.Id))
+			Configurator.Configure();
+
+			using (var client = new ClientConnection("net://localhost:3131/StatelessServices"))
 			{
-				client.ConnectTo("localhost", 3131);
+				client.Open();
 
 				GreetSomePeople(client.RemoteExecutor.Create<IGreeter>());
 				PerformSomeCalculations(client.RemoteExecutor.Create<ICalculator>());

@@ -1,7 +1,8 @@
 ﻿using System;
 using CallbackServices.Contracts;
-using RemoteExecution.Dispatchers;
-using RemoteExecution.Endpoints;
+using RemoteExecution;
+using RemoteExecution.Core.Connections;
+using RemoteExecution.Core.Dispatchers;
 
 namespace CallbackServices.Client
 {
@@ -9,12 +10,14 @@ namespace CallbackServices.Client
 	{
 		static void Main(string[] args)
 		{
-			IOperationDispatcher callbackDispatcher = new OperationDispatcher();
-			callbackDispatcher.RegisterRequestHandler<IClientCallback>(new ClientCallback());
+			Configurator.Configure();
 
-			using (var client = new ClientEndpoint(Protocol.Id, callbackDispatcher))
+			IOperationDispatcher callbackDispatcher = new OperationDispatcher();
+			callbackDispatcher.RegisterHandler<IClientCallback>(new ClientCallback());
+
+			using (var client = new ClientConnection("net://localhost:3133/CallbackServices", callbackDispatcher))
 			{
-				client.ConnectTo("localhost", 3133);
+				client.Open();
 
 				var userInfoService = client.RemoteExecutor.Create<ILongRunningOperation>();
 				userInfoService.Perform(5);

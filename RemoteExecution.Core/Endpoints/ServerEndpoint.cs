@@ -49,7 +49,7 @@ namespace RemoteExecution.Core.Endpoints
 				TaskScheduler = _config.TaskScheduler
 			};
 			_listener.OnChannelOpen += OnChannelOpen;
-			BroadcastExecutor = config.RemoteExecutorFactory.CreateBroadcastRemoteExecutor(listener.BroadcastChannel);
+			BroadcastRemoteExecutor = config.RemoteExecutorFactory.CreateBroadcastRemoteExecutor(listener.BroadcastChannel);
 		}
 
 		#region IServerEndpoint Members
@@ -94,7 +94,7 @@ namespace RemoteExecution.Core.Endpoints
 			}
 		}
 
-		public IBroadcastRemoteExecutor BroadcastExecutor { get; private set; }
+		public IBroadcastRemoteExecutor BroadcastRemoteExecutor { get; private set; }
 
 		#endregion
 

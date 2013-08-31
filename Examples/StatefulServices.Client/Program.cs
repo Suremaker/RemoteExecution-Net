@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
-using RemoteExecution.Endpoints;
+using RemoteExecution;
+using RemoteExecution.Core.Connections;
 using StatefulServices.Contracts;
 
 namespace StatefulServices.Client
@@ -22,10 +23,10 @@ namespace StatefulServices.Client
 
 		static void Main(string[] args)
 		{
-
-			using (var client = new ClientEndpoint(Protocol.Id))
+			Configurator.Configure();
+			using (var client = new ClientConnection("net://localhost:3132/StatefulServices"))
 			{
-				client.ConnectTo("localhost", 3132);
+				client.Open();
 
 				var userInfoService = client.RemoteExecutor.Create<IUserInfoService>();
 				GetUsers(userInfoService);

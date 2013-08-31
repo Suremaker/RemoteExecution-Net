@@ -31,80 +31,25 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Logging">
-      <HintPath>..\packages\Common.Logging.1.2.0\lib\1.0\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Lidgren.Network">
-      <HintPath>..\3rdparty\Lidgren.Network.dll</HintPath>
-    </Reference>
-    <Reference Include="ObjectSerialization, Version=1.0.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ObjectSerialization-Net.1.0.26\lib\net40\ObjectSerialization.dll</HintPath>
-    </Reference>
-    <Reference Include="Spring.Aop">
-      <HintPath>..\packages\Spring.Aop.1.3.2\lib\net40\Spring.Aop.dll</HintPath>
-    </Reference>
-    <Reference Include="Spring.Core">
-      <HintPath>..\packages\Spring.Core.1.3.2\lib\net40\Spring.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Endpoints\Adapters\IClientEndpointAdapter.cs" />
-    <Compile Include="Endpoints\Adapters\IEndpointAdapter.cs" />
-    <Compile Include="Endpoints\Adapters\IServerEndpointAdapter.cs" />
-    <Compile Include="Endpoints\Adapters\LidgrenClientEndpointAdapter.cs" />
-    <Compile Include="Endpoints\Adapters\LidgrenEndpointAdapter.cs" />
-    <Compile Include="Endpoints\Adapters\LidgrenServerEndpointAdapter.cs" />
-    <Compile Include="Endpoints\GenericServerEndpoint.cs" />
-    <Compile Include="Endpoints\ServerEndpointConfig.cs" />
-    <Compile Include="Endpoints\StatefulServerEndpoint.cs" />
-    <Compile Include="Endpoints\StatelessServerEndpoint.cs" />
-    <Compile Include="Executors\BroadcastRemoteExecutor.cs" />
-    <Compile Include="Channels\LidgrenMessageChannel.cs" />
-    <Compile Include="Connections\INetworkConnection.cs" />
-    <Compile Include="Dispatchers\IOperationDispatcher.cs" />
-    <Compile Include="Dispatchers\OperationAbortedException.cs" />
-    <Compile Include="Dispatchers\OperationDispatcher.cs" />
-    <Compile Include="Channels\LidgrenBroadcastChannel.cs" />
-    <Compile Include="Connections\NotConnectedException.cs" />
-    <Compile Include="Executors\IBroadcastRemoteExecutor.cs" />
-    <Compile Include="Channels\IBroadcastChannel.cs" />
-    <Compile Include="Channels\IIncomingMessageChannel.cs" />
-    <Compile Include="Channels\IMessageChannel.cs" />
-    <Compile Include="Channels\IOutgoingMessageChannel.cs" />
-    <Compile Include="Messages\IRequest.cs" />
-    <Compile Include="Executors\NoResultMethodExecution.cs" />
-    <Compile Include="Handlers\IResponseHandler.cs" />
-    <Compile Include="Messages\ExceptionResponse.cs" />
-    <Compile Include="Messages\IMessage.cs" />
-    <Compile Include="Handlers\IHandler.cs" />
-    <Compile Include="Handlers\RequestHandler.cs" />
-    <Compile Include="Handlers\ResponseHandler.cs" />
-    <Compile Include="Executors\IRemoteExecutor.cs" />
-    <Compile Include="Messages\IResponse.cs" />
-    <Compile Include="Messages\Request.cs" />
-    <Compile Include="Messages\Response.cs" />
-    <Compile Include="Endpoints\ClientEndpoint.cs" />
-    <Compile Include="Endpoints\IClientEndpoint.cs" />
-    <Compile Include="Endpoints\IServerEndpoint.cs" />
-    <Compile Include="Endpoints\Processing\MessageLoop.cs" />
-    <Compile Include="Connections\LidgrenNetworkConnection.cs" />
-    <Compile Include="Endpoints\ServerEndpoint.cs" />
+    <Compile Include="Configurator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Remoting\OneWayRemoteCallInterceptor.cs" />
-    <Compile Include="Remoting\RemoteCallInterceptor.cs" />
-    <Compile Include="Executors\RemoteExecutor.cs" />
-    <Compile Include="Remoting\TwoWayRemoteCallInterceptor.cs" />
-    <Compile Include="Serialization\MessageSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\RemoteExecution.Core\RemoteExecution.Core.csproj">
+      <Project>{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}</Project>
+      <Name>RemoteExecution.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteExecution.TransportLayer.Lidgren\RemoteExecution.TransportLayer.Lidgren.csproj">
+      <Project>{85D95624-EC1F-461C-B923-E824C6B56955}</Project>
+      <Name>RemoteExecution.TransportLayer.Lidgren</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

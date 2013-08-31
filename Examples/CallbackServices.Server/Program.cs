@@ -1,6 +1,5 @@
 ﻿using System;
-using CallbackServices.Contracts;
-using RemoteExecution.Endpoints;
+using RemoteExecution;
 
 namespace CallbackServices.Server
 {
@@ -8,10 +7,10 @@ namespace CallbackServices.Server
 	{
 		static void Main(string[] args)
 		{
-			var config = new ServerEndpointConfig(Protocol.Id, 3133);
-			using (var host = new Host(config))
+			Configurator.Configure();
+			using (var host = new Host("net://127.0.0.1:3133/CallbackServices"))
 			{
-				host.StartListening();
+				host.Start();
 				Console.WriteLine("Server started...\nPress enter to stop");
 				Console.ReadLine();
 			}

@@ -96,7 +96,7 @@ namespace RemoteExecution.Core.UT.Endpoints
 		[Test]
 		public void Should_create_broadcast_executor()
 		{
-			Assert.That(_subject.BroadcastExecutor, Is.EqualTo(_broadcastExecutor));
+			Assert.That(_subject.BroadcastRemoteExecutor, Is.EqualTo(_broadcastExecutor));
 		}
 
 		[Test]
@@ -110,8 +110,8 @@ namespace RemoteExecution.Core.UT.Endpoints
 
 			var connection = _subject.ActiveConnections.SingleOrDefault();
 			Assert.That(connection, Is.Not.Null);
-			Assert.That(connection.Dispatcher, Is.EqualTo(_operationDispatcher));
-			Assert.That(connection.Executor, Is.EqualTo(remoteExecutor));
+			Assert.That(connection.OperationDispatcher, Is.EqualTo(_operationDispatcher));
+			Assert.That(connection.RemoteExecutor, Is.EqualTo(remoteExecutor));
 		}
 
 		[Test]

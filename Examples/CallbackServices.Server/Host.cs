@@ -1,20 +1,21 @@
 ﻿using CallbackServices.Contracts;
-using RemoteExecution.Connections;
-using RemoteExecution.Endpoints;
+using RemoteExecution.Core.Config;
+using RemoteExecution.Core.Connections;
+using RemoteExecution.Core.Endpoints;
 
 namespace CallbackServices.Server
 {
 	class Host : StatefulServerEndpoint
 	{
-		public Host(ServerEndpointConfig config)
-			: base(config)
+		public Host(string uri)
+			: base(uri, new ServerConfig())
 		{
 		}
 
-		protected override void RegisterServicesFor(INetworkConnection connection)
+		protected override void InitializeConnection(IRemoteConnection connection)
 		{
 			var clientCallback = connection.RemoteExecutor.Create<IClientCallback>();
-			connection.OperationDispatcher.RegisterRequestHandler<ILongRunningOperation>(new LongRunningOperation(clientCallback));
+			connection.OperationDispatcher.RegisterHandler<ILongRunningOperation>(new LongRunningOperation(clientCallback));
 		}
 	}
 }

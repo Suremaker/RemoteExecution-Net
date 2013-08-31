@@ -5,8 +5,6 @@ using RemoteExecution.Core.Config;
 using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Endpoints;
-using RemoteExecution.Core.TransportLayer;
-using RemoteExecution.TransportLayer.Lidgren;
 
 namespace RemoteExecution.AT
 {
@@ -18,7 +16,7 @@ namespace RemoteExecution.AT
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			TransportLayerResolver.Register(new LidgrenProvider());
+			Configurator.Configure();
 		}
 
 		protected IClientConnection CreateClientConnection()
@@ -41,7 +39,7 @@ namespace RemoteExecution.AT
 		protected IClientConnection OpenClientConnectionWithCallback<TInterface>(TInterface clientSerivce)
 		{
 			var client = CreateClientConnection();
-			client.Dispatcher.RegisterHandler(clientSerivce);
+			client.OperationDispatcher.RegisterHandler(clientSerivce);
 			client.Open();
 			return client;
 		}
@@ -55,10 +53,10 @@ namespace RemoteExecution.AT
 
 		private void ConfigureConnection(IServerEndpoint endpoint, IRemoteConnection clientConnection)
 		{
-			clientConnection.Dispatcher
+			clientConnection.OperationDispatcher
 			                .RegisterHandler<ICalculator>(new Calculator())
 			                .RegisterHandler<IGreeter>(new Greeter())
-			                .RegisterHandler<IRemoteService>(new RemoteService(clientConnection, endpoint.BroadcastExecutor));
+			                .RegisterHandler<IRemoteService>(new RemoteService(clientConnection, endpoint.BroadcastRemoteExecutor));
 		}
 	}
 }

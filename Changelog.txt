@@ -39,6 +39,10 @@ Version 1.0.8:
 + introduced Config namespace with DefaultConfig, ClientConfig and ServerConfig
 + introduced various constructors for ClientConnection in order to simplify usage
 + reimplemented StatefulServerEndpoint / StatelessServerEndpoint
++ removed all classes from RemoteExecution after reimplementation in RemoteExecution.Core / RemoteExecution.TransportLayer.Lidgren
++ removed RemoteExecution.UT / RemoteExecution.IT
++ introduced Configurator in RemoteExecution assembly
++ adjusted Example projects to use new classes
 
 Version 1.0.7:
 ---------------------

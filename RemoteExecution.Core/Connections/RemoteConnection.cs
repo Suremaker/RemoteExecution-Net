@@ -17,10 +17,10 @@ namespace RemoteExecution.Core.Connections
 
 		public RemoteConnection(IDuplexChannel channel, IOperationDispatcher dispatcher, IClientConfig config)
 		{
-			Dispatcher = dispatcher;
+			OperationDispatcher = dispatcher;
 			Channel = channel;
 			_scheduler = config.TaskScheduler;
-			Executor = config.RemoteExecutorFactory.CreateRemoteExecutor(channel, dispatcher.MessageDispatcher);
+			RemoteExecutor = config.RemoteExecutorFactory.CreateRemoteExecutor(channel, dispatcher.MessageDispatcher);
 
 			Channel.Received += OnMessageReceived;
 			Channel.ChannelClosed += OnChannelClose;
@@ -38,22 +38,22 @@ namespace RemoteExecution.Core.Connections
 			Channel.Dispose();
 		}
 
-		public IRemoteExecutor Executor { get; private set; }
-		public IOperationDispatcher Dispatcher { get; private set; }
+		public IRemoteExecutor RemoteExecutor { get; private set; }
+		public IOperationDispatcher OperationDispatcher { get; private set; }
 		public bool IsOpen { get { return Channel.IsOpen; } }
 
 		#endregion
 
 		private void OnChannelClose()
 		{
-			Dispatcher.MessageDispatcher.GroupDispatch(Channel.Id, new ExceptionResponseMessage(string.Empty, typeof(OperationAbortedException), "Connection has been closed."));
+			OperationDispatcher.MessageDispatcher.GroupDispatch(Channel.Id, new ExceptionResponseMessage(string.Empty, typeof(OperationAbortedException), "Connection has been closed."));
 			if (Closed != null)
 				Closed();
 		}
 
 		private void OnMessageReceived(IMessage msg)
 		{
-			_scheduler.Execute(() => Dispatcher.MessageDispatcher.Dispatch(msg));
+			_scheduler.Execute(() => OperationDispatcher.MessageDispatcher.Dispatch(msg));
 		}
 	}
 }

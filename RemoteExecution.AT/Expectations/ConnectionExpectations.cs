@@ -15,7 +15,7 @@ namespace RemoteExecution.AT.Expectations
 			using (StartServer())
 			using (var client = OpenClientConnection())
 			{
-				var calculator = client.Executor.Create<ICalculator>();
+				var calculator = client.RemoteExecutor.Create<ICalculator>();
 
 				Assert.That(calculator.Divide(8, 2), Is.EqualTo(4));
 

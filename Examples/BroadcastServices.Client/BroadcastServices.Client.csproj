@@ -41,6 +41,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\RemoteExecution.Core\RemoteExecution.Core.csproj">
+      <Project>{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}</Project>
+      <Name>RemoteExecution.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RemoteExecution.TransportLayer.Lidgren\RemoteExecution.TransportLayer.Lidgren.csproj">
+      <Project>{85D95624-EC1F-461C-B923-E824C6B56955}</Project>
+      <Name>RemoteExecution.TransportLayer.Lidgren</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BroadcastServices.Contracts\BroadcastServices.Contracts.csproj">
       <Project>{3F78029F-D917-4779-A37E-7FD5B9F48786}</Project>
       <Name>BroadcastServices.Contracts</Name>
