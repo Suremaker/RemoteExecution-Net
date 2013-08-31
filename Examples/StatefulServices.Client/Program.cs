@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using RemoteExecution;
-using RemoteExecution.Core.Connections;
+using RemoteExecution.Connections;
 using StatefulServices.Contracts;
 
 namespace StatefulServices.Client

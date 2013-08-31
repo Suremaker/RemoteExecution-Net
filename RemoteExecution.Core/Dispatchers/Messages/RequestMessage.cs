@@ -1,7 +1,7 @@
 ﻿using System;
-using RemoteExecution.Core.Channels;
+using RemoteExecution.Channels;
 
-namespace RemoteExecution.Core.Dispatchers.Messages
+namespace RemoteExecution.Dispatchers.Messages
 {
 	[Serializable]
 	internal class RequestMessage : IRequestMessage

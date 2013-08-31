@@ -1,8 +1,8 @@
-﻿using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Config;
-using RemoteExecution.Core.Dispatchers;
+﻿using RemoteExecution.Channels;
+using RemoteExecution.Config;
+using RemoteExecution.Dispatchers;
 
-namespace RemoteExecution.Core.Connections
+namespace RemoteExecution.Connections
 {
 	public class ClientConnection : RemoteConnection, IClientConnection
 	{

@@ -1,7 +1,7 @@
-using RemoteExecution.Core.Executors;
-using RemoteExecution.Core.Schedulers;
+using RemoteExecution.Executors;
+using RemoteExecution.Schedulers;
 
-namespace RemoteExecution.Core.Config
+namespace RemoteExecution.Config
 {
 	public class ServerConfig : IServerConfig
 	{

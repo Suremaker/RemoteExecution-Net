@@ -1,6 +1,6 @@
 ﻿using System;
 using RemoteExecution;
-using RemoteExecution.Core.Connections;
+using RemoteExecution.Connections;
 using StatelessServices.Contracts;
 
 namespace StatelessServices.Client

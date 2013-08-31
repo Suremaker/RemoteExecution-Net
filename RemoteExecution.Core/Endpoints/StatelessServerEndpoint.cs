@@ -1,8 +1,8 @@
-﻿using RemoteExecution.Core.Config;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Endpoints.Listeners;
+﻿using RemoteExecution.Config;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Endpoints.Listeners;
 
-namespace RemoteExecution.Core.Endpoints
+namespace RemoteExecution.Endpoints
 {
 	public class StatelessServerEndpoint : ServerEndpoint
 	{

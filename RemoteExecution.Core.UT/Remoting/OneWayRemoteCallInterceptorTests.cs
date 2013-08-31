@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Dispatchers.Messages;
-using RemoteExecution.Core.Remoting;
+using RemoteExecution.Channels;
+using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.Remoting;
 using Rhino.Mocks;
 using Spring.Aop.Framework;
 

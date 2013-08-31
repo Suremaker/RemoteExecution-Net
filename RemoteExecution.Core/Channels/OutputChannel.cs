@@ -1,8 +1,8 @@
 using System;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Serializers;
+using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.Serializers;
 
-namespace RemoteExecution.Core.Channels
+namespace RemoteExecution.Channels
 {
 	public abstract class OutputChannel : IOutputChannel
 	{

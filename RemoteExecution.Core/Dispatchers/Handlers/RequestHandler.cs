@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using RemoteExecution.Core.Dispatchers.Messages;
+using RemoteExecution.Dispatchers.Messages;
 
-namespace RemoteExecution.Core.Dispatchers.Handlers
+namespace RemoteExecution.Dispatchers.Handlers
 {
 	internal class RequestHandler : IMessageHandler
 	{

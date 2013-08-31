@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using NUnit.Framework;
-using RemoteExecution.Core.Dispatchers.Handlers;
-using RemoteExecution.Core.Dispatchers.Messages;
+using RemoteExecution.Dispatchers.Handlers;
+using RemoteExecution.Dispatchers.Messages;
 
 namespace RemoteExecution.Core.UT.Dispatchers.Handlers
 {

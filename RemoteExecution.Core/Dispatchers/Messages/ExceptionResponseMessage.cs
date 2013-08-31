@@ -1,6 +1,6 @@
 using System;
 
-namespace RemoteExecution.Core.Dispatchers.Messages
+namespace RemoteExecution.Dispatchers.Messages
 {
 	[Serializable]
 	internal class ExceptionResponseMessage : IResponseMessage

@@ -1,10 +1,10 @@
 ﻿using System;
 using Examples.Utils;
 using OneWayMethodServices.Contracts;
-using RemoteExecution.Core.Config;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Endpoints;
-using RemoteExecution.Core.Executors;
+using RemoteExecution.Config;
+using RemoteExecution.Connections;
+using RemoteExecution.Endpoints;
+using RemoteExecution.Executors;
 
 namespace OneWayMethodServices.Server
 {

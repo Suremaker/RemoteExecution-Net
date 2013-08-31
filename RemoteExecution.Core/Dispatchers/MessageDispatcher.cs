@@ -2,8 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using RemoteExecution.Dispatchers.Handlers;
+using RemoteExecution.Dispatchers.Messages;
 
-namespace RemoteExecution.Core.Dispatchers
+namespace RemoteExecution.Dispatchers
 {
 	public class MessageDispatcher : IMessageDispatcher
 	{

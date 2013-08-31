@@ -1,8 +1,7 @@
 ﻿using NUnit.Framework;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Dispatchers.Messages;
-using RemoteExecution.Core.Serializers;
+using RemoteExecution.Channels;
+using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.Serializers;
 using Rhino.Mocks;
 
 namespace RemoteExecution.Core.UT.Channels

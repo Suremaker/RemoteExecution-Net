@@ -1,9 +1,9 @@
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Remoting;
+using RemoteExecution.Channels;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Remoting;
 using Spring.Aop.Framework;
 
-namespace RemoteExecution.Core.Executors
+namespace RemoteExecution.Executors
 {
 	internal class RemoteExecutor : IRemoteExecutor
 	{

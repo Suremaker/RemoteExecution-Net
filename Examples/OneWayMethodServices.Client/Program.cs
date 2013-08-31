@@ -2,9 +2,9 @@
 using Examples.Utils;
 using OneWayMethodServices.Contracts;
 using RemoteExecution;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Executors;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Executors;
 
 namespace OneWayMethodServices.Client
 {

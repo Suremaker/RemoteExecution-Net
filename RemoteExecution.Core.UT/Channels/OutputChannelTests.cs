@@ -1,6 +1,6 @@
 using NUnit.Framework;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Serializers;
+using RemoteExecution.Channels;
+using RemoteExecution.Serializers;
 
 namespace RemoteExecution.Core.UT.Channels
 {

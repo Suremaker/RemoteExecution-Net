@@ -49,6 +49,10 @@
       <Project>{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}</Project>
       <Name>RemoteExecution.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\RemoteExecution.Interfaces\RemoteExecution.Interfaces.csproj">
+      <Project>{DDB0303B-C762-445D-9CB1-A7D03239B660}</Project>
+      <Name>RemoteExecution.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\RemoteExecution.TransportLayer.Lidgren\RemoteExecution.TransportLayer.Lidgren.csproj">
       <Project>{85D95624-EC1F-461C-B923-E824C6B56955}</Project>
       <Name>RemoteExecution.TransportLayer.Lidgren</Name>

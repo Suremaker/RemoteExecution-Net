@@ -1,7 +1,7 @@
 ﻿using CallbackServices.Contracts;
-using RemoteExecution.Core.Config;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Endpoints;
+using RemoteExecution.Config;
+using RemoteExecution.Connections;
+using RemoteExecution.Endpoints;
 
 namespace CallbackServices.Server
 {

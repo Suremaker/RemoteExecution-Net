@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Endpoints.Listeners;
+using RemoteExecution.Channels;
+using RemoteExecution.Endpoints.Listeners;
 
-namespace RemoteExecution.Core.TransportLayer
+namespace RemoteExecution.TransportLayer
 {
 	public static class TransportLayerResolver
 	{

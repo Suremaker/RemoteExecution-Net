@@ -1,7 +1,7 @@
 using AopAlliance.Intercept;
-using RemoteExecution.Core.Executors;
+using RemoteExecution.Executors;
 
-namespace RemoteExecution.Core.Remoting
+namespace RemoteExecution.Remoting
 {
 	internal class RemoteCallInterceptor : IMethodInterceptor
 	{

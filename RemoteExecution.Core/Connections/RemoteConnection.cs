@@ -1,13 +1,13 @@
 ﻿using System;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Config;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Dispatchers.Messages;
-using RemoteExecution.Core.Executors;
-using RemoteExecution.Core.Schedulers;
-using RemoteExecution.Core.TransportLayer;
+using RemoteExecution.Channels;
+using RemoteExecution.Config;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.Executors;
+using RemoteExecution.Schedulers;
+using RemoteExecution.TransportLayer;
 
-namespace RemoteExecution.Core.Connections
+namespace RemoteExecution.Connections
 {
 	public class RemoteConnection : IRemoteConnection
 	{

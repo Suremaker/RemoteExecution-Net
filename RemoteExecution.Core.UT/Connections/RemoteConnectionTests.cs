@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Config;
-using RemoteExecution.Core.Connections;
+using RemoteExecution.Channels;
+using RemoteExecution.Config;
+using RemoteExecution.Connections;
 
 namespace RemoteExecution.Core.UT.Connections
 {

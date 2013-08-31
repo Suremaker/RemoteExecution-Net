@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using RemoteExecution.Core.Dispatchers.Messages;
+using RemoteExecution.Dispatchers.Messages;
 
 namespace RemoteExecution.Core.UT.Dispatchers.Messages
 {

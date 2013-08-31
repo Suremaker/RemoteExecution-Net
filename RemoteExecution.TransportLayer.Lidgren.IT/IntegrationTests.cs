@@ -1,13 +1,12 @@
 ﻿using System;
 using NUnit.Framework;
-using RemoteExecution.Core.Config;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Endpoints;
-using RemoteExecution.Core.Endpoints.Listeners;
-using RemoteExecution.Core.Serializers;
-using RemoteExecution.TransportLayer.Lidgren.Channels;
-using RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners;
+using RemoteExecution.Channels;
+using RemoteExecution.Config;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Endpoints;
+using RemoteExecution.Endpoints.Listeners;
+using RemoteExecution.Serializers;
 
 namespace RemoteExecution.TransportLayer.Lidgren.IT
 {

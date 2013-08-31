@@ -1,7 +1,7 @@
 ﻿using AopAlliance.Intercept;
 using NUnit.Framework;
-using RemoteExecution.Core.Executors;
-using RemoteExecution.Core.Remoting;
+using RemoteExecution.Executors;
+using RemoteExecution.Remoting;
 using Rhino.Mocks;
 using Spring.Aop.Framework;
 

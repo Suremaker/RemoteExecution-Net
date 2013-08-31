@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Dispatchers.Messages;
-using RemoteExecution.Core.Executors;
 using RemoteExecution.Core.IT.Helpers;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.Executors;
 
 namespace RemoteExecution.Core.IT.Executors
 {

@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using RemoteExecution.Core.Config;
+using RemoteExecution.Config;
 
 namespace RemoteExecution.Core.UT.Config
 {

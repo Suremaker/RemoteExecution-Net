@@ -1,8 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Endpoints.Listeners;
-using RemoteExecution.Core.TransportLayer;
+using RemoteExecution.Channels;
+using RemoteExecution.Endpoints.Listeners;
+using RemoteExecution.TransportLayer;
 using Rhino.Mocks;
 
 namespace RemoteExecution.Core.UT.TransportLayer

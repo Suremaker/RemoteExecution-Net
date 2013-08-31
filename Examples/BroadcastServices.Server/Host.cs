@@ -1,9 +1,9 @@
 ﻿using System;
 using BroadcastServices.Contracts;
 using Examples.Utils;
-using RemoteExecution.Core.Config;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Endpoints;
+using RemoteExecution.Config;
+using RemoteExecution.Connections;
+using RemoteExecution.Endpoints;
 
 namespace BroadcastServices.Server
 {

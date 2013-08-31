@@ -1,7 +1,7 @@
 ﻿using System;
 using RemoteExecution;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Endpoints;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Endpoints;
 using StatelessServices.Contracts;
 
 namespace StatelessServices.Server

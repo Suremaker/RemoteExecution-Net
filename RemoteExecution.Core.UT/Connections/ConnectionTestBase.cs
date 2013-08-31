@@ -1,11 +1,11 @@
 ﻿using System;
 using NUnit.Framework;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Dispatchers.Messages;
-using RemoteExecution.Core.Executors;
-using RemoteExecution.Core.Schedulers;
+using RemoteExecution.Channels;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.Executors;
+using RemoteExecution.Schedulers;
 using Rhino.Mocks;
 
 namespace RemoteExecution.Core.UT.Connections

@@ -43,6 +43,8 @@ Version 1.0.8:
 + removed RemoteExecution.UT / RemoteExecution.IT
 + introduced Configurator in RemoteExecution assembly
 + adjusted Example projects to use new classes
++ introduced RemoteExecution.Interfaces assembly
++ flattened namespaces
 
 Version 1.0.7:
 ---------------------

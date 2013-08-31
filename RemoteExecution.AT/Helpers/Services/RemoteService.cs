@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using RemoteExecution.AT.Helpers.Contracts;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Executors;
+using RemoteExecution.Connections;
+using RemoteExecution.Executors;
 
 namespace RemoteExecution.AT.Helpers.Services
 {

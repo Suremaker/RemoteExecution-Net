@@ -7,7 +7,7 @@
     <ProjectGuid>{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RemoteExecution.Core</RootNamespace>
+    <RootNamespace>RemoteExecution</RootNamespace>
     <AssemblyName>RemoteExecution.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -50,54 +50,27 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Channels\DuplexChannel.cs" />
-    <Compile Include="Channels\IBroadcastChannel.cs" />
-    <Compile Include="Channels\IChannel.cs" />
-    <Compile Include="Channels\IClientChannel.cs" />
-    <Compile Include="Channels\IDuplexChannel.cs" />
-    <Compile Include="Channels\IInputChannel.cs" />
-    <Compile Include="Channels\IOutputChannel.cs" />
-    <Compile Include="Channels\NotConnectedException.cs" />
     <Compile Include="Channels\OutputChannel.cs" />
-    <Compile Include="Channels\ConnectionException.cs" />
     <Compile Include="Config\ClientConfig.cs" />
     <Compile Include="Config\DefaultConfig.cs" />
-    <Compile Include="Config\IClientConfig.cs" />
-    <Compile Include="Config\IServerConfig.cs" />
     <Compile Include="Config\ServerConfig.cs" />
     <Compile Include="Endpoints\StatefulServerEndpoint.cs" />
     <Compile Include="Endpoints\StatelessServerEndpoint.cs" />
-    <Compile Include="TransportLayer\ITransportLayerProvider.cs" />
     <Compile Include="TransportLayer\TransportLayerResolver.cs" />
     <Compile Include="Connections\ClientConnection.cs" />
-    <Compile Include="Connections\IClientConnection.cs" />
-    <Compile Include="Connections\IRemoteConnection.cs" />
     <Compile Include="Dispatchers\OperationAbortedException.cs" />
     <Compile Include="Connections\RemoteConnection.cs" />
     <Compile Include="Dispatchers\Handlers\DefaultRequestHandler.cs" />
-    <Compile Include="Dispatchers\Handlers\IResponseHandler.cs" />
     <Compile Include="Dispatchers\Handlers\RequestHandler.cs" />
     <Compile Include="Dispatchers\Handlers\ResponseHandler.cs" />
-    <Compile Include="Dispatchers\IMessage.cs" />
-    <Compile Include="Dispatchers\IMessageDispatcher.cs" />
-    <Compile Include="Dispatchers\IMessageHandler.cs" />
-    <Compile Include="Dispatchers\IOperationDispatcher.cs" />
     <Compile Include="Dispatchers\MessageDispatcher.cs" />
     <Compile Include="Dispatchers\Messages\ExceptionResponseMessage.cs" />
-    <Compile Include="Dispatchers\Messages\IRequestMessage.cs" />
-    <Compile Include="Dispatchers\Messages\IResponseMessage.cs" />
     <Compile Include="Dispatchers\Messages\RequestMessage.cs" />
     <Compile Include="Dispatchers\Messages\ResponseMessage.cs" />
     <Compile Include="Dispatchers\OperationDispatcher.cs" />
     <Compile Include="Endpoints\GenericServerEndpoint.cs" />
-    <Compile Include="Endpoints\IServerEndpoint.cs" />
-    <Compile Include="Endpoints\Listeners\IServerConnectionListener.cs" />
     <Compile Include="Endpoints\ServerEndpoint.cs" />
-    <Compile Include="Endpoints\ServerStartException.cs" />
     <Compile Include="Executors\BroadcastRemoteExecutor.cs" />
-    <Compile Include="Executors\IBroadcastRemoteExecutor.cs" />
-    <Compile Include="Executors\IRemoteExecutor.cs" />
-    <Compile Include="Executors\IRemoteExecutorFactory.cs" />
-    <Compile Include="Executors\NoResultMethodExecution.cs" />
     <Compile Include="Executors\RemoteExecutor.cs" />
     <Compile Include="Executors\RemoteExecutorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,15 +78,17 @@
     <Compile Include="Remoting\RemoteCallInterceptor.cs" />
     <Compile Include="Remoting\TwoWayRemoteCallInterceptor.cs" />
     <Compile Include="Schedulers\AsyncTaskScheduler.cs" />
-    <Compile Include="Schedulers\ITaskScheduler.cs" />
     <Compile Include="Serializers\BinaryMessageSerializer.cs" />
-    <Compile Include="Serializers\IMessageSerializer.cs" />
-    <Compile Include="TransportLayer\UnknownTransportLayerException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RemoteExecution.Interfaces\RemoteExecution.Interfaces.csproj">
+      <Project>{DDB0303B-C762-445D-9CB1-A7D03239B660}</Project>
+      <Name>RemoteExecution.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

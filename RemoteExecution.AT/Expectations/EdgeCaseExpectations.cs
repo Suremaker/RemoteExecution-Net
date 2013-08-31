@@ -1,8 +1,8 @@
 using System;
 using NUnit.Framework;
 using RemoteExecution.AT.Helpers.Contracts;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Endpoints;
+using RemoteExecution.Channels;
+using RemoteExecution.Endpoints;
 
 namespace RemoteExecution.AT.Expectations
 {

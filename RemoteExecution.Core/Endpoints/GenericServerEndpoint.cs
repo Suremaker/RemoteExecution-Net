@@ -1,10 +1,10 @@
 ﻿using System;
-using RemoteExecution.Core.Config;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Endpoints.Listeners;
+using RemoteExecution.Config;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Endpoints.Listeners;
 
-namespace RemoteExecution.Core.Endpoints
+namespace RemoteExecution.Endpoints
 {
 	public class GenericServerEndpoint : ServerEndpoint
 	{

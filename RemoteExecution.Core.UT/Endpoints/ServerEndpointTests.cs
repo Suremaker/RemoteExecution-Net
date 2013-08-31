@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Config;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Endpoints;
-using RemoteExecution.Core.Endpoints.Listeners;
-using RemoteExecution.Core.Executors;
-using RemoteExecution.Core.Schedulers;
+using RemoteExecution.Channels;
+using RemoteExecution.Config;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Endpoints;
+using RemoteExecution.Endpoints.Listeners;
+using RemoteExecution.Executors;
+using RemoteExecution.Schedulers;
 using Rhino.Mocks;
 
 namespace RemoteExecution.Core.UT.Endpoints

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework;
-using RemoteExecution.Core.Schedulers;
+using RemoteExecution.Schedulers;
 
 namespace RemoteExecution.Core.UT.Schedulers
 {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading;
 using Lidgren.Network;
-using RemoteExecution.Core.Channels;
+using RemoteExecution.Channels;
 
-namespace RemoteExecution.TransportLayer.Lidgren
+namespace RemoteExecution
 {
-	public static class SynchronizationExtensions
+	internal static class SynchronizationExtensions
 	{
 		private static readonly TimeSpan _synchronizationTimeSpan = TimeSpan.FromMilliseconds(25);
 

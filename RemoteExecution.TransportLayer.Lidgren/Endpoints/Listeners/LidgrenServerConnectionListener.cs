@@ -2,12 +2,10 @@
 using System.Net;
 using System.Runtime.CompilerServices;
 using Lidgren.Network;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Endpoints.Listeners;
-using RemoteExecution.Core.Serializers;
-using RemoteExecution.TransportLayer.Lidgren.Channels;
+using RemoteExecution.Channels;
+using RemoteExecution.Serializers;
 
-namespace RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners
+namespace RemoteExecution.Endpoints.Listeners
 {
 	public class LidgrenServerConnectionListener : IServerConnectionListener
 	{

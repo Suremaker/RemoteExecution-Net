@@ -1,8 +1,8 @@
 ﻿using System;
 using CallbackServices.Contracts;
 using RemoteExecution;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Dispatchers;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
 
 namespace CallbackServices.Client
 {

@@ -1,7 +1,7 @@
 ﻿using System;
-using RemoteExecution.Core.Dispatchers.Handlers;
+using RemoteExecution.Dispatchers.Handlers;
 
-namespace RemoteExecution.Core.Dispatchers
+namespace RemoteExecution.Dispatchers
 {
 	public class OperationDispatcher : IOperationDispatcher
 	{

@@ -1,9 +1,9 @@
 using System;
 using AopAlliance.Intercept;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Dispatchers.Messages;
+using RemoteExecution.Channels;
+using RemoteExecution.Dispatchers.Messages;
 
-namespace RemoteExecution.Core.Remoting
+namespace RemoteExecution.Remoting
 {
 	internal class OneWayRemoteCallInterceptor : IMethodInterceptor
 	{

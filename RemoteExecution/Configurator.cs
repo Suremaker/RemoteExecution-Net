@@ -1,5 +1,4 @@
-﻿using RemoteExecution.Core.TransportLayer;
-using RemoteExecution.TransportLayer.Lidgren;
+﻿using RemoteExecution.TransportLayer;
 
 namespace RemoteExecution
 {

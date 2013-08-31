@@ -1,12 +1,10 @@
 ﻿using System;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Endpoints.Listeners;
-using RemoteExecution.Core.Serializers;
-using RemoteExecution.Core.TransportLayer;
-using RemoteExecution.TransportLayer.Lidgren.Channels;
-using RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners;
+using RemoteExecution.Channels;
+using RemoteExecution.Endpoints.Listeners;
+using RemoteExecution.Serializers;
+using RemoteExecution.TransportLayer;
 
-namespace RemoteExecution.TransportLayer.Lidgren
+namespace RemoteExecution
 {
 	public class LidgrenProvider : ITransportLayerProvider
 	{

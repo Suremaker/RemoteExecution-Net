@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace RemoteExecution.Core.Schedulers
+namespace RemoteExecution.Schedulers
 {
 	/// <summary>
 	/// Class for scheduling task execution in background threads.

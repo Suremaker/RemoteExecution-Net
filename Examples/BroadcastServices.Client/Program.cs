@@ -3,8 +3,8 @@ using System.Linq;
 using BroadcastServices.Contracts;
 using Examples.Utils;
 using RemoteExecution;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Dispatchers;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
 
 namespace BroadcastServices.Client
 {

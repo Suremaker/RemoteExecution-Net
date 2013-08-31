@@ -1,10 +1,10 @@
 using AopAlliance.Intercept;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Dispatchers.Handlers;
-using RemoteExecution.Core.Dispatchers.Messages;
+using RemoteExecution.Channels;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Dispatchers.Handlers;
+using RemoteExecution.Dispatchers.Messages;
 
-namespace RemoteExecution.Core.Remoting
+namespace RemoteExecution.Remoting
 {
 	internal class TwoWayRemoteCallInterceptor : IMethodInterceptor
 	{

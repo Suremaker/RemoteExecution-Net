@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
-using RemoteExecution.Core.Executors;
 using RemoteExecution.Core.IT.Helpers;
+using RemoteExecution.Executors;
 
 namespace RemoteExecution.Core.IT.Executors
 {

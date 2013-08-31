@@ -1,10 +1,9 @@
 using System.Reflection;
 using ObjectSerialization;
 using ObjectSerialization.Types;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Dispatchers.Messages;
+using RemoteExecution.Dispatchers.Messages;
 
-namespace RemoteExecution.Core.Serializers
+namespace RemoteExecution.Serializers
 {
 	public class BinaryMessageSerializer : IMessageSerializer
 	{

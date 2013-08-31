@@ -1,7 +1,7 @@
 ﻿using System;
-using RemoteExecution.Core.Dispatchers.Messages;
+using RemoteExecution.Dispatchers.Messages;
 
-namespace RemoteExecution.Core.Dispatchers.Handlers
+namespace RemoteExecution.Dispatchers.Handlers
 {
 	internal class DefaultRequestHandler : IMessageHandler
 	{

@@ -1,7 +1,7 @@
 ﻿using System;
 using Lidgren.Network;
 
-namespace RemoteExecution.TransportLayer.Lidgren
+namespace RemoteExecution
 {
 	internal class MessageRouter
 	{

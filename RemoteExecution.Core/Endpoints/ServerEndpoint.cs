@@ -2,15 +2,15 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Config;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Endpoints.Listeners;
-using RemoteExecution.Core.Executors;
-using RemoteExecution.Core.TransportLayer;
+using RemoteExecution.Channels;
+using RemoteExecution.Config;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Endpoints.Listeners;
+using RemoteExecution.Executors;
+using RemoteExecution.TransportLayer;
 
-namespace RemoteExecution.Core.Endpoints
+namespace RemoteExecution.Endpoints
 {
 	/// <summary>
 	/// Abstract implementation of server endpoint, containing common logic for maintaining connections.

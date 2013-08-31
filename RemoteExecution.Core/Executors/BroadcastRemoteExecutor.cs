@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Remoting;
+using RemoteExecution.Channels;
+using RemoteExecution.Remoting;
 using Spring.Aop.Framework;
 
-namespace RemoteExecution.Core.Executors
+namespace RemoteExecution.Executors
 {
 	internal class BroadcastRemoteExecutor : IBroadcastRemoteExecutor
 	{

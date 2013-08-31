@@ -6,9 +6,9 @@ using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.AT.Helpers.Contracts;
 using RemoteExecution.AT.Helpers.Services;
-using RemoteExecution.Core.Connections;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Executors;
+using RemoteExecution.Connections;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Executors;
 
 namespace RemoteExecution.AT.Expectations
 {

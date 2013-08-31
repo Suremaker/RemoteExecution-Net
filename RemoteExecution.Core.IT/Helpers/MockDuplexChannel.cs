@@ -1,6 +1,6 @@
 using System;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Dispatchers;
+using RemoteExecution.Channels;
+using RemoteExecution.Dispatchers.Messages;
 
 namespace RemoteExecution.Core.IT.Helpers
 {

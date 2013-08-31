@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Dispatchers.Handlers;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Dispatchers.Handlers;
 using Rhino.Mocks;
 
 namespace RemoteExecution.Core.UT.Dispatchers

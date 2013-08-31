@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
-using RemoteExecution.Core.Channels;
-using RemoteExecution.Core.Dispatchers;
-using RemoteExecution.Core.Executors;
+using RemoteExecution.Channels;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.Executors;
 using Rhino.Mocks;
 
 namespace RemoteExecution.Core.UT.Executors
