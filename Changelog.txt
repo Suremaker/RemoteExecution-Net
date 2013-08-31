@@ -38,6 +38,7 @@ Version 1.0.8:
 + added ctor to ClientConnection / ServerEndpoint accepting URI to determine and configure transport layer
 + introduced Config namespace with DefaultConfig, ClientConfig and ServerConfig
 + introduced various constructors for ClientConnection in order to simplify usage
++ reimplemented StatefulServerEndpoint / StatelessServerEndpoint
 
 Version 1.0.7:
 ---------------------

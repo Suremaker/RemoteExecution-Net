@@ -34,8 +34,8 @@ namespace RemoteExecution.Core.Endpoints
 		/// </summary>
 		public event Action<IRemoteConnection> ConnectionOpened;
 
-		protected ServerEndpoint(string listenerUri, IServerConfig config) :
-			this(TransportLayerResolver.CreateConnectionListenerFor(new Uri(listenerUri)), config)
+		protected ServerEndpoint(string listenerUri, IServerConfig config)
+			: this(TransportLayerResolver.CreateConnectionListenerFor(new Uri(listenerUri)), config)
 		{
 		}
 

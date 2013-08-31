@@ -64,6 +64,8 @@
     <Compile Include="Config\IClientConfig.cs" />
     <Compile Include="Config\IServerConfig.cs" />
     <Compile Include="Config\ServerConfig.cs" />
+    <Compile Include="Endpoints\StatefulServerEndpoint.cs" />
+    <Compile Include="Endpoints\StatelessServerEndpoint.cs" />
     <Compile Include="TransportLayer\ITransportLayerProvider.cs" />
     <Compile Include="TransportLayer\TransportLayerResolver.cs" />
     <Compile Include="Connections\ClientConnection.cs" />
