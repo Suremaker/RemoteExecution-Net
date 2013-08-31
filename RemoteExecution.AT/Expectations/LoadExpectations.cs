@@ -91,12 +91,6 @@ namespace RemoteExecution.AT.Expectations
 			WaitForThreads(StartThreads(tasks));
 		}
 
-		private void WaitForThreads(IEnumerable<Thread> threads)
-		{
-			foreach (Thread thread in threads)
-				thread.Join();
-		}
-
 		private IEnumerable<Thread> StartThreads(IEnumerable<TaskData> tasks)
 		{
 			var threads = tasks.Select(t => new Thread(t.ExecuteTask)).ToList();
@@ -105,6 +99,12 @@ namespace RemoteExecution.AT.Expectations
 				thread.Start();
 
 			return threads;
+		}
+
+		private void WaitForThreads(IEnumerable<Thread> threads)
+		{
+			foreach (Thread thread in threads)
+				thread.Join();
 		}
 	}
 }

@@ -8,9 +8,9 @@ namespace RemoteExecution.AT.Helpers.Services
 {
 	class RemoteService : IRemoteService
 	{
-		private readonly IRemoteConnection _connection;
 		private readonly IBroadcastService _broadcastService;
 		private readonly IClientService _clientService;
+		private readonly IRemoteConnection _connection;
 
 		public RemoteService(IRemoteConnection connection, IBroadcastRemoteExecutor broadcastRemoteExecutor)
 		{
@@ -18,6 +18,8 @@ namespace RemoteExecution.AT.Helpers.Services
 			_clientService = _connection.Executor.Create<IClientService>();
 			_broadcastService = broadcastRemoteExecutor.Create<IBroadcastService>();
 		}
+
+		#region IRemoteService Members
 
 		public void Sleep(TimeSpan time)
 		{
@@ -38,5 +40,7 @@ namespace RemoteExecution.AT.Helpers.Services
 		{
 			_broadcastService.SetValue(value);
 		}
+
+		#endregion
 	}
 }

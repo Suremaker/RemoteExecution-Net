@@ -93,6 +93,18 @@ namespace RemoteExecution.Core.UT.Dispatchers
 		}
 
 		[Test]
+		public void Should_return_itself_in_order_to_chain_operations()
+		{
+			var foo = MockRepository.GenerateMock<IFoo>();
+			var dispatcher = _subject.RegisterHandler(foo)
+			                         .UnregisterHandler<IFoo>()
+			                         .RegisterHandler(typeof(IFoo), foo)
+			                         .UnregisterHandler(typeof(IFoo));
+
+			Assert.That(dispatcher, Is.SameAs(_subject));
+		}
+
+		[Test]
 		public void Should_unregister_handler()
 		{
 			_subject.UnregisterHandler(typeof(IFoo));
@@ -104,18 +116,6 @@ namespace RemoteExecution.Core.UT.Dispatchers
 		{
 			_subject.UnregisterHandler<IFoo>();
 			_messageDispatcher.AssertWasCalled(m => m.Unregister(typeof(IFoo).Name));
-		}
-
-		[Test]
-		public void Should_return_itself_in_order_to_chain_operations()
-		{
-			var foo = MockRepository.GenerateMock<IFoo>();
-			var dispatcher = _subject.RegisterHandler(foo)
-					.UnregisterHandler<IFoo>()
-					.RegisterHandler(typeof(IFoo), foo)
-					.UnregisterHandler(typeof(IFoo));
-
-			Assert.That(dispatcher, Is.SameAs(_subject));
 		}
 	}
 }

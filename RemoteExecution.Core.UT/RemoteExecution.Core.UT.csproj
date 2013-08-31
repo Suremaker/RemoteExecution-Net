@@ -52,6 +52,9 @@
     <Compile Include="Channels\DuplexChannelTests.cs" />
     <Compile Include="Channels\OutputChannelTests.cs" />
     <Compile Include="Channels\ChannelTestsBase.cs" />
+    <Compile Include="Config\ClientConfigTests.cs" />
+    <Compile Include="Config\DefaultConfigTests.cs" />
+    <Compile Include="Config\ServerConfigTests.cs" />
     <Compile Include="Connections\ClientConnectionTests.cs" />
     <Compile Include="Connections\ConnectionTestBase.cs" />
     <Compile Include="Connections\RemoteConnectionTests.cs" />

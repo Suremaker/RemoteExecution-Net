@@ -28,6 +28,11 @@ namespace RemoteExecution.Core.Endpoints
 		IEnumerable<IRemoteConnection> ActiveConnections { get; }
 
 		/// <summary>
+		/// Returns broadcast executor.
+		/// </summary>
+		IBroadcastRemoteExecutor BroadcastExecutor { get; }
+
+		/// <summary>
 		/// Returns true if endpoint is accepting incoming connections.
 		/// </summary>
 		bool IsRunning { get; }
@@ -36,10 +41,5 @@ namespace RemoteExecution.Core.Endpoints
 		/// Starts accepting incoming connections.
 		/// </summary>
 		void Start();
-
-		/// <summary>
-		/// Returns broadcast executor.
-		/// </summary>
-		IBroadcastRemoteExecutor BroadcastExecutor { get; }
 	}
 }

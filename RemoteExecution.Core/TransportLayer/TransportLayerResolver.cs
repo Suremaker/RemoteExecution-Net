@@ -9,12 +9,6 @@ namespace RemoteExecution.Core.TransportLayer
 	{
 		private static readonly ConcurrentDictionary<string, ITransportLayerProvider> _providers = new ConcurrentDictionary<string, ITransportLayerProvider>();
 
-		public static void Register(ITransportLayerProvider provider)
-		{
-			if (!_providers.TryAdd(provider.Scheme, provider))
-				throw new ArgumentException(string.Format("There is already registered provider for '{0}' scheme.", provider.Scheme));
-		}
-
 		public static IClientChannel CreateClientChannelFor(Uri uri)
 		{
 			return Resolve(uri.Scheme).CreateClientChannelFor(uri);
@@ -23,6 +17,12 @@ namespace RemoteExecution.Core.TransportLayer
 		public static IServerConnectionListener CreateConnectionListenerFor(Uri uri)
 		{
 			return Resolve(uri.Scheme).CreateConnectionListenerFor(uri);
+		}
+
+		public static void Register(ITransportLayerProvider provider)
+		{
+			if (!_providers.TryAdd(provider.Scheme, provider))
+				throw new ArgumentException(string.Format("There is already registered provider for '{0}' scheme.", provider.Scheme));
 		}
 
 		private static ITransportLayerProvider Resolve(string scheme)

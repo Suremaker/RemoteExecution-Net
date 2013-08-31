@@ -1,11 +1,10 @@
 ﻿using System;
 using NUnit.Framework;
+using RemoteExecution.Core.Config;
 using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Endpoints;
 using RemoteExecution.Core.Endpoints.Listeners;
-using RemoteExecution.Core.Executors;
-using RemoteExecution.Core.Schedulers;
 using RemoteExecution.Core.Serializers;
 using RemoteExecution.TransportLayer.Lidgren.Channels;
 using RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners;
@@ -32,7 +31,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 			_dispatcher.RegisterHandler<ICalculator>(new Calculator());
 			_dispatcher.RegisterHandler<IGreeter>(new Greeter());
 
-			_server = new GenericServerEndpoint(_connectionListener, new ServerEndpointConfig(), () => _dispatcher);
+			_server = new GenericServerEndpoint(_connectionListener, new ServerConfig(), () => _dispatcher);
 			_server.Start();
 		}
 
@@ -44,7 +43,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 
 		private ClientConnection CreateClientConnection()
 		{
-			return new ClientConnection(new LidgrenClientChannel(_applicationId, _host, _port, new BinaryMessageSerializer()), new RemoteExecutorFactory(), new OperationDispatcher(), new AsyncTaskScheduler());
+			return new ClientConnection(new LidgrenClientChannel(_applicationId, _host, _port, new BinaryMessageSerializer()), new OperationDispatcher(), new ClientConfig());
 		}
 
 		[Test]

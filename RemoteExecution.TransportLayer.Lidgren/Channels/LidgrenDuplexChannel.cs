@@ -33,6 +33,11 @@ namespace RemoteExecution.TransportLayer.Lidgren.Channels
 			OnReceive(message.ReadBytes(message.LengthBytes));
 		}
 
+		public void OnConnectionClose()
+		{
+			FireChannelClosed();
+		}
+
 		protected override void Close()
 		{
 			if (Connection != null && IsOpen)
@@ -51,11 +56,6 @@ namespace RemoteExecution.TransportLayer.Lidgren.Channels
 			var msg = Connection.Peer.CreateMessage(data.Length);
 			msg.Write(data);
 			return msg;
-		}
-
-		public void OnConnectionClose()
-		{
-			FireChannelClosed();
 		}
 	}
 }

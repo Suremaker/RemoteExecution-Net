@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using RemoteExecution.Core.Channels;
+using RemoteExecution.Core.Config;
 using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Endpoints.Listeners;
@@ -16,7 +17,8 @@ namespace RemoteExecution.Core.Endpoints
 	/// </summary>
 	public abstract class ServerEndpoint : IServerEndpoint
 	{
-		private readonly IServerEndpointConfig _config;
+		private readonly IClientConfig _clientConfig;
+		private readonly IServerConfig _config;
 		private readonly ConcurrentDictionary<Guid, IRemoteConnection> _connections = new ConcurrentDictionary<Guid, IRemoteConnection>();
 		private readonly IServerConnectionListener _listener;
 
@@ -32,15 +34,20 @@ namespace RemoteExecution.Core.Endpoints
 		/// </summary>
 		public event Action<IRemoteConnection> ConnectionOpened;
 
-		protected ServerEndpoint(string listenerUri, IServerEndpointConfig config) :
+		protected ServerEndpoint(string listenerUri, IServerConfig config) :
 			this(TransportLayerResolver.CreateConnectionListenerFor(new Uri(listenerUri)), config)
 		{
 		}
 
-		protected ServerEndpoint(IServerConnectionListener listener, IServerEndpointConfig config)
+		protected ServerEndpoint(IServerConnectionListener listener, IServerConfig config)
 		{
 			_listener = listener;
 			_config = config;
+			_clientConfig = new ClientConfig
+			{
+				RemoteExecutorFactory = _config.RemoteExecutorFactory,
+				TaskScheduler = _config.TaskScheduler
+			};
 			_listener.OnChannelOpen += OnChannelOpen;
 			BroadcastExecutor = config.RemoteExecutorFactory.CreateBroadcastRemoteExecutor(listener.BroadcastChannel);
 		}
@@ -138,7 +145,7 @@ namespace RemoteExecution.Core.Endpoints
 				return;
 			}
 
-			var connection = new RemoteConnection(channel, _config.RemoteExecutorFactory, GetOperationDispatcher(), _config.TaskScheduler);
+			var connection = new RemoteConnection(channel, GetOperationDispatcher(), _clientConfig);
 			var channelId = channel.Id;
 
 			connection.Closed += () => HandleConnectionClose(channelId);

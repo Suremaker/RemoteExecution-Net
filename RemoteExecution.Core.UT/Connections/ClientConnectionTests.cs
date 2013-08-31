@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using RemoteExecution.Core.Channels;
+using RemoteExecution.Core.Config;
 using RemoteExecution.Core.Connections;
 using Rhino.Mocks;
 
@@ -10,7 +11,7 @@ namespace RemoteExecution.Core.UT.Connections
 	{
 		protected override IClientConnection CreateSubject()
 		{
-			return new ClientConnection(Channel, RemoteExecutorFactory, OperationDispatcher, Scheduler);
+			return new ClientConnection(Channel, OperationDispatcher, new ClientConfig { RemoteExecutorFactory = RemoteExecutorFactory, TaskScheduler = Scheduler });
 		}
 
 		[Test]

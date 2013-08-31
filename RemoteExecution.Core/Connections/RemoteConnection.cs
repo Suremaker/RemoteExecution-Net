@@ -1,5 +1,6 @@
 ﻿using System;
 using RemoteExecution.Core.Channels;
+using RemoteExecution.Core.Config;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Dispatchers.Messages;
 using RemoteExecution.Core.Executors;
@@ -14,19 +15,19 @@ namespace RemoteExecution.Core.Connections
 		private readonly ITaskScheduler _scheduler;
 		public event Action Closed;
 
-		public RemoteConnection(IDuplexChannel channel, IRemoteExecutorFactory remoteExecutorFactory, IOperationDispatcher dispatcher, ITaskScheduler scheduler)
+		public RemoteConnection(IDuplexChannel channel, IOperationDispatcher dispatcher, IClientConfig config)
 		{
 			Dispatcher = dispatcher;
 			Channel = channel;
-			_scheduler = scheduler;
-			Executor = remoteExecutorFactory.CreateRemoteExecutor(channel, dispatcher.MessageDispatcher);
+			_scheduler = config.TaskScheduler;
+			Executor = config.RemoteExecutorFactory.CreateRemoteExecutor(channel, dispatcher.MessageDispatcher);
 
 			Channel.Received += OnMessageReceived;
 			Channel.ChannelClosed += OnChannelClose;
 		}
 
-		public RemoteConnection(string connectionUri, IRemoteExecutorFactory remoteExecutorFactory, IOperationDispatcher dispatcher, ITaskScheduler scheduler)
-			: this(TransportLayerResolver.CreateClientChannelFor(new Uri(connectionUri)), remoteExecutorFactory, dispatcher, scheduler)
+		public RemoteConnection(string connectionUri, IOperationDispatcher dispatcher, IClientConfig config)
+			: this(TransportLayerResolver.CreateClientChannelFor(new Uri(connectionUri)), dispatcher, config)
 		{
 		}
 

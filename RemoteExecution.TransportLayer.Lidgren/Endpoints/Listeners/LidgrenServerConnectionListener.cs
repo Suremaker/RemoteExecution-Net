@@ -11,10 +11,10 @@ namespace RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners
 {
 	public class LidgrenServerConnectionListener : IServerConnectionListener
 	{
+		private readonly MessageRouter _messageRouter;
 		private readonly NetServer _netServer;
 		private readonly IMessageSerializer _serializer;
 		private MessageLoop _messageLoop;
-		private readonly MessageRouter _messageRouter;
 		public event Action<IDuplexChannel> OnChannelOpen;
 
 		public LidgrenServerConnectionListener(string applicationId, string listenAddress, ushort port, IMessageSerializer serializer)
@@ -36,7 +36,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners
 			BroadcastChannel = new LidgrenBroadcastChannel(_netServer, serializer);
 		}
 
-		#region IServerListener Members
+		#region IServerConnectionListener Members
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Dispose()
@@ -87,11 +87,6 @@ namespace RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners
 			channel.OnConnectionClose();
 		}
 
-		private void HandleReceivedData(NetIncomingMessage message)
-		{
-			ExtractChannelWithWait(message.SenderConnection).HandleIncomingMessage(message);
-		}
-
 		private void HandleNewConnection(NetConnection netConnection)
 		{
 			lock (netConnection)
@@ -101,6 +96,11 @@ namespace RemoteExecution.TransportLayer.Lidgren.Endpoints.Listeners
 					OnChannelOpen(channel);
 				netConnection.Tag = channel;
 			}
+		}
+
+		private void HandleReceivedData(NetIncomingMessage message)
+		{
+			ExtractChannelWithWait(message.SenderConnection).HandleIncomingMessage(message);
 		}
 	}
 }

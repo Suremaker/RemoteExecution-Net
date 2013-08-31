@@ -1,4 +1,5 @@
 ﻿using System;
+using RemoteExecution.Core.Config;
 using RemoteExecution.Core.Connections;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Endpoints.Listeners;
@@ -9,7 +10,7 @@ namespace RemoteExecution.Core.Endpoints
 	{
 		private readonly Func<IOperationDispatcher> _operationDispatcherCreator;
 
-		public GenericServerEndpoint(string listenerUri, IServerEndpointConfig config, Func<IOperationDispatcher> operationDispatcherCreator, Action<IServerEndpoint, IRemoteConnection> connectionInitializer = null)
+		public GenericServerEndpoint(string listenerUri, IServerConfig config, Func<IOperationDispatcher> operationDispatcherCreator, Action<IServerEndpoint, IRemoteConnection> connectionInitializer = null)
 			: base(listenerUri, config)
 		{
 			_operationDispatcherCreator = operationDispatcherCreator;
@@ -17,7 +18,7 @@ namespace RemoteExecution.Core.Endpoints
 				OnConnectionInitialize += connection => connectionInitializer(this, connection);
 		}
 
-		public GenericServerEndpoint(IServerConnectionListener listener, IServerEndpointConfig config, Func<IOperationDispatcher> operationDispatcherCreator, Action<IServerEndpoint, IRemoteConnection> connectionInitializer = null)
+		public GenericServerEndpoint(IServerConnectionListener listener, IServerConfig config, Func<IOperationDispatcher> operationDispatcherCreator, Action<IServerEndpoint, IRemoteConnection> connectionInitializer = null)
 			: base(listener, config)
 		{
 			_operationDispatcherCreator = operationDispatcherCreator;

@@ -10,8 +10,8 @@ namespace RemoteExecution.TransportLayer.Lidgren.Channels
 	{
 		private readonly NetClient _client;
 		private readonly string _host;
-		private readonly ushort _port;
 		private readonly MessageRouter _messageRouter;
+		private readonly ushort _port;
 		private MessageLoop _messageLoop;
 
 		public LidgrenClientChannel(string applicationId, string host, ushort port, IMessageSerializer serializer)

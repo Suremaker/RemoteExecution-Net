@@ -9,6 +9,12 @@ namespace RemoteExecution.TransportLayer.Lidgren
 	{
 		private static readonly TimeSpan _synchronizationTimeSpan = TimeSpan.FromMilliseconds(25);
 
+		public static void WaitForClose(this NetPeer netPeer)
+		{
+			while (netPeer.Status != NetPeerStatus.NotRunning)
+				Thread.Sleep(_synchronizationTimeSpan);
+		}
+
 		public static void WaitForConnectionToOpen(this NetConnection connection)
 		{
 			while (connection.Status != NetConnectionStatus.Connected)
@@ -18,12 +24,6 @@ namespace RemoteExecution.TransportLayer.Lidgren
 
 				Thread.Sleep(_synchronizationTimeSpan);
 			}
-		}
-
-		public static void WaitForClose(this NetPeer netPeer)
-		{
-			while (netPeer.Status != NetPeerStatus.NotRunning)
-				Thread.Sleep(_synchronizationTimeSpan);
 		}
 	}
 }

@@ -5,9 +5,9 @@ namespace RemoteExecution.TransportLayer.Lidgren
 {
 	internal class MessageRouter
 	{
-		public event Action<NetIncomingMessage> DataReceived;
 		public event Action<NetConnection> ConnectionClosed;
 		public event Action<NetConnection> ConnectionOpened;
+		public event Action<NetIncomingMessage> DataReceived;
 
 		public void Route(NetIncomingMessage msg)
 		{
@@ -22,6 +22,24 @@ namespace RemoteExecution.TransportLayer.Lidgren
 			}
 		}
 
+		private void HandleClosedConnection(NetConnection connection)
+		{
+			if (ConnectionClosed != null)
+				ConnectionClosed(connection);
+		}
+
+		private void HandleIncomingData(NetIncomingMessage msg)
+		{
+			if (DataReceived != null)
+				DataReceived(msg);
+		}
+
+		private void HandleNewConnection(NetConnection connection)
+		{
+			if (ConnectionOpened != null)
+				ConnectionOpened(connection);
+		}
+
 		private void HandleStatusChange(NetIncomingMessage msg)
 		{
 			switch ((NetConnectionStatus)msg.ReadByte())
@@ -33,24 +51,6 @@ namespace RemoteExecution.TransportLayer.Lidgren
 					HandleClosedConnection(msg.SenderConnection);
 					break;
 			}
-		}
-
-		private void HandleClosedConnection(NetConnection connection)
-		{
-			if (ConnectionClosed != null)
-				ConnectionClosed(connection);
-		}
-
-		private void HandleNewConnection(NetConnection connection)
-		{
-			if (ConnectionOpened != null)
-				ConnectionOpened(connection);
-		}
-
-		private void HandleIncomingData(NetIncomingMessage msg)
-		{
-			if (DataReceived != null)
-				DataReceived(msg);
 		}
 	}
 }

@@ -8,24 +8,21 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 	{
 		private LidgrenProvider _subject;
 
+		#region Setup/Teardown
+
 		[SetUp]
 		public void SetUp()
 		{
 			_subject = new LidgrenProvider();
 		}
 
-		[Test]
-		public void Should_create_client_throw_if_scheme_is_wrong()
-		{
-			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateClientChannelFor(new Uri("other://localhost:3221/appId")));
-			Assert.That(ex.Message, Is.EqualTo("Invalid scheme."));
-		}
+		#endregion
 
 		[Test]
-		public void Should_create_connection_listener_throw_if_scheme_is_wrong()
+		public void Should_create_client()
 		{
-			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateConnectionListenerFor(new Uri("other://0.0.0.0:3221/appId")));
-			Assert.That(ex.Message, Is.EqualTo("Invalid scheme."));
+			var client = _subject.CreateClientChannelFor(new Uri("net://localhost:3243/appId"));
+			Assert.That(client, Is.Not.Null);
 		}
 
 		[Test]
@@ -36,10 +33,17 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 		}
 
 		[Test]
-		public void Should_create_connection_listener_throw_if_no_app_id_is_provided()
+		public void Should_create_client_throw_if_no_port_provided()
 		{
-			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateConnectionListenerFor(new Uri("net://0.0.0.0:3221")));
-			Assert.That(ex.Message, Is.EqualTo("No application id provided."));
+			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateClientChannelFor(new Uri("net://localhost/appId")));
+			Assert.That(ex.Message, Is.EqualTo("No port provided."));
+		}
+
+		[Test]
+		public void Should_create_client_throw_if_scheme_is_wrong()
+		{
+			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateClientChannelFor(new Uri("other://localhost:3221/appId")));
+			Assert.That(ex.Message, Is.EqualTo("Invalid scheme."));
 		}
 
 		[Test]
@@ -50,30 +54,9 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 		}
 
 		[Test]
-		public void Should_create_connection_listener_throw_if_wrong_app_id_is_provided()
+		public void Should_create_connection_listener()
 		{
-			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateConnectionListenerFor(new Uri("net://0.0.0.0:3221/appId/appId2")));
-			Assert.That(ex.Message, Is.EqualTo("Application id cannot contain '/' character."));
-		}
-
-		[Test]
-		public void Should_create_client_throw_if_no_port_provided()
-		{
-			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateClientChannelFor(new Uri("net://localhost/appId")));
-			Assert.That(ex.Message, Is.EqualTo("No port provided."));
-		}
-
-		[Test]
-		public void Should_create_connection_listener_throw_if_no_port_provided()
-		{
-			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateConnectionListenerFor(new Uri("net://0.0.0.0/appId")));
-			Assert.That(ex.Message, Is.EqualTo("No port provided."));
-		}
-
-		[Test]
-		public void Should_create_client()
-		{
-			var client = _subject.CreateClientChannelFor(new Uri("net://localhost:3243/appId"));
+			var client = _subject.CreateConnectionListenerFor(new Uri("net://0.0.0.0:3243/appId"));
 			Assert.That(client, Is.Not.Null);
 		}
 
@@ -85,10 +68,31 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 		}
 
 		[Test]
-		public void Should_create_connection_listener()
+		public void Should_create_connection_listener_throw_if_no_app_id_is_provided()
 		{
-			var client = _subject.CreateConnectionListenerFor(new Uri("net://0.0.0.0:3243/appId"));
-			Assert.That(client, Is.Not.Null);
+			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateConnectionListenerFor(new Uri("net://0.0.0.0:3221")));
+			Assert.That(ex.Message, Is.EqualTo("No application id provided."));
+		}
+
+		[Test]
+		public void Should_create_connection_listener_throw_if_no_port_provided()
+		{
+			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateConnectionListenerFor(new Uri("net://0.0.0.0/appId")));
+			Assert.That(ex.Message, Is.EqualTo("No port provided."));
+		}
+
+		[Test]
+		public void Should_create_connection_listener_throw_if_scheme_is_wrong()
+		{
+			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateConnectionListenerFor(new Uri("other://0.0.0.0:3221/appId")));
+			Assert.That(ex.Message, Is.EqualTo("Invalid scheme."));
+		}
+
+		[Test]
+		public void Should_create_connection_listener_throw_if_wrong_app_id_is_provided()
+		{
+			var ex = Assert.Throws<ArgumentException>(() => _subject.CreateConnectionListenerFor(new Uri("net://0.0.0.0:3221/appId/appId2")));
+			Assert.That(ex.Message, Is.EqualTo("Application id cannot contain '/' character."));
 		}
 	}
 }

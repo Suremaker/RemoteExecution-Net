@@ -59,6 +59,11 @@
     <Compile Include="Channels\NotConnectedException.cs" />
     <Compile Include="Channels\OutputChannel.cs" />
     <Compile Include="Channels\ConnectionException.cs" />
+    <Compile Include="Config\ClientConfig.cs" />
+    <Compile Include="Config\DefaultConfig.cs" />
+    <Compile Include="Config\IClientConfig.cs" />
+    <Compile Include="Config\IServerConfig.cs" />
+    <Compile Include="Config\ServerConfig.cs" />
     <Compile Include="TransportLayer\ITransportLayerProvider.cs" />
     <Compile Include="TransportLayer\TransportLayerResolver.cs" />
     <Compile Include="Connections\ClientConnection.cs" />
@@ -83,10 +88,8 @@
     <Compile Include="Dispatchers\OperationDispatcher.cs" />
     <Compile Include="Endpoints\GenericServerEndpoint.cs" />
     <Compile Include="Endpoints\IServerEndpoint.cs" />
-    <Compile Include="Endpoints\IServerEndpointConfig.cs" />
     <Compile Include="Endpoints\Listeners\IServerConnectionListener.cs" />
     <Compile Include="Endpoints\ServerEndpoint.cs" />
-    <Compile Include="Endpoints\ServerEndpointConfig.cs" />
     <Compile Include="Endpoints\ServerStartException.cs" />
     <Compile Include="Executors\BroadcastRemoteExecutor.cs" />
     <Compile Include="Executors\IBroadcastRemoteExecutor.cs" />

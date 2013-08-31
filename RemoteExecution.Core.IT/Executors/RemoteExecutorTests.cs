@@ -47,16 +47,6 @@ namespace RemoteExecution.Core.IT.Executors
 		}
 
 		[Test]
-		public void Should_throw_exception()
-		{
-			const string message = "message";
-			_channel.OnSend += msg => _messageDispatcher.Dispatch(new ExceptionResponseMessage(msg.CorrelationId, typeof(InvalidOperationException), message));
-
-			var ex = Assert.Throws<InvalidOperationException>(() => _calculator.Add(3, 2));
-			Assert.That(ex.Message, Is.EqualTo(message));
-		}
-
-		[Test]
 		public void Should_support_concurrent_operations()
 		{
 			var requests = new ConcurrentStack<RequestMessage>();
@@ -85,6 +75,16 @@ namespace RemoteExecution.Core.IT.Executors
 				thread.Join();
 
 			Assert.That(validResults, Is.EqualTo(tasks.Count));
+		}
+
+		[Test]
+		public void Should_throw_exception()
+		{
+			const string message = "message";
+			_channel.OnSend += msg => _messageDispatcher.Dispatch(new ExceptionResponseMessage(msg.CorrelationId, typeof(InvalidOperationException), message));
+
+			var ex = Assert.Throws<InvalidOperationException>(() => _calculator.Add(3, 2));
+			Assert.That(ex.Message, Is.EqualTo(message));
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using RemoteExecution.Core.Channels;
+using RemoteExecution.Core.Config;
 using RemoteExecution.Core.Connections;
 
 namespace RemoteExecution.Core.UT.Connections
@@ -9,7 +10,7 @@ namespace RemoteExecution.Core.UT.Connections
 	{
 		protected override IRemoteConnection CreateSubject()
 		{
-			return new RemoteConnection(Channel, RemoteExecutorFactory, OperationDispatcher, Scheduler);
+			return new RemoteConnection(Channel, OperationDispatcher, new ClientConfig { RemoteExecutorFactory = RemoteExecutorFactory, TaskScheduler = Scheduler });
 		}
 	}
 }

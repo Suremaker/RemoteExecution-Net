@@ -5,7 +5,7 @@ namespace RemoteExecution.Core.Executors
 {
 	public interface IRemoteExecutorFactory
 	{
-		IRemoteExecutor CreateRemoteExecutor(IDuplexChannel channel, IMessageDispatcher dispatcher);
 		IBroadcastRemoteExecutor CreateBroadcastRemoteExecutor(IBroadcastChannel channel);
+		IRemoteExecutor CreateRemoteExecutor(IDuplexChannel channel, IMessageDispatcher dispatcher);
 	}
 }

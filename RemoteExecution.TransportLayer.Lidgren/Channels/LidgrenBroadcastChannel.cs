@@ -14,10 +14,16 @@ namespace RemoteExecution.TransportLayer.Lidgren.Channels
 			_netServer = netServer;
 		}
 
+		#region IBroadcastChannel Members
+
 		public override bool IsOpen
 		{
 			get { return _netServer.Status == NetPeerStatus.Running; }
 		}
+
+		public int ReceiverCount { get { return _netServer.ConnectionsCount; } }
+
+		#endregion
 
 		protected override void Close()
 		{
@@ -38,7 +44,5 @@ namespace RemoteExecution.TransportLayer.Lidgren.Channels
 			msg.Write(data);
 			return msg;
 		}
-
-		public int ReceiverCount { get { return _netServer.ConnectionsCount; } }
 	}
 }

@@ -10,22 +10,6 @@ namespace RemoteExecution.AT.Expectations
 	public abstract partial class BehaviorExpectations : TestContext
 	{
 		[Test]
-		public void Should_successfuly_connect_and_disconnect_client()
-		{
-			using (var server = StartServer())
-			{
-				using (var client = CreateClientConnection())
-				{
-					client.Open();
-
-					Assert.That(client.IsOpen);
-					Assert.That(server.ActiveConnections.Count(), Is.EqualTo(1));
-				}
-				SyncHelper.WaitUntil(() => !server.ActiveConnections.Any());
-			}
-		}
-
-		[Test]
 		public void Should_reconnect_client_with_same_executor()
 		{
 			using (StartServer())
@@ -65,6 +49,22 @@ namespace RemoteExecution.AT.Expectations
 				server.Dispose();
 				SyncHelper.WaitUntil(() => !client1.IsOpen);
 				SyncHelper.WaitUntil(() => !client2.IsOpen);
+			}
+		}
+
+		[Test]
+		public void Should_successfuly_connect_and_disconnect_client()
+		{
+			using (var server = StartServer())
+			{
+				using (var client = CreateClientConnection())
+				{
+					client.Open();
+
+					Assert.That(client.IsOpen);
+					Assert.That(server.ActiveConnections.Count(), Is.EqualTo(1));
+				}
+				SyncHelper.WaitUntil(() => !server.ActiveConnections.Any());
 			}
 		}
 	}

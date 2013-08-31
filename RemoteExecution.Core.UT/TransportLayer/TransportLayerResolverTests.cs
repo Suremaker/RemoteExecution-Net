@@ -10,6 +10,15 @@ namespace RemoteExecution.Core.UT.TransportLayer
 	[TestFixture]
 	public class TransportLayerResolverTests
 	{
+		private ITransportLayerProvider StubProvider(string scheme, IClientChannel clientChannel, IServerConnectionListener connectionListener)
+		{
+			var provider = MockRepository.GenerateMock<ITransportLayerProvider>();
+			provider.Stub(p => p.Scheme).Return(scheme);
+			provider.Stub(p => p.CreateClientChannelFor(Arg<Uri>.Is.Anything)).Return(clientChannel);
+			provider.Stub(p => p.CreateConnectionListenerFor(Arg<Uri>.Is.Anything)).Return(connectionListener);
+			return provider;
+		}
+
 		[Test]
 		public void Should_create_client_channel_throw_exception_for_unknown_schema()
 		{
@@ -51,15 +60,6 @@ namespace RemoteExecution.Core.UT.TransportLayer
 			Assert.That(TransportLayerResolver.CreateClientChannelFor(new Uri("scheme2://localhost")), Is.SameAs(clientChannel2));
 			Assert.That(TransportLayerResolver.CreateConnectionListenerFor(new Uri("scheme1://localhost")), Is.SameAs(connectionListener1));
 			Assert.That(TransportLayerResolver.CreateConnectionListenerFor(new Uri("scheme2://localhost")), Is.SameAs(connectionListener2));
-		}
-
-		private ITransportLayerProvider StubProvider(string scheme, IClientChannel clientChannel, IServerConnectionListener connectionListener)
-		{
-			var provider = MockRepository.GenerateMock<ITransportLayerProvider>();
-			provider.Stub(p => p.Scheme).Return(scheme);
-			provider.Stub(p => p.CreateClientChannelFor(Arg<Uri>.Is.Anything)).Return(clientChannel);
-			provider.Stub(p => p.CreateConnectionListenerFor(Arg<Uri>.Is.Anything)).Return(connectionListener);
-			return provider;
 		}
 	}
 }

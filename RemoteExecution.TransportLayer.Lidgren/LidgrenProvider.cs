@@ -12,18 +12,23 @@ namespace RemoteExecution.TransportLayer.Lidgren
 	{
 		private static readonly IMessageSerializer _serializer = new BinaryMessageSerializer();
 
+		#region ITransportLayerProvider Members
+
 		public IClientChannel CreateClientChannelFor(Uri uri)
 		{
 			VerifyScheme(uri);
 			return new LidgrenClientChannel(GetApplicationId(uri), uri.Host, GetPort(uri), _serializer);
 		}
 
-		private ushort GetPort(Uri uri)
+		public IServerConnectionListener CreateConnectionListenerFor(Uri uri)
 		{
-			if (uri.Port <= 0)
-				throw new ArgumentException("No port provided.");
-			return (ushort)uri.Port;
+			VerifyScheme(uri);
+			return new LidgrenServerConnectionListener(GetApplicationId(uri), uri.Host, GetPort(uri), _serializer);
 		}
+
+		public string Scheme { get { return "net"; } }
+
+		#endregion
 
 		private string GetApplicationId(Uri uri)
 		{
@@ -37,10 +42,11 @@ namespace RemoteExecution.TransportLayer.Lidgren
 			return applicationId;
 		}
 
-		public IServerConnectionListener CreateConnectionListenerFor(Uri uri)
+		private ushort GetPort(Uri uri)
 		{
-			VerifyScheme(uri);
-			return new LidgrenServerConnectionListener(GetApplicationId(uri), uri.Host, GetPort(uri), _serializer);
+			if (uri.Port <= 0)
+				throw new ArgumentException("No port provided.");
+			return (ushort)uri.Port;
 		}
 
 		private void VerifyScheme(Uri uri)
@@ -48,7 +54,5 @@ namespace RemoteExecution.TransportLayer.Lidgren
 			if (uri.Scheme != Scheme)
 				throw new ArgumentException("Invalid scheme.");
 		}
-
-		public string Scheme { get { return "net"; } }
 	}
 }

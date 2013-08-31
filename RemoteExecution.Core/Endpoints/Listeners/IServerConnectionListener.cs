@@ -12,6 +12,11 @@ namespace RemoteExecution.Core.Endpoints.Listeners
 		event Action<IDuplexChannel> OnChannelOpen;
 
 		/// <summary>
+		/// Returns broadcast channel allowing to send messages to all clients at once.
+		/// </summary>
+		IBroadcastChannel BroadcastChannel { get; }
+
+		/// <summary>
 		/// Returns true if listener is actively listening for incoming connections.
 		/// </summary>
 		bool IsListening { get; }
@@ -20,10 +25,5 @@ namespace RemoteExecution.Core.Endpoints.Listeners
 		/// Starts listening for incoming connections.
 		/// </summary>
 		void StartListening();
-
-		/// <summary>
-		/// Returns broadcast channel allowing to send messages to all clients at once.
-		/// </summary>
-		IBroadcastChannel BroadcastChannel { get; }
 	}
 }

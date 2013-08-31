@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using RemoteExecution.Core.Channels;
+using RemoteExecution.Core.Config;
 using RemoteExecution.Core.Dispatchers;
 using RemoteExecution.Core.Endpoints;
 using RemoteExecution.Core.Endpoints.Listeners;
@@ -17,7 +18,7 @@ namespace RemoteExecution.Core.UT.Endpoints
 	{
 		private IServerEndpoint _subject;
 		private IServerConnectionListener _connectionListener;
-		private IServerEndpointConfig _config;
+		private IServerConfig _config;
 		private IRemoteExecutorFactory _remoteExecutorFactory;
 		private ITaskScheduler _taskScheduler;
 		private IOperationDispatcher _operationDispatcher;
@@ -47,7 +48,7 @@ namespace RemoteExecution.Core.UT.Endpoints
 			_connectionListener = MockRepository.GenerateMock<IServerConnectionListener>();
 			_remoteExecutorFactory = MockRepository.GenerateMock<IRemoteExecutorFactory>();
 			_taskScheduler = MockRepository.GenerateMock<ITaskScheduler>();
-			_config = MockRepository.GenerateMock<IServerEndpointConfig>();
+			_config = MockRepository.GenerateMock<IServerConfig>();
 			_config.Stub(c => c.MaxConnections).Return(10);
 			_config.Stub(c => c.RemoteExecutorFactory).Return(_remoteExecutorFactory);
 			_config.Stub(c => c.TaskScheduler).Return(_taskScheduler);
@@ -93,6 +94,12 @@ namespace RemoteExecution.Core.UT.Endpoints
 		}
 
 		[Test]
+		public void Should_create_broadcast_executor()
+		{
+			Assert.That(_subject.BroadcastExecutor, Is.EqualTo(_broadcastExecutor));
+		}
+
+		[Test]
 		public void Should_create_new_connection_for_opened_channel()
 		{
 			var channel = GenerateChannel();
@@ -105,12 +112,6 @@ namespace RemoteExecution.Core.UT.Endpoints
 			Assert.That(connection, Is.Not.Null);
 			Assert.That(connection.Dispatcher, Is.EqualTo(_operationDispatcher));
 			Assert.That(connection.Executor, Is.EqualTo(remoteExecutor));
-		}
-
-		[Test]
-		public void Should_create_broadcast_executor()
-		{
-			Assert.That(_subject.BroadcastExecutor, Is.EqualTo(_broadcastExecutor));
 		}
 
 		[Test]
