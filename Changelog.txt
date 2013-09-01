@@ -1,6 +1,11 @@
 Remote Execution project change log
 ---------------------------------------------------
 
+Version 1.1.0:
+---------------------
++ finished project restructuring
+
+
 Version 1.0.8:
 ---------------------
 + introduced RemoteExecution.Core project

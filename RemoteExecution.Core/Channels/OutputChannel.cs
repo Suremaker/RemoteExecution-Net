@@ -7,7 +7,7 @@ namespace RemoteExecution.Channels
 	public abstract class OutputChannel : IOutputChannel
 	{
 		protected readonly IMessageSerializer Serializer;
-		public event Action ChannelClosed;
+		public event Action Closed;
 
 		protected OutputChannel(IMessageSerializer serializer)
 		{
@@ -39,8 +39,8 @@ namespace RemoteExecution.Channels
 
 		protected void FireChannelClosed()
 		{
-			if (ChannelClosed != null)
-				ChannelClosed();
+			if (Closed != null)
+				Closed();
 		}
 
 		protected abstract void SendData(byte[] data);

@@ -36,7 +36,7 @@ namespace RemoteExecution.Core.UT.Endpoints
 		{
 			var channel = MockRepository.GenerateMock<IDuplexChannel>();
 			channel.Stub(c => c.Id).Return(Guid.NewGuid());
-			channel.Stub(c => c.Dispose()).WhenCalled(m => channel.Raise(c => c.ChannelClosed += null));
+			channel.Stub(c => c.Dispose()).WhenCalled(m => channel.Raise(c => c.Closed += null));
 			return channel;
 		}
 
@@ -187,11 +187,11 @@ namespace RemoteExecution.Core.UT.Endpoints
 			Assert.That(_subject.ActiveConnections.Count(), Is.EqualTo(2));
 			var connection2 = _subject.ActiveConnections.Single(c => c != connection1);
 
-			channel1.Raise(c => c.ChannelClosed += null);
+			channel1.Raise(c => c.Closed += null);
 			Assert.That(_subject.ActiveConnections.Count(), Is.EqualTo(1));
 			Assert.That(_subject.ActiveConnections.Single(), Is.SameAs(connection2));
 
-			channel2.Raise(c => c.ChannelClosed += null);
+			channel2.Raise(c => c.Closed += null);
 			Assert.That(_subject.ActiveConnections, Is.Empty);
 		}
 

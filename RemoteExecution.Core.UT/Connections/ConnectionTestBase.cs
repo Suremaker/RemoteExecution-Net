@@ -44,7 +44,7 @@ namespace RemoteExecution.Core.UT.Connections
 			bool wasCloseEventRaised = false;
 			Subject.Closed += () => wasCloseEventRaised = true;
 			Channel.Stub(c => c.Id).Return(Guid.NewGuid());
-			Channel.Raise(c => c.ChannelClosed += null);
+			Channel.Raise(c => c.Closed += null);
 
 			MessageDispatcher.AssertWasCalled(d => d.GroupDispatch(
 				Arg<Guid>.Is.Equal(Channel.Id),

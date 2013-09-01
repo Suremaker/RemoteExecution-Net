@@ -52,7 +52,7 @@ namespace RemoteExecution.AT.Expectations
 		{
 			using (var client = CreateClientConnection())
 			{
-				var ex = Assert.Throws<ConnectionException>(client.Open);
+				var ex = Assert.Throws<ConnectionOpenException>(client.Open);
 				Assert.That(ex.Message, Is.EqualTo("Connection closed."));
 			}
 		}

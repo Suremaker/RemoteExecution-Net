@@ -6,7 +6,7 @@ namespace RemoteExecution.Core.IT.Helpers
 {
 	class MockDuplexChannel : IDuplexChannel
 	{
-		public event Action ChannelClosed;
+		public event Action Closed;
 		public event Action<IMessage> OnSend;
 		public event Action<IMessage> Received;
 

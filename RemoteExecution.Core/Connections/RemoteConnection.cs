@@ -23,7 +23,7 @@ namespace RemoteExecution.Connections
 			RemoteExecutor = config.RemoteExecutorFactory.CreateRemoteExecutor(channel, dispatcher.MessageDispatcher);
 
 			Channel.Received += OnMessageReceived;
-			Channel.ChannelClosed += OnChannelClose;
+			Channel.Closed += OnChannelClose;
 		}
 
 		public RemoteConnection(string connectionUri, IOperationDispatcher dispatcher, IClientConfig config)

@@ -20,7 +20,7 @@ namespace RemoteExecution
 			while (connection.Status != NetConnectionStatus.Connected)
 			{
 				if (connection.Status == NetConnectionStatus.Disconnected)
-					throw new ConnectionException("Connection closed.");
+					throw new ConnectionOpenException("Connection closed.");
 
 				Thread.Sleep(_synchronizationTimeSpan);
 			}

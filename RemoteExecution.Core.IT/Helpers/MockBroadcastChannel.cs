@@ -6,7 +6,7 @@ namespace RemoteExecution.Core.IT.Helpers
 {
 	class MockBroadcastChannel : IBroadcastChannel
 	{
-		public event Action ChannelClosed;
+		public event Action Closed;
 		public event Action<IMessage> OnSend;
 
 		public MockBroadcastChannel()
