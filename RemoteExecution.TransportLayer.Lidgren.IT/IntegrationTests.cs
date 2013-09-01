@@ -42,7 +42,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 
 		private ClientConnection CreateClientConnection()
 		{
-			return new ClientConnection(new LidgrenClientChannel(_applicationId, _host, _port, new BinaryMessageSerializer()), new OperationDispatcher(), new ClientConfig());
+			return new ClientConnection(new LidgrenClientChannel(_applicationId, _host, _port, new BinaryMessageSerializer()), new OperationDispatcher(), new ConnectionConfig());
 		}
 
 		[Test]

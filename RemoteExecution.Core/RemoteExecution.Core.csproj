@@ -55,14 +55,13 @@
     </Compile>
     <Compile Include="Channels\DuplexChannel.cs" />
     <Compile Include="Channels\OutputChannel.cs" />
-    <Compile Include="Config\ClientConfig.cs" />
+    <Compile Include="Config\ConnectionConfig.cs" />
     <Compile Include="Config\DefaultConfig.cs" />
     <Compile Include="Config\ServerConfig.cs" />
     <Compile Include="Endpoints\StatefulServerEndpoint.cs" />
     <Compile Include="Endpoints\StatelessServerEndpoint.cs" />
     <Compile Include="TransportLayer\TransportLayerResolver.cs" />
     <Compile Include="Connections\ClientConnection.cs" />
-    <Compile Include="Dispatchers\OperationAbortedException.cs" />
     <Compile Include="Connections\RemoteConnection.cs" />
     <Compile Include="Dispatchers\Handlers\DefaultRequestHandler.cs" />
     <Compile Include="Dispatchers\Handlers\RequestHandler.cs" />

@@ -11,7 +11,7 @@ namespace RemoteExecution.Core.UT.Connections
 	{
 		protected override IClientConnection CreateSubject()
 		{
-			return new ClientConnection(Channel, OperationDispatcher, new ClientConfig { RemoteExecutorFactory = RemoteExecutorFactory, TaskScheduler = Scheduler });
+			return new ClientConnection(Channel, OperationDispatcher, new ConnectionConfig { RemoteExecutorFactory = RemoteExecutorFactory, TaskScheduler = Scheduler });
 		}
 
 		[Test]

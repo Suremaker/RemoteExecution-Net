@@ -54,7 +54,7 @@
     <Compile Include="Channels\IInputChannel.cs" />
     <Compile Include="Channels\IOutputChannel.cs" />
     <Compile Include="Channels\NotConnectedException.cs" />
-    <Compile Include="Config\IClientConfig.cs" />
+    <Compile Include="Config\IConnectionConfig.cs" />
     <Compile Include="Config\IServerConfig.cs" />
     <Compile Include="Connections\IClientConnection.cs" />
     <Compile Include="Connections\IRemoteConnection.cs" />
@@ -65,6 +65,7 @@
     <Compile Include="Dispatchers\Messages\IMessage.cs" />
     <Compile Include="Dispatchers\Messages\IRequestMessage.cs" />
     <Compile Include="Dispatchers\Messages\IResponseMessage.cs" />
+    <Compile Include="Dispatchers\OperationAbortedException.cs" />
     <Compile Include="Endpoints\IServerEndpoint.cs" />
     <Compile Include="Endpoints\Listeners\IServerConnectionListener.cs" />
     <Compile Include="Endpoints\ServerStartException.cs" />

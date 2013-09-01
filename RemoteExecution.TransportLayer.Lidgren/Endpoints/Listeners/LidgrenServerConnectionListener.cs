@@ -7,14 +7,29 @@ using RemoteExecution.Serializers;
 
 namespace RemoteExecution.Endpoints.Listeners
 {
+	/// <summary>
+	/// Lidgren server connection listener class allowing to listen for new connection, handle them and use broadcast channel.
+	/// </summary>
 	public class LidgrenServerConnectionListener : IServerConnectionListener
 	{
 		private readonly MessageRouter _messageRouter;
 		private readonly NetServer _netServer;
 		private readonly IMessageSerializer _serializer;
 		private MessageLoop _messageLoop;
+
+		/// <summary>
+		/// Fires when channel for new connection is opened.
+		/// After all event handlers are finished, channel is treated as fully operational and ready for receiving data.
+		/// </summary>
 		public event Action<IDuplexChannel> OnChannelOpen;
 
+		/// <summary>
+		/// Creates listener instance.
+		/// </summary>
+		/// <param name="applicationId">Application id that would be used to accept/reject incoming connections.</param>
+		/// <param name="listenAddress">IP address on which listener would be listening for incoming connections. Use 0.0.0.0 to listen on all network interfaces.</param>
+		/// <param name="port">Port on which listener would be listening for incoming connections.</param>
+		/// <param name="serializer">Message serializer.</param>
 		public LidgrenServerConnectionListener(string applicationId, string listenAddress, ushort port, IMessageSerializer serializer)
 		{
 			var netConfig = new NetPeerConfiguration(applicationId)
@@ -36,6 +51,9 @@ namespace RemoteExecution.Endpoints.Listeners
 
 		#region IServerConnectionListener Members
 
+		/// <summary>
+		/// Closes connection listener and shuts down lidgren net server and its message loop.
+		/// </summary>
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Dispose()
 		{
@@ -48,6 +66,9 @@ namespace RemoteExecution.Endpoints.Listeners
 
 		}
 
+		/// <summary>
+		/// Starts listening for incoming connections.
+		/// </summary>
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void StartListening()
 		{
@@ -57,8 +78,14 @@ namespace RemoteExecution.Endpoints.Listeners
 			_netServer.Start();
 		}
 
+		/// <summary>
+		/// Returns broadcast channel allowing to send messages to all clients at once.
+		/// </summary>
 		public IBroadcastChannel BroadcastChannel { get; private set; }
 
+		/// <summary>
+		/// Returns true if listener is actively listening for incoming connections.
+		/// </summary>
 		public bool IsListening { get { return _netServer.Status == NetPeerStatus.Running; } }
 
 		#endregion

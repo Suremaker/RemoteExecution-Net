@@ -1,10 +1,16 @@
 using System;
 using System.Runtime.CompilerServices;
 using Lidgren.Network;
+using RemoteExecution.Endpoints.Listeners;
 using RemoteExecution.Serializers;
 
 namespace RemoteExecution.Channels
 {
+	/// <summary>
+	/// Lidgren client channel allowing to send and receive messages. 
+	/// Client channel has to be opened with Open() method before use
+	/// and can be reopened after it has been closed.
+	/// </summary>
 	public class LidgrenClientChannel : LidgrenDuplexChannel, IClientChannel
 	{
 		private readonly NetClient _client;
@@ -13,6 +19,13 @@ namespace RemoteExecution.Channels
 		private readonly ushort _port;
 		private MessageLoop _messageLoop;
 
+		/// <summary>
+		/// Creates client channel instance.
+		/// </summary>
+		/// <param name="applicationId">Application id that has to match to one used by <see cref="LidgrenServerConnectionListener"/>.</param>
+		/// <param name="host">Host to connect to.</param>
+		/// <param name="port">Port to connect to.</param>
+		/// <param name="serializer">Message serializer.</param>
 		public LidgrenClientChannel(string applicationId, string host, ushort port, IMessageSerializer serializer)
 			: base(serializer)
 		{
@@ -26,6 +39,10 @@ namespace RemoteExecution.Channels
 
 		#region IClientChannel Members
 
+		/// <summary>
+		/// Opens channel for sending and receiving messages.
+		/// If channel has been closed, this method reopens it.
+		/// </summary>
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Open()
 		{
@@ -39,6 +56,10 @@ namespace RemoteExecution.Channels
 
 		#endregion
 
+		/// <summary>
+		/// Closes channel. 
+		/// It should not throw if channel is already closed.
+		/// </summary>
 		protected override void Close()
 		{
 			base.Close();

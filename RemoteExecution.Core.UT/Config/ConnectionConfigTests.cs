@@ -4,16 +4,16 @@ using RemoteExecution.Config;
 namespace RemoteExecution.Core.UT.Config
 {
 	[TestFixture]
-	public class ClientConfigTests
+	public class ConnectionConfigTests
 	{
-		private IClientConfig _subject;
+		private IConnectionConfig _subject;
 
 		#region Setup/Teardown
 
 		[SetUp]
 		public void SetUp()
 		{
-			_subject = new ClientConfig();
+			_subject = new ConnectionConfig();
 		}
 
 		#endregion

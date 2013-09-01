@@ -3,6 +3,9 @@ using RemoteExecution.Channels;
 
 namespace RemoteExecution.Endpoints.Listeners
 {
+	/// <summary>
+	/// Server connection listener interface allowing to listen for new connection, handle them and use broadcast channel.
+	/// </summary>
 	public interface IServerConnectionListener : IDisposable
 	{
 		/// <summary>

@@ -10,7 +10,7 @@ namespace RemoteExecution.Core.UT.Connections
 	{
 		protected override IRemoteConnection CreateSubject()
 		{
-			return new RemoteConnection(Channel, OperationDispatcher, new ClientConfig { RemoteExecutorFactory = RemoteExecutorFactory, TaskScheduler = Scheduler });
+			return new RemoteConnection(Channel, OperationDispatcher, new ConnectionConfig { RemoteExecutorFactory = RemoteExecutorFactory, TaskScheduler = Scheduler });
 		}
 	}
 }

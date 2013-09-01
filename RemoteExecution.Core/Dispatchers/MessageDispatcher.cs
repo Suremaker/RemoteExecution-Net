@@ -7,6 +7,9 @@ using RemoteExecution.Dispatchers.Messages;
 
 namespace RemoteExecution.Dispatchers
 {
+	/// <summary>
+	/// Message dispatcher class allowing to register message handlers and dispatch messages.
+	/// </summary>
 	public class MessageDispatcher : IMessageDispatcher
 	{
 		private readonly ConcurrentDictionary<Guid, ConcurrentDictionary<IMessageHandler, IMessageHandler>> _handlerGroups = new ConcurrentDictionary<Guid, ConcurrentDictionary<IMessageHandler, IMessageHandler>>();
@@ -14,6 +17,10 @@ namespace RemoteExecution.Dispatchers
 
 		#region IMessageDispatcher Members
 
+		/// <summary>
+		/// Registers message handler.
+		/// </summary>
+		/// <param name="handler">Handler.</param>
 		public void Register(IMessageHandler handler)
 		{
 			if (handler.HandledMessageType == null)
@@ -28,6 +35,10 @@ namespace RemoteExecution.Dispatchers
 				.TryAdd(handler, handler);
 		}
 
+		/// <summary>
+		/// Unregisters message handler for given message type.
+		/// </summary>
+		/// <param name="messageType">Message type.</param>
 		public void Unregister(string messageType)
 		{
 			IMessageHandler removedHandler;
@@ -35,6 +46,10 @@ namespace RemoteExecution.Dispatchers
 				RemoveHandlerFromGroup(removedHandler);
 		}
 
+		/// <summary>
+		/// Dispatches given message to one of registered handlers.
+		/// </summary>
+		/// <param name="message">Message to dispatch.</param>
 		public void Dispatch(IMessage message)
 		{
 			IMessageHandler handler;
@@ -47,6 +62,11 @@ namespace RemoteExecution.Dispatchers
 			handler.Handle(message);
 		}
 
+		/// <summary>
+		/// Dispatches given message to all handlers belonging to given handler group id.
+		/// </summary>
+		/// <param name="handlerGroupId">Handler group id.</param>
+		/// <param name="message">Message to dispatch.</param>
 		public void GroupDispatch(Guid handlerGroupId, IMessage message)
 		{
 			// ReSharper disable PossibleMultipleEnumeration
@@ -68,6 +88,9 @@ namespace RemoteExecution.Dispatchers
 			// ReSharper restore PossibleMultipleEnumeration
 		}
 
+		/// <summary>
+		/// Default message handler which is used if there is no registered handler for dispatched message.
+		/// </summary>
 		public IMessageHandler DefaultHandler { get; set; }
 
 		#endregion
