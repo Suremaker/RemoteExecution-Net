@@ -3,9 +3,9 @@ Remote Execution project change log
 
 Version 1.1.0:
 ---------------------
-+ finished project restructuring
-+ added documentation
-+ renamed ClientConfig to ConnectionConfig
++ added class documentation
++ restructured project into sub projects
++ reorganized classes to simplify their usage
 
 Version 1.0.8:
 ---------------------
